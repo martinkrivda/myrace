@@ -42,26 +42,26 @@
 						<div class="col-xs-2"></div>
 						<div class="col-xs-2"></div>
 						<div class="col-xs-2">
-							<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#create-runner">{{ trans('adminlte_lang::message.addrunner') }}</button>
+							<button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#create-runner"><i class="fa fa-edit"></i> {{ trans('adminlte_lang::message.addrunner') }}</button>
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						</div>
 					</div>
 				</div>
 				<!-- /.box-header -->
-				<div class="box-body">	
+				<div class="box-body">
 				{{ csrf_field() }}
 					<table id="runners-table" class="table table-striped table-hover dataTable" role="grid" aria-describedby="runners-table_info">
 						<thead>
 							<tr>
 							  <th>ID</th>
-							  <th>Jméno</th>
-							  <th>Příjmení</th>
-							  <th>Ročník</th>
-							  <th>Pohlaví</th>
-							  <th>Země</th>
+							  <th>{{ trans('adminlte_lang::message.firstname') }}</th>
+							  <th>{{ trans('adminlte_lang::message.lastname') }}</th>
+							  <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							  <th>{{ trans('adminlte_lang::message.gender') }}</th>
+							  <th>{{ trans('adminlte_lang::message.country') }}</th>
 							  <th>E-mail</th>
-							  <th>Telefon</th>
-							  <th>Actions</th>
+							  <th>{{ trans('adminlte_lang::message.phone') }}</th>
+							  <th>{{ trans('adminlte_lang::message.actions') }}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -69,14 +69,14 @@
 						<tfoot>
 							<tr>
 							 <th>ID</th>
-							  <th>Jméno</th>
-							  <th>Příjmení</th>
-							  <th>Ročník</th>
-							  <th>Pohlaví</th>
-							  <th>Země</th>
-							  <th>E-mail</th>
-							  <th>Telefon</th>
-							  <th>Actions</th>
+							 <th>{{ trans('adminlte_lang::message.firstname') }}</th>
+							 <th>{{ trans('adminlte_lang::message.lastname') }}</th>
+							 <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							 <th>{{ trans('adminlte_lang::message.gender') }}</th>
+							 <th>{{ trans('adminlte_lang::message.country') }}</th>
+							 <th>E-mail</th>
+							 <th>{{ trans('adminlte_lang::message.phone') }}</th>
+							 <th>{{ trans('adminlte_lang::message.actions') }}</th>
 							</tr>
 						</tfoot>
 					</table>
@@ -87,4 +87,3 @@
 
 
 @endsection
-

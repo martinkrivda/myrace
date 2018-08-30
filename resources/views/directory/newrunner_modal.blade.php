@@ -14,7 +14,6 @@
                   <label for="firstname" class=" form-control-label">{{ trans('adminlte_lang::message.firstname') }}</label><input type="text" id="firstname"
                     name="firstname" placeholder="{{ trans('adminlte_lang::message.fillfirstname') }}"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ]{1,50}"
-                    value=""
                     class="form-control" maxlength="50" required />
                 </div>
               </div>
@@ -24,7 +23,6 @@
                     type="text" id="lastname" name="lastname"
                     placeholder="{{ trans('adminlte_lang::message.filllastname') }}"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ]{1,255}"
-                    value=""
                     class="form-control" maxlength="255" required />
                 </div>
               </div>
@@ -36,7 +34,6 @@
                     type="number" id="vintage" name="vintage" min="1900"
                     max="<?php echo date("Y"); ?>" step="1"
                     placeholder="{{ trans('adminlte_lang::message.vintage') }}"
-                    value=""
                     class="form-control" required />
                 </div>
               </div>
@@ -45,7 +42,7 @@
                   <label for="gender" class="form-control-label">{{ trans('adminlte_lang::message.gender') }}</label><select
                     name="gender" id="gender"
                     class="form-control">
-                    <option value="0">{{ trans('adminlte_lang::message.pleaseselect') }}</option>
+                    <option disabled selected value>{{ trans('adminlte_lang::message.pleaseselect') }}</option>
                     <option value="male">{{ trans('adminlte_lang::message.male') }}</option>
                     <option value="female">{{ trans('adminlte_lang::message.female') }}</option>
                   </select>
@@ -57,7 +54,6 @@
                     type="text" id="club" name="club" list="clubs"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,70}"
                     placeholder="{{ trans('adminlte_lang::message.fillclub') }}"
-                    value=""
                     class="form-control" maxlength="70" />
                   <datalist id="clubs">
                   </datalist>
@@ -70,7 +66,6 @@
                   <label for="email" class="form-control-label">E-mail</label><input
                     type="email" id="email" name="email"
                     placeholder="{{ trans('adminlte_lang::message.fillemail') }}"
-                    value=""
                     class="form-control" maxlength="255" />
                 </div>
               </div>
@@ -79,7 +74,6 @@
                   <label for="phone" class="form-control-label">{{ trans('adminlte_lang::message.phone') }}</label><input
                     type="tel" id="phone" name="phone"
                     placeholder="{{ trans('adminlte_lang::message.fillphone') }}"
-                    value=""
                     class="form-control" maxlength="13" />
                 </div>
               </div>
@@ -90,11 +84,11 @@
                   <label for="country" class="form-control-label">{{ trans('adminlte_lang::message.country') }}</label>
                   <select name="country" id="country"
                     class="form-control">
-                    <option value="0">{{ trans('adminlte_lang::message.pleaseselect') }}</option>
+                    <option disabled selected required>{{ trans('adminlte_lang::message.pleaseselect') }}</option>
                     @foreach($countries as $country)
                       <option value="{{ $country->country_code }}" >{{ $country->name }}</option>
                     @endforeach
-                    
+
                 </select>
                 @if ($errors->has('country'))
                   <div class="error">{{ $errors->first('country') }}</div>
@@ -103,12 +97,12 @@
               </div>
             </div>
           </div>
-           <div class="modal-footer">
+          <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('adminlte_lang::message.close') }}</button>
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type="submit" class="btn btn-primary crud-submit" value="{{ trans('adminlte_lang::message.submit') }}">
         </div>
         </div>
-        </form> 
+        </form>
       </div>
     </div>

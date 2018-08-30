@@ -11,6 +11,9 @@ function manageData() {
     	manageRow(data.data);
         $('#runners-table').DataTable({
             retrieve: true,
+            serverSide: false,
+            responsive: true,
+            "paging": true,
             "columnDefs": [
                { "orderable": false, "targets": 8 }
             ]
@@ -38,8 +41,8 @@ function manageRow(data) {
         rows = rows + '<td>'+value.email+'</td>';
         rows = rows + '<td>'+value.phone+'</td>';
 	  	rows = rows + '<td data-id="'+value.runner_ID+'">';
-        rows = rows + '<button data-toggle="modal" data-target="#edit-item" class="btn btn-primary edit-item">Edit</button> ';
-        rows = rows + '<button class="btn btn-danger remove-item">Delete</button>';
+        rows = rows + '<button data-toggle="modal" data-target="#edit-item" class="btn btn-primary edit-item"><i class="fa fa-pencil"></i></button> ';
+        rows = rows + '<button class="btn btn-danger remove-item"><i class="fa fa-trash-o"></i></button>';
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';
 	});
@@ -48,6 +51,7 @@ function manageRow(data) {
 
 /* Create new Post */
 $(".crud-submit").click(function(e) {
+    if($(this).closest('form')[0].checkValidity()){
     e.preventDefault();
     var form_action = $("#create-runner").find("form").attr("action");
     var firstname = $("#create-runner").find("input[name='firstname']").val();
@@ -58,18 +62,23 @@ $(".crud-submit").click(function(e) {
     var email = $("#create-runner").find("input[name='email']").val();
     var phone = $("#create-runner").find("input[name='phone']").val();
     var country = $("#create-runner").find("select[name='country']").val();
-    $.ajax({
-        dataType: 'json',
-        type:'POST',
-        url: form_action,
-        data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, email:email, phone:phone, country:country}
-    }).done(function(data){
-        manageData();
-        $(".modal").modal('hide');
-        $('body').removeClass('modal-open');
-        $('.modal-backdrop').remove();
-        toastr.success('Post Created Successfully.', 'Success Alert', {timeOut: 5000});
-    });
+    if (firstname != '' && lastname !='' && vintage != '' && country != null && gender != null){
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: form_action,
+            data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, email:email, phone:phone, country:country}
+        }).done(function(data){
+            manageData();
+            $(".modal").modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            toastr.success('New runner was created.', 'Success', {timeOut: 5000});
+        });
+    }  else {
+        toastr.warning('Select gender and country.', 'Gender and country fields must be chosen!', {timeOut: 5000});
+    }
+}
 });
 
 /* Remove Post */
