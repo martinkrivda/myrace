@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Validator;
-use App\Runner;
 use App\Country;
-use Alert;
+use App\Http\Controllers\Controller;
+use App\Runner;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RunnersController extends Controller
 {
@@ -24,7 +21,7 @@ class RunnersController extends Controller
         $this->middleware('auth');
     }
     //
-      /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -43,7 +40,6 @@ class RunnersController extends Controller
     public function index()
     {
         $runners = Runner::all();
-        Log::emergency('The system is down!');
         return response()->json(['data' => $runners]);
     }
 
@@ -65,7 +61,17 @@ class RunnersController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:255',
+            'vintage' => 'required|numeric|min:1900',
+            'gender' => ['required', 'regex:/^(male|female)$/', 'max:255'],
+            'email' => 'email|nullable|max:255',
+            'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
+            'country' => 'string|exists:country,country_code|max:2',
+        ]);
         $create = Runner::create($request->all());
+        Log::info('New runner was added to DB.', ['firstname' => $create->firstname, 'lastname' => $create->lastname, 'runner_ID' => $create->runner_ID]);
         return response()->json($create);
     }
 
@@ -75,18 +81,19 @@ class RunnersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($runner_ID)
     {
-        //
+        $show = Runner::find($runner_ID);
+        return response()->json($show);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $runner_ID
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($runner_ID)
     {
         //
     }
@@ -95,22 +102,25 @@ class RunnersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $runner_ID
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $runner_ID)
     {
-        //
+        $edit = Runner::find($runner_ID)->update($request->all());
+        return response()->json($edit);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $runner_ID
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($runner_ID)
     {
-        //
+        Runner::find($runner_ID)->delete();
+        //Runner::find($runner_ID)->update(['deleted' => '1']);
+        return response()->json(['message' => 'Runner deleted successfully', 'status' => 'success', 'done']);
     }
 }

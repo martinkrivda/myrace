@@ -84,6 +84,7 @@
 		</div>
 	</div>
 	@include('directory.newrunner_modal')
+	@include('directory.editrunner_modal')
 
 
 @endsection

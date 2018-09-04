@@ -98,7 +98,7 @@
             </div>
           </div>
           <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('adminlte_lang::message.close') }}</button>
+          <button type="reset" class="btn btn-default" data-dismiss="modal">{{ trans('adminlte_lang::message.close') }}</button>
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type="submit" class="btn btn-primary crud-submit" value="{{ trans('adminlte_lang::message.submit') }}">
         </div>
