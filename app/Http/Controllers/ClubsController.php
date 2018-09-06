@@ -2,10 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Club;
+use App\Country;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClubsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    //
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clubs()
+    {
+        $countries = Country::all('country_code', 'name');
+        return view('directory.clubs', compact('countries'));
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +37,8 @@ class ClubsController extends Controller
      */
     public function index()
     {
-        //
+        $clubs = Club::all();
+        return response()->json(['data' => $clubs]);
     }
 
     /**
@@ -43,9 +68,11 @@ class ClubsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($club_ID)
     {
-        //
+        $show = Club::find($club_ID);
+        Log::info('New club was added to DB.', ['name' => $create->name, 'club_ID' => $create->club_ID]);
+        return response()->json($show);
     }
 
     /**
@@ -66,9 +93,10 @@ class ClubsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $club_ID)
     {
-        //
+        $edit = Club::find($club_ID)->update($request->all());
+        return response()->json($edit);
     }
 
     /**
@@ -77,8 +105,10 @@ class ClubsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($club_ID)
     {
-        //
+        Runner::find($club_ID)->delete();
+        //Runner::find($club_ID)->update(['deleted' => true]);
+        return response()->json(['message' => 'Club deleted successfully', 'status' => 'success', 'done']);
     }
 }

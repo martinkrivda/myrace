@@ -120,7 +120,7 @@ class RunnersController extends Controller
     public function destroy($runner_ID)
     {
         Runner::find($runner_ID)->delete();
-        //Runner::find($runner_ID)->update(['deleted' => '1']);
+        //Runner::find($runner_ID)->update(['deleted' => true]);
         return response()->json(['message' => 'Runner deleted successfully', 'status' => 'success', 'done']);
     }
 }

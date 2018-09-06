@@ -15,8 +15,3 @@
         <!-- DataTables -->
         <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('js/dataTables.bootstrap.min.js') }}" charset="utf-8"></script>
-
-        <script type="text/javascript">
-            var url = "<?php echo route('runners-data.index') ?>";
-        </script>
-        <script src="/js/runnersAjax.js"></script>

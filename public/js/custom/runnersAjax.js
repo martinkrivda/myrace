@@ -46,6 +46,9 @@ function manageRow(data) {
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';
 	});
+    if (rows == ""){
+        rows = '<tr><td colspan="100%"><center><i>no data</i></center></td></tr>';
+    }
 	$("tbody").html(rows);
 }
 
@@ -80,6 +83,7 @@ $(".crud-submit").click(function(e) {
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
             toastr.success('New runner was created.', 'Success', {timeOut: 5000});
+            $(".formrunner").trigger("reset");
         });
     }  else {
         toastr.warning('Select gender and country.', 'Gender and country fields must be chosen!', {timeOut: 5000});
@@ -109,14 +113,14 @@ function SwalDelete(runner_ID, c_obj){
                 preConfirm: function() {
                     return new Promise(function(resolve){
                         $.ajax({
-        dataType: 'json',
-        type:'delete',
-        url: url + '/' + runner_ID,
-        data: {runner_ID, runner_ID},
+                            dataType: 'json',
+                            type:'delete',
+                            url: url + '/' + runner_ID,
+                            data: {runner_ID, runner_ID},
                         })
                         .done(function(response){
                             c_obj.remove();
-                            toastr.success('Item Deleted Successfully.', 'Success Alert', {timeOut: 5000});
+                            toastr.success('Runner Deleted Successfully.', 'Success Alert', {timeOut: 5000});
                             swal('Smazáno',response.message, response.status)
                             manageData();
                             

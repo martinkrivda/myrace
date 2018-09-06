@@ -3,8 +3,9 @@
 @section('htmlheader_title')
 	{{ trans('adminlte_lang::message.runners') }}
 @endsection
-
-
+@section('contentheader_title')
+	{{ trans('adminlte_lang::message.runnersdirectory') }}
+@endsection
 @section('main-content')
 	<div class="container-fluid spark-screen">
 		<div class="row">
@@ -86,5 +87,14 @@
 	@include('directory.newrunner_modal')
 	@include('directory.editrunner_modal')
 
-
 @endsection
+
+@section('scripts')
+    @parent
+    <script type="text/javascript">
+        var url = "<?php echo route('runners-data.index') ?>";
+    </script>
+    <script src="/js/custom/runnersAjax.js"></script>
+@endsection
+
+
