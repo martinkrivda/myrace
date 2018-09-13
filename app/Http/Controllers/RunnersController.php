@@ -69,7 +69,12 @@ class RunnersController extends Controller
             'email' => 'email|nullable|max:255',
             'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
             'country' => 'string|exists:country,country_code|max:2',
+            'club' => 'string|nullable|max:70',
+            'club_ID' => 'numeric|exists:club,club_ID|max:10|nullable',
         ]);
+        if ($request['club_ID'] !== '' && $request['club_ID'] !== null) {
+            $request['club'] = null;
+        }
         $create = Runner::create($request->all());
         Log::info('New runner was added to DB.', ['firstname' => $create->firstname, 'lastname' => $create->lastname, 'runner_ID' => $create->runner_ID]);
         return response()->json($create);
@@ -107,6 +112,15 @@ class RunnersController extends Controller
      */
     public function update(Request $request, $runner_ID)
     {
+        $request->validate([
+            'firstname' => 'required|string|max:50',
+            'lastname' => 'required|string|max:255',
+            'vintage' => 'required|numeric|min:1900',
+            'gender' => ['required', 'regex:/^(male|female)$/', 'max:255'],
+            'email' => 'email|nullable|max:255',
+            'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
+            'country' => 'string|exists:country,country_code|max:2',
+        ]);
         $edit = Runner::find($runner_ID)->update($request->all());
         return response()->json($edit);
     }

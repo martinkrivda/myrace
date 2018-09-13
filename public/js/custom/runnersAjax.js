@@ -46,9 +46,6 @@ function manageRow(data) {
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';
 	});
-    if (rows == ""){
-        rows = '<tr><td colspan="100%"><center><i>no data</i></center></td></tr>';
-    }
 	$("tbody").html(rows);
 }
 
@@ -62,6 +59,7 @@ $(".crud-submit").click(function(e) {
     var vintage = $("#create-runner").find("input[name='vintage']").val();
     var gender = $("#create-runner").find("select[name='gender']").val();
     var club = $("#create-runner").find("input[name='club']").val();
+    var club_ID = $("#create-runner").find("input[name='club_ID']").val();
     var email = $("#create-runner").find("input[name='email']").val();
     var phone = $("#create-runner").find("input[name='phone']").val();
     var country = $("#create-runner").find("select[name='country']").val();
@@ -70,7 +68,7 @@ $(".crud-submit").click(function(e) {
             dataType: 'json',
             type:'POST',
             url: form_action,
-            data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, email:email, phone:phone, country:country},
+            data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -82,6 +80,7 @@ $(".crud-submit").click(function(e) {
             $(".modal").modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
+            $("#create-runner").find("input[name='club_ID']").val(null);
             toastr.success('New runner was created.', 'Success', {timeOut: 5000});
             $(".formrunner").trigger("reset");
         });
@@ -185,4 +184,44 @@ $(".crud-submit-edit").click(function(e) {
         toastr.warning('Select gender and country.', 'Gender and country fields must be chosen!', {timeOut: 5000});
     }
 }
-});	
+});
+
+$(document).ready(function(){
+
+    $('#club').keyup(function(){ 
+        var query = $(this).val();
+        searchclub(query);  
+    });
+    $('#club').click(function(){
+        var query = $(this).val();
+        searchclub(query);  
+    });
+
+    $(document).on('click', 'li', function(){
+        var string = $(this).text();
+        var club = string.split(" - ",3);
+        $('#club').val(club[0]);
+        $('#club_ID').val(club[2]);  
+        $('#livesearchclubs').fadeOut();  
+    });
+    $(document).on('click', 'div', function(){  
+        $('#livesearchclubs').fadeOut();  
+    });  
+
+    function searchclub(query){
+        if(query != '')
+        {
+         var _token = $('input[name="_token"]').val();
+         $.ajax({
+          url:"/clubs/searchclub",
+          method:"POST",
+          data:{query:query, _token:_token},
+          success:function(data){
+           $('#livesearchclubs').fadeIn();  
+                    $('#livesearchclubs').html(data);
+          }
+         });
+        }
+    }
+
+});

@@ -51,12 +51,15 @@
               <div class="col-xs-5">
                 <div class="form-group">
                   <label for="club" class="form-control-label">{{ trans('adminlte_lang::message.club') }}</label><input
-                    type="text" id="club" name="club" list="clubs"
+                    type="text" id="club" name="club"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,70}"
                     placeholder="{{ trans('adminlte_lang::message.fillclub') }}"
-                    class="form-control" maxlength="70" />
-                  <datalist id="clubs">
-                  </datalist>
+                    class="form-control" maxlength="70" autocomplete="off"/>
+                    <input type="hidden" id="club_ID" name="club_ID" patter="\d{1,10}"
+                    class="form-control" maxlength="10" autocomplete="off"/>
+                  <!--<datalist id="clubs" list="clubs">
+                  </datalist>-->
+                  <div id="livesearchclubs"></div>
                 </div>
               </div>
             </div>

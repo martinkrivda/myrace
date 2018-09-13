@@ -51,7 +51,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                 {{ csrf_field() }}
-                    <table id="runners-club" class="table table-striped table-hover dataTable" role="grid" aria-describedby="clubs-table_info">
+                    <table id="clubs-table" class="table table-striped table-hover dataTable" role="grid" aria-describedby="clubs-table_info">
                         <thead>
                             <tr>
                               <th>ID</th>

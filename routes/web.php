@@ -18,10 +18,8 @@ Route::get('runners', 'RunnersController@runners');
 Route::resource('runners-data', 'RunnersController');
 Route::get('clubs', 'ClubsController@clubs');
 Route::resource('clubs-data', 'ClubsController');
-//Route::post('/modal_newrunner', 'RunnersController@modal_addrunner');
-//Route::post('/modal_editrunner', 'RunnersController@modal_edit');
-//Route::post('/do_editrunner/{id}', 'RunnersController@do_edit');
-//Route::post('/runners/delete','RunnersController@destroy');
+
+Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
 
 Route::group(['middleware' => 'auth'], function () {
     //    Route::get('/link1', function ()    {

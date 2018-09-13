@@ -50,9 +50,6 @@ function manageRow(data) {
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';
 	});
-    if (rows == ""){
-        rows = '<tr><td colspan="100%"><center><i>no data</i></center></td></tr>';
-    }
 	$("tbody").html(rows);
 }
 
@@ -73,7 +70,7 @@ $(".crud-submit").click(function(e) {
     var taxid = $("#create-club").find("input[name='taxid']").val();
     var vatid = $("#create-club").find("input[name='vatid']").val();
     var country = $("#create-club").find("select[name='country']").val();
-    if (clubname != '' && clubabbr !='' && street != '' && city != '' && zip != '' && country != null){
+    if (clubname != '' && clubabbr !='' && country != null){
         $.ajax({
             dataType: 'json',
             type:'POST',
@@ -189,7 +186,7 @@ $(".crud-submit-edit").click(function(e) {
     var phone = $("#create-club").find("input[name='phone']").val();
     var taxid = $("#create-club").find("input[name='taxid']").val();
     var vatid = $("#create-club").find("input[name='vatid']").val();
-    if (clubname != '' && clubabbr !='' && street != '' && city != '' && zip != '' && country != null){
+    if (clubname != '' && clubabbr !='' && country != null){
         $.ajax({
         dataType: 'json',
         type:'PUT',

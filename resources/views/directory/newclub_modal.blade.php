@@ -31,7 +31,6 @@
                     type="text" id="clubabbr" name="clubabbr"
                     placeholder="{{ trans('adminlte_lang::message.fillclubabbr') }}"
                     pattern="[a-zA-Z\-0-9]{3,10}"
-                    value="<?php echo htmlspecialchars(@$_POST['clubcode']); ?>"
                     class="form-control" maxlength="10" required />
                 </div>
               </div>
