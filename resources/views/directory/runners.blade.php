@@ -58,6 +58,7 @@
 							  <th>{{ trans('adminlte_lang::message.firstname') }}</th>
 							  <th>{{ trans('adminlte_lang::message.lastname') }}</th>
 							  <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							  <th>{{ trans('adminlte_lang::message.club') }}</th>
 							  <th>{{ trans('adminlte_lang::message.gender') }}</th>
 							  <th>{{ trans('adminlte_lang::message.country') }}</th>
 							  <th>E-mail</th>
@@ -73,6 +74,7 @@
 							 <th>{{ trans('adminlte_lang::message.firstname') }}</th>
 							 <th>{{ trans('adminlte_lang::message.lastname') }}</th>
 							 <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							 <th>{{ trans('adminlte_lang::message.club') }}</th>
 							 <th>{{ trans('adminlte_lang::message.gender') }}</th>
 							 <th>{{ trans('adminlte_lang::message.country') }}</th>
 							 <th>E-mail</th>

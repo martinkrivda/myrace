@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Country;
 use App\Http\Controllers\Controller;
 use App\Runner;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,7 +40,10 @@ class RunnersController extends Controller
      */
     public function index()
     {
-        $runners = Runner::all();
+        //$runners = Runner::all();
+        $runners = DB::table('runner')
+            ->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
+            ->get();
         return response()->json(['data' => $runners]);
     }
 

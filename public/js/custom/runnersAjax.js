@@ -15,7 +15,7 @@ function manageData() {
             responsive: true,
             "paging": true,
             "columnDefs": [
-               { "orderable": false, "targets": 8 }
+               { "orderable": false, "targets": 9 }
             ]
         });
         //is_ajax_fire = 1;
@@ -36,6 +36,11 @@ function manageRow(data) {
 	  	rows = rows + '<td>'+value.firstname+'</td>';
         rows = rows + '<td>'+value.lastname+'</td>';
         rows = rows + '<td>'+value.vintage+'</td>';
+        if (value.club_ID !== null){
+            rows = rows + '<td id="'+ value.club_ID +'" title="'+ value.clubabbr +'">'+value.clubname+'</td>';
+        } else {
+            rows = rows + '<td>'+value.club+'</td>';
+        }
         rows = rows + '<td>'+value.gender+'</td>';
         rows = rows + '<td>'+value.country+'</td>';
         rows = rows + '<td>'+value.email+'</td>';
@@ -140,13 +145,19 @@ $("body").on("click",".edit-runner",function() {
     var firstname = columns[1].innerHTML;
     var lastname = columns[2].innerHTML;
     var vintage = columns[3].innerHTML;
-    var gender = columns[4].innerHTML;
-    var country = columns[5].innerHTML;
-    var email = columns[6].innerHTML;
-    var phone = columns[7].innerHTML;
+    var club = columns[4].innerHTML;
+    var club_ID = columns[4].id;
+    var gender = columns[5].innerHTML;
+    var country = columns[6].innerHTML;
+    var email = columns[7].innerHTML;
+    var phone = columns[8].innerHTML;
+    if (email == 'null'){email = ''};
+    if (phone == 'null'){phone = ''};
     $("#edit-runner").find("input[name='firstname']").val(firstname);
     $("#edit-runner").find("input[name='lastname']").val(lastname);
     $("#edit-runner").find("input[name='vintage']").val(vintage);
+    $("#edit-runner").find("input[name='club']").val(club);
+    $("#edit-runner").find("input[name='club_ID']").val(club_ID);
     $("#edit-runner").find("select[name='gender']").val(gender);
     $("#edit-runner").find("select[name='country']").val(country);
     $("#edit-runner").find("input[name='email']").val(email);
@@ -163,7 +174,8 @@ $(".crud-submit-edit").click(function(e) {
     var lastname = $("#edit-runner").find("input[name='lastname']").val();
     var vintage = $("#edit-runner").find("input[name='vintage']").val();
     var gender = $("#edit-runner").find("select[name='gender']").val();
-    var club = $("#edit-runner").find("input[name='club']").val();
+    var club = $("#create-runner").find("input[name='club']").val();
+    var club_ID = $("#create-runner").find("input[name='club_ID']").val();
     var email = $("#edit-runner").find("input[name='email']").val();
     var phone = $("#edit-runner").find("input[name='phone']").val();
     var country = $("#edit-runner").find("select[name='country']").val();
@@ -172,7 +184,7 @@ $(".crud-submit-edit").click(function(e) {
         dataType: 'json',
         type:'PUT',
         url: form_action,
-        data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, email:email, phone:phone, country:country},
+        data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
     }).done(function(data){
         manageData();
         $(".modal").modal('hide');
@@ -197,6 +209,15 @@ $(document).ready(function(){
         searchclub(query);  
     });
 
+     $('#clubedit').keyup(function(){ 
+        var query = $(this).val();
+        searchclubedit(query);  
+    });
+    $('#clubedit').click(function(){
+        var query = $(this).val();
+        searchclubedit(query);  
+    });
+
     $(document).on('click', 'li', function(){
         var string = $(this).text();
         var club = string.split(" - ",3);
@@ -206,6 +227,16 @@ $(document).ready(function(){
     });
     $(document).on('click', 'div', function(){  
         $('#livesearchclubs').fadeOut();  
+    });
+    $(document).on('click', 'li', function(){
+        var string = $(this).text();
+        var club = string.split(" - ",3);
+        $('#clubedit').val(club[0]);
+        $('#club_ID').val(club[2]);  
+        $('#livesearchclubsedit').fadeOut();  
+    });
+    $(document).on('click', 'div', function(){  
+        $('#livesearchclubsedit').fadeOut();  
     });  
 
     function searchclub(query){
@@ -219,6 +250,22 @@ $(document).ready(function(){
           success:function(data){
            $('#livesearchclubs').fadeIn();  
                     $('#livesearchclubs').html(data);
+          }
+         });
+        }
+    }
+
+    function searchclubedit(query){
+        if(query != '')
+        {
+         var _token = $('input[name="_token"]').val();
+         $.ajax({
+          url:"/clubs/searchclub",
+          method:"POST",
+          data:{query:query, _token:_token},
+          success:function(data){
+           $('#livesearchclubsedit').fadeIn();  
+                    $('#livesearchclubsedit').html(data);
           }
          });
         }
