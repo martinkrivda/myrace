@@ -124,7 +124,12 @@ class RunnersController extends Controller
             'email' => 'email|nullable|max:255',
             'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
             'country' => 'string|exists:country,country_code|max:2',
+            'club' => 'string|nullable|max:70',
+            'club_ID' => 'numeric|exists:club,club_ID|max:10|nullable',
         ]);
+        if ($request['club_ID'] !== '' && $request['club_ID'] !== null) {
+            $request['club'] = null;
+        }
         $edit = Runner::find($runner_ID)->update($request->all());
         return response()->json($edit);
     }

@@ -18,6 +18,8 @@ Route::get('runners', 'RunnersController@runners');
 Route::resource('runners-data', 'RunnersController');
 Route::get('clubs', 'ClubsController@clubs');
 Route::resource('clubs-data', 'ClubsController');
+Route::get('organiser', 'OrganiserController@organiser')->name('organiser.show');
+Route::post('/organiser/{organiser_ID}/update/', 'OrganiserController@update')->name('organiser.update');
 
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
 

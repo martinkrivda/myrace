@@ -33,8 +33,12 @@ function manageRow(data) {
 	$.each( data, function( key, value ) {
 	  	rows = rows + '<tr>';
 	  	rows = rows + '<td>'+value.club_ID+'</td>';
-	  	rows = rows + '<td>'+value.clubname+' '+value.clubname2+'</td>';
-        rows = rows + '<td>'+value.clubabbr+'</td>';
+        if (value.clubname2 !== null){
+            rows = rows + '<td>'+value.clubname+', '+value.clubname2+'</td>';
+        }else{
+            rows = rows + '<td>'+value.clubname+'</td>';
+        }
+        rows = rows + '<td>'+value.clubabbr.toUpperCase()+'</td>';
         rows = rows + '<td>'+value.street+'</td>';
         rows = rows + '<td>'+value.city+'</td>';
         rows = rows + '<td>'+value.postalcode+'</td>';
@@ -143,18 +147,23 @@ $("body").on("click",".edit-club",function() {
     var club_ID = $(this).parent("td").data('id');
     var row = $(this).closest('tr');
     var columns = row.find('td');
-    var clubname = columns[1].innerHTML;
-    var clubname2 = columns[2].innerHTML;
-    var clubabbr = columns[3].innerHTML;
-    var street = columns[4].innerHTML;
-    var city = columns[5].innerHTML;
-    var postalcode = columns[6].innerHTML;
-    var email = columns[7].innerHTML;
-    var phone = columns[8].innerHTML;
-    var taxid = columns[9].innerHTML;
-    var vatid = columns[10].innerHTML;
-    var country = columns[11].innerHTML;
+    var clubname = columns[1].innerHTML.split(",", 2)[0];
+    var clubname2 = columns[1].innerHTML.split(",", 2)[1];
+    var clubabbr = columns[2].innerHTML;
+    var street = columns[3].innerHTML;
+    var city = columns[4].innerHTML;
+    var postalcode = columns[5].innerHTML;
+    var email = columns[10].innerHTML;
+    var phone = columns[11].innerHTML;
+    var taxid = columns[7].innerHTML;
+    var vatid = columns[8].innerHTML;
+    var country = columns[6].innerHTML;
     var web = columns[12].innerHTML;
+    if (web == 'null'){web = ''};
+    if (taxid == 'null'){taxid = ''};
+    if (vatid == 'null'){vatid = ''};
+    if (email == 'null'){email = ''};
+    if (phone == 'null'){phone = ''};
     $("#edit-club").find("input[name='clubname']").val(clubname);
     $("#edit-club").find("input[name='clubname2']").val(clubname2);
     $("#edit-club").find("input[name='clubabbr']").val(clubabbr);
@@ -174,18 +183,19 @@ $("body").on("click",".edit-club",function() {
 $(".crud-submit-edit").click(function(e) {
     if($(this).closest('form')[0].checkValidity()){
     e.preventDefault();
-    var form_action = $("#create-club").find("form").attr("action");
-    var clubname = $("#create-club").find("input[name='clubname']").val();
-    var clubname2 = $("#create-club").find("input[name='clubname2']").val();
-    var clubabbr = $("#create-club").find("input[name='clubabbr']").val();
-    var street = $("#create-club").find("input[name='street']").val();
-    var city = $("#create-club").find("input[name='city']").val();
-    var postalcode = $("#create-club").find("input[name='postalcode']").val();
-    var email = $("#create-club").find("input[name='email']").val();
-    var web = $("#create-club").find("input[name='web']").val();
-    var phone = $("#create-club").find("input[name='phone']").val();
-    var taxid = $("#create-club").find("input[name='taxid']").val();
-    var vatid = $("#create-club").find("input[name='vatid']").val();
+    var form_action = $("#edit-club").find("form").attr("action");
+    var clubname = $("#edit-club").find("input[name='clubname']").val();
+    var clubname2 = $("#edit-club").find("input[name='clubname2']").val();
+    var clubabbr = $("#edit-club").find("input[name='clubabbr']").val();
+    var street = $("#edit-club").find("input[name='street']").val();
+    var city = $("#edit-club").find("input[name='city']").val();
+    var postalcode = $("#edit-club").find("input[name='postalcode']").val();
+    var email = $("#edit-club").find("input[name='email']").val();
+    var web = $("#edit-club").find("input[name='web']").val();
+    var phone = $("#edit-club").find("input[name='phone']").val();
+    var taxid = $("#edit-club").find("input[name='taxid']").val();
+    var vatid = $("#edit-club").find("input[name='vatid']").val();
+    var country = $("#edit-club").find("select[name='country']").val();
     if (clubname != '' && clubabbr !='' && country != null){
         $.ajax({
         dataType: 'json',

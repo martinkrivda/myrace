@@ -120,7 +120,7 @@
                   <label for="webpage" class=" form-control-label">Web</label><input
                     type="url" id="webpage" name="webpage"
                     placeholder="{{ trans('adminlte_lang::message.fillweb') }}"
-                    pattern="^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$"
+                    pattern="/^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$/"
                     class="form-control" maxlength="50" />
                 </div>
               </div>

@@ -86,7 +86,7 @@
                 <div class="form-group">
                   <label for="country" class="form-control-label">{{ trans('adminlte_lang::message.country') }}</label>
                   <select name="country" id="country"
-                    class="form-control">
+                    class="form-control select2">
                     <option disabled selected required>{{ trans('adminlte_lang::message.pleaseselect') }}</option>
                     @foreach($countries as $country)
                       <option value="{{ $country->country_code }}" >{{ $country->name }}</option>

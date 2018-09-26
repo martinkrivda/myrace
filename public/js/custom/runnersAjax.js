@@ -38,8 +38,10 @@ function manageRow(data) {
         rows = rows + '<td>'+value.vintage+'</td>';
         if (value.club_ID !== null){
             rows = rows + '<td id="'+ value.club_ID +'" title="'+ value.clubabbr +'">'+value.clubname+'</td>';
-        } else {
+        } else if (value.club !== null) {
             rows = rows + '<td>'+value.club+'</td>';
+        } else {
+            rows = rows + '<td></td>';
         }
         rows = rows + '<td>'+value.gender+'</td>';
         rows = rows + '<td>'+value.country+'</td>';

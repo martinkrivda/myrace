@@ -55,7 +55,7 @@
 					<li><a href="{{ url('advancedsetting') }}"><i class='fa fa-wrench'></i>{{ trans('adminlte_lang::message.advanced') }}</a></li>
                 </ul>
             </li>
-			<li><a href="{{ url('organizer') }}"><i class='fa fa-briefcase'></i> <span>{{ trans('adminlte_lang::message.organizer') }}</span></a></li>
+			<li><a href="{{ url('organiser') }}"><i class='fa fa-briefcase'></i> <span>{{ trans('adminlte_lang::message.organiser') }}</span></a></li>
 			<li><a href="{{ url('newsletter') }}"><i class='fa fa-bullhorn'></i> <span>{{ trans('adminlte_lang::message.newsletters') }}</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>

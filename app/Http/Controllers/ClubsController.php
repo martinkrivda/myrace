@@ -63,7 +63,7 @@ class ClubsController extends Controller
         $request->validate([
             'clubname' => 'required|string|max:70',
             'clubname2' => 'nullable|string|max:50',
-            'clubabbr' => 'required|string|min:3|max:10',
+            'clubabbr' => 'required|string|min:3|max:10|unique:club',
             'street' => 'string|max:30|nullable',
             'city' => 'string|max:30|nullable',
             'postalcode' => 'regex:/^\d{5}$/|nullable|max:13',
@@ -111,6 +111,20 @@ class ClubsController extends Controller
      */
     public function update(Request $request, $club_ID)
     {
+        $request->validate([
+            'clubname' => 'required|string|max:70',
+            'clubname2' => 'nullable|string|max:50',
+            'clubabbr' => 'required|string|min:3|max:10|unique:club',
+            'street' => 'string|max:30|nullable',
+            'city' => 'string|max:30|nullable',
+            'postalcode' => 'regex:/^\d{5}$/|nullable|max:13',
+            'email' => 'email|nullable|max:100',
+            'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
+            'taxid' => 'regex:/^\d{8}$/|numeric|nullable|max:8',
+            'vatid' => 'regex:/^(CZ|SK)\d{8}$/|nullable|max:10',
+            'country' => 'string|exists:country,country_code|max:2',
+            'web' => 'url|nullable|max:50',
+        ]);
         $edit = Club::find($club_ID)->update($request->all());
         return response()->json($edit);
     }
