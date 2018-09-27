@@ -362,6 +362,12 @@ if (typeof jQuery === 'undefined') {
             }
         };
 
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         /**
          * Send AJAX request to server.
          *

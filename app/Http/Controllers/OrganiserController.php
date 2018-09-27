@@ -10,6 +10,16 @@ use Illuminate\Http\Request;
 class OrganiserController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -23,7 +33,8 @@ class OrganiserController extends Controller
 
     public function index()
     {
-        //
+        $organiser = Organiser::all('organiser_ID', 'orgname');
+        return response()->json($organiser);
     }
 
     /**

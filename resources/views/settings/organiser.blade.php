@@ -13,7 +13,7 @@
 				<div class="box-header">
 					<div class="row">
 						<div class="col-xs-2">
-						  <span><i class="fa fa-university" aria-hidden="true"></i></span>
+						  <span><i class="fa fa-suitcase" aria-hidden="true"></i></span>
 						  <h3 class="box-title">{{ trans('adminlte_lang::message.organiser') }}</h3>
 						</div>
 						<div class="col-xs-2"></div>
@@ -223,7 +223,7 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 @endsection
 
 @section('scripts')

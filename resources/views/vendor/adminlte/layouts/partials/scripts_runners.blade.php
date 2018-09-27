@@ -15,3 +15,5 @@
         <!-- DataTables -->
         <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('js/dataTables.bootstrap.min.js') }}" charset="utf-8"></script>
+        <!-- TableEdit -->
+        <script src="{{ asset('js/jquery.tabledit.js') }}"></script>
