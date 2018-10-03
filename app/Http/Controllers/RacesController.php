@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Country;
+use App\Organiser;
 use App\Race;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use JavaScript;
 
 class RacesController extends Controller
 {
@@ -27,7 +32,11 @@ class RacesController extends Controller
     public function races()
     {
         $countries = Country::all('country_code', 'name');
-        return view('settings.races', compact('countries'));
+        $organisers = Organiser::all('organiser_ID', 'orgname');
+        $races = Race::all('race_ID', 'racename');
+        $user = Auth::user();
+        Javascript::put(['userID' => $user->id]);
+        return view('settings.races', compact('countries', 'organisers', 'races'));
     }
 
     /**
@@ -38,6 +47,7 @@ class RacesController extends Controller
     public function index()
     {
         $races = DB::table('race')
+            ->select('race_ID', 'racename', 'location', 'race.organiser_ID', 'race.web', 'race.email', 'race.phone', 'organiser_abbr', 'orgname')
             ->leftJoin('organiser', 'race.organiser_ID', '=', 'organiser.organiser_ID')
             ->get();
         return response()->json(['data' => $races]);
@@ -61,7 +71,9 @@ class RacesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $create = Race::create($request->all());
+        Log::info('New race was added to DB.', ['racename' => $create->racename, 'location' => $create->location, 'race_ID' => $create->race_ID]);
+        return response()->json($create);
     }
 
     /**
@@ -70,9 +82,10 @@ class RacesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($race_ID)
     {
-        //
+        $show = Race::find($race_ID);
+        return response()->json($show);
     }
 
     /**
@@ -96,9 +109,18 @@ class RacesController extends Controller
     public function update(Request $request)
     {
         if ($request['action'] == 'edit') {
-            $edit = Race::find($request['race_ID'])->update($request->all());
+            try {
+                $edit = Race::find($request['race_ID'])->update($request->all());
+                alert()->success('Success!', 'Race was modified successfully.');
+            } catch (\Exception $e) {
+                alert()->error('Error!', 'Race was modified with errors.');
+                return $e->getMessage();
+            } finally {
+                return response()->json($edit);
+            }
         } elseif ($request['action'] == 'delete') {
-            echo "delete";
+            $delete = Race::find($request['race_ID'])->delete();
+            alert()->success('Success!', 'Race was deleted successfully.');
         } elseif ($request['action'] == 'restore') {
             echo "restore";
         }

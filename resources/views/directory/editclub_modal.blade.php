@@ -124,7 +124,7 @@
                   @endif
                 </div>
               </div>
-              <div class="col-xs-5">
+              <div class="col-xs-7">
                 <div class="form-group">
                   <label for="webpage" class=" form-control-label">Web</label><input
                     type="url" id="webpage" name="webpage"

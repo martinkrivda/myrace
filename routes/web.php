@@ -24,6 +24,7 @@ Route::resource('organiser-data', 'OrganiserController');
 Route::get('races', 'RacesController@races');
 Route::post('races-update', 'RacesController@update');
 Route::resource('races-data', 'RacesController');
+Route::resource('editions-data', 'EditionController');
 
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
 

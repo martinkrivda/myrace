@@ -24,7 +24,7 @@ $(document).ready(function(){
 	        rows = rows + '<td>'+value.phone+'</td>';
 		  	rows = rows + '</tr>';
 		});
-		$("tbody").html(rows);
+		$("#races-table").find("tbody").html(rows);
 	}
 	function race_tableData(){
 		//var	data = '';
@@ -35,7 +35,6 @@ $(document).ready(function(){
         	url: orgurl,
         }).done(function(data){
         	$.each( data, function( key, value ) {
-        		//organisers = new Object();
         		var organiser_ID = value.organiser_ID;
         		var orgname = value.orgname;
         		organisers[organiser_ID] = orgname;	
@@ -74,4 +73,40 @@ $(document).ready(function(){
 			});
 		});
 	}
+	/* Create new Post */
+	$(".crud-race-submit").click(function(e) {
+	    if($(this).closest('form')[0].checkValidity()){
+	    e.preventDefault();
+	    var form_action = $("#create-race").find("form").attr("action");
+	    var racename = $("#create-race").find("input[name='racename']").val();
+	    var location = $("#create-race").find("input[name='location']").val();
+	    var organiser = $("#create-race").find("select[name='organiser']").val();
+	    var web = $("#create-race").find("input[name='web']").val();
+	    var email = $("#create-race").find("input[name='email']").val();
+	    var phone = $("#create-race").find("input[name='phone']").val();
+	    if (racename != '' && location !='' && userID != '' && organiser != null){
+	        $.ajax({
+	            dataType: 'json',
+	            type:'POST',
+	            url: form_action,
+	            data:{racename:racename, location:location, organiser_ID:organiser, web:web, email:email, phone:phone, creator_ID:userID},
+	            error: function(xhr, status, error) {
+	                console.log("error", xhr.responseText);
+	                var err = JSON.parse(xhr.responseText);
+	                swal(err.message,JSON.stringify(err.errors),'error');
+	                //alert(err.message);
+	            }
+	        }).done(function(data){
+	            viewData();
+	            $(".modal").modal('hide');
+	            $('body').removeClass('modal-open');
+	            $('.modal-backdrop').remove();
+	            toastr.success('New race was created.', 'Success', {timeOut: 5000});
+	            $(".formrace").trigger("reset");
+	        });
+	    }  else {
+	        toastr.warning('Select organiser.', 'Organiser field must be chosen!', {timeOut: 5000});
+	    }
+	}
+	});
 });
