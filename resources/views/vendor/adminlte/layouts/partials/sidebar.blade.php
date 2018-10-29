@@ -35,7 +35,26 @@
             <!-- Optionally, you can add icons to the links -->
             <li class="active"><a href="{{ url('home') }}"><i class='fa fa-dashboard'></i> <span>{{ trans('adminlte_lang::message.dashboard') }}</span></a></li>
 			<li class="header">{{ trans('adminlte_lang::message.races') }}</li>
-            <li><a href="#"><i class='fa fa-laptop'></i> <span>25. ročník MCVV</span></a></li>
+
+            @foreach($menu as $nav)
+                <li class="treeview">
+                    <a href="#"><i class='fa fa-rocket'></i> <span>{{$nav->edition_nr}}. {{trans('menu.editionof')}} {{$nav->race_abbr}}</span> <i class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li><a href="{{ URL::to('race/information/' . $nav->edition_ID) }}"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> {{ trans('menu.information') }}</a></li>
+                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/category') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ trans('menu.category') }}</a></li>
+                        <li><a href="{{ URL::to('race/registrations/' . $nav->edition_ID) }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
+                        <li><a href="{{ URL::to('race/payments/' . $nav->edition_ID) }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
+                        <li><a href="{{ URL::to('race/aservices/' . $nav->edition_ID) }}"><i class="fa fa-share-square-o" aria-hidden="true"></i> {{ trans('menu.additionalserv') }}</a></li>
+                        <li><a href="{{ URL::to('race/rfidreader/' . $nav->edition_ID) }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
+                        <li><a href="{{ URL::to('race/startlist/' . $nav->edition_ID) }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
+                        <li><a href="{{ URL::to('race/resultlist/' . $nav->edition_ID) }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>
+                        <li><a href="{{ URL::to('race/speaker/' . $nav->edition_ID) }}"><i class="fa fa-microphone" aria-hidden="true"></i> {{ trans('menu.speaker') }}</a></li>
+                        <li><a href="{{ URL::to('race/statistics/' . $nav->edition_ID) }}"><i class="fa fa-bar-chart-o" aria-hidden="true"></i> {{ trans('menu.statistics') }}</a></li>
+                    </ul>
+                </li>
+            @endforeach
+
+
 			<li class="header">{{ trans('adminlte_lang::message.directory') }}</li>
             <li class="treeview">
                 <a href="#"><i class='fa fa-book'></i> <span>{{ trans('adminlte_lang::message.registrations') }}</span> <i class="fa fa-angle-left pull-right"></i></a>

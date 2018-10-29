@@ -17,8 +17,9 @@ $(document).ready(function(){
 		  	rows = rows + '<tr>';
 		  	rows = rows + '<td>'+value.race_ID+'</td>';
 		  	rows = rows + '<td>'+value.racename+'</td>';
+		  	rows = rows + '<td>'+value.race_abbr+'</td>';  
 		  	rows = rows + '<td>'+value.location+'</td>';
-		  	rows = rows + '<td>'+value.orgname+'</td>';    
+		  	rows = rows + '<td>'+value.orgname+'</td>';     
 	        rows = rows + '<td>'+value.web+'</td>';
 	        rows = rows + '<td>'+value.email+'</td>';
 	        rows = rows + '<td>'+value.phone+'</td>';
@@ -44,7 +45,7 @@ $(document).ready(function(){
 			    eventType: 'dblclick',
 			    columns: {
 			        identifier: [0, 'race_ID'],
-			        editable: [[1, 'racename'], [2, 'location'], [3, 'orgname', JSON.stringify(organisers)], [4, 'web'], [5, 'email'], [6, 'phone']]
+			        editable: [[1, 'racename'], [2, 'race_abbr'], [3, 'location'], [4, 'orgname', JSON.stringify(organisers)], [5, 'web'], [6, 'email'], [7, 'phone']]
 			    },
 			    onDraw: function() {
 			        console.log('onDraw()');
@@ -81,15 +82,16 @@ $(document).ready(function(){
 	    var racename = $("#create-race").find("input[name='racename']").val();
 	    var location = $("#create-race").find("input[name='location']").val();
 	    var organiser = $("#create-race").find("select[name='organiser']").val();
+	    var race_abbr = $("#create-race").find("input[name='race_abbr']").val();
 	    var web = $("#create-race").find("input[name='web']").val();
 	    var email = $("#create-race").find("input[name='email']").val();
 	    var phone = $("#create-race").find("input[name='phone']").val();
-	    if (racename != '' && location !='' && userID != '' && organiser != null){
+	    if (racename != '' && location !='' && race_abbr !='' && userID != '' && organiser != null){
 	        $.ajax({
 	            dataType: 'json',
 	            type:'POST',
 	            url: form_action,
-	            data:{racename:racename, location:location, organiser_ID:organiser, web:web, email:email, phone:phone, creator_ID:userID},
+	            data:{racename:racename, location:location, organiser_ID:organiser, race_abbr:race_abbr, web:web, email:email, phone:phone, creator_ID:userID},
 	            error: function(xhr, status, error) {
 	                console.log("error", xhr.responseText);
 	                var err = JSON.parse(xhr.responseText);

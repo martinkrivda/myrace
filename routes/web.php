@@ -25,8 +25,16 @@ Route::get('races', 'RacesController@races');
 Route::post('races-update', 'RacesController@update');
 Route::resource('races-data', 'RacesController');
 Route::resource('editions-data', 'EditionController');
+Route::get('users', 'UsersController@users');
+Route::resource('users-data', 'UsersController');
 
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
+
+Route::get('race/information/{edition_ID}', 'InformationController@information');
+//Route::pattern('edition_ID', '{0-9}+');
+Route::resource('race/{edition_ID}/category', 'CategoryController', ['parameters' => [
+    'edition_ID' => 'edition_ID',
+]]);
 
 Route::group(['middleware' => 'auth'], function () {
     //    Route::get('/link1', function ()    {

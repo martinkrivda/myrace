@@ -47,7 +47,7 @@ class RacesController extends Controller
     public function index()
     {
         $races = DB::table('race')
-            ->select('race_ID', 'racename', 'location', 'race.organiser_ID', 'race.web', 'race.email', 'race.phone', 'organiser_abbr', 'orgname')
+            ->select('race_ID', 'racename', 'race_abbr', 'location', 'race.organiser_ID', 'race.web', 'race.email', 'race.phone', 'organiser_abbr', 'orgname')
             ->leftJoin('organiser', 'race.organiser_ID', '=', 'organiser.organiser_ID')
             ->get();
         return response()->json(['data' => $races]);

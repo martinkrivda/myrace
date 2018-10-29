@@ -16,6 +16,7 @@ class CreateRaceTable extends Migration
         Schema::create('race', function (Blueprint $table) {
             $table->increments('race_ID');
             $table->string('racename', 70)->unique();
+            $table->char('race_abbr', 10)->unique();
             $table->string('location', 50);
             $table->integer('organiser_ID')->unsigned();
             $table->string('web', 50)->nullable();

@@ -41,7 +41,16 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-xs-7">
+                    <div class="col-xs-3">
+                        <div class="form-group">
+                            <label for="race_abbr" class=" form-control-label">{{ trans('title.abbreviation') }}</label><input
+                                type="text" id="race_abbr" name="race_abbr"
+                                pattern="[a-zA-Z \.\-0-9]{3,10}"
+                                placeholder="{{ trans('title.fillabbreviation') }}"
+                                class="form-control" minlength="3" maxlength="10" required/>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
                         <div class="form-group">
                             <label for="web" class=" form-control-label">{{ trans('title.web') }}</label><input
                                 type="url" id="web" name="web"

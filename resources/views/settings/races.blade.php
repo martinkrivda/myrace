@@ -36,6 +36,7 @@
                         <tr>
                           <th>ID</th>
                           <th>{{ trans('title.name') }}</th>
+                          <th>{{ trans('title.abbreviation') }}</th>
                           <th>{{ trans('title.location') }}</th>
                           <th>{{ trans('title.organiser') }}</th>
                           <th>{{ trans('title.web') }}</th>
