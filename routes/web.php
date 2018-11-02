@@ -12,8 +12,9 @@
  */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('welcome');
 });
+Route::get('info', 'HomeController@index');
 Route::get('runners', 'RunnersController@runners');
 Route::resource('runners-data', 'RunnersController');
 Route::get('clubs', 'ClubsController@clubs');
@@ -33,14 +34,14 @@ Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searc
 Route::get('race/information/{edition_ID}', 'InformationController@information');
 //Route::pattern('edition_ID', '{0-9}+');
 Route::resource('race/{edition_ID}/category', 'CategoryController', ['parameters' => [
-    'edition_ID' => 'edition_ID',
+	'edition_ID' => 'edition_ID',
 ]]);
 
 Route::group(['middleware' => 'auth'], function () {
-    //    Route::get('/link1', function ()    {
-    //        // Uses Auth Middleware
-    //    });
+	//    Route::get('/link1', function ()    {
+	//        // Uses Auth Middleware
+	//    });
 
-    //Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
-    #adminlte_routes
+	//Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
+	#adminlte_routes
 });

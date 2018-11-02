@@ -26,6 +26,7 @@ class CreateRunnerTable extends Migration
             $table->timestamps();
             $table->foreign('country')->references('country_code')->on('country')->onDelete('restrict');
         });
+        DB::statement("ALTER TABLE runner comment 'Table records registered runners.'");
     }
 
     /**

@@ -16,7 +16,7 @@
    </transition>
   </div>
     <div class="form-group has-feedback " :class="{ 'has-error': form.errors.has('lastname') }">
-   <input type="text" class="form-control" :placeholder="trans('adminlte_lang_message.lastname')" name="lastname" value="" v-model="form.lastname" autofocus/>
+   <input type="text" class="form-control" :placeholder="trans('title.lastname')" name="lastname" value="" v-model="form.lastname" autofocus/>
    <span class="glyphicon glyphicon-user form-control-feedback"></span>
    <transition name="fade">
     <span class="help-block" v-if="form.errors.has('lastname')" v-text="form.errors.get('lastname')"></span>

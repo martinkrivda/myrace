@@ -29,12 +29,12 @@
     "icheck": "^1.0.2",
     "ionicons": "^3.0.0",
     "jquery": "^3.2",
-    "laravel-mix": "^2.0",
-    "lodash": "^4.17.4",
+    "laravel-mix": "^2.1.14",
+    "lodash": "^4.17.11",
     "npm-install-webpack-plugin": "^4.0.5",
-    "popper.js": "^1.12",
-    "vue": "^2.5.7",
-    "webpack": "^4.16.2",
+    "popper.js": "^1.14.4",
+    "vue": "^2.5.17",
+    "webpack": "^4.23.1",
     "webpack-command": "^0.4.1"
   },
   "dependencies": {

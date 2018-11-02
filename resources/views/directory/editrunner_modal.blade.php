@@ -20,7 +20,7 @@
             <div class="row">
               <div class="col-xs-6">
                 <div class="form-group">
-                  <label for="firstname" class=" form-control-label">{{ trans('adminlte_lang::message.firstname') }}</label><input type="text" id="firstname"
+                  <label for="firstname" class=" form-control-label">{{ trans('title.firstname') }}</label><input type="text" id="firstname"
                     name="firstname" placeholder="{{ trans('adminlte_lang::message.fillfirstname') }}"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ]{1,50}"
                     class="form-control" maxlength="50" required />
@@ -28,7 +28,7 @@
               </div>
               <div class="col-xs-6">
                 <div class="form-group">
-                  <label for="lastname" class="form-control-label">{{ trans('adminlte_lang::message.lastname') }}</label><input
+                  <label for="lastname" class="form-control-label">{{ trans('title.lastname') }}</label><input
                     type="text" id="lastname" name="lastname"
                     placeholder="{{ trans('adminlte_lang::message.filllastname') }}"
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ]{1,255}"
@@ -64,7 +64,7 @@
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,70}"
                     placeholder="{{ trans('adminlte_lang::message.fillclub') }}"
                     class="form-control" maxlength="70" autocomplete="off"/>
-                    <input type="hidden" id="club_ID" name="club_ID" patter="\d{1,10}"
+                    <input type="hidden" id="clubedit_ID" name="club_ID" patter="\d{1,10}"
                     class="form-control" maxlength="10" autocomplete="off"/>
                   <!--<datalist id="clubs">
                   </datalist>-->

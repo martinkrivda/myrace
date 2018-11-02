@@ -55,8 +55,8 @@
 						<thead>
 							<tr>
 							  <th>ID</th>
-							  <th>{{ trans('adminlte_lang::message.firstname') }}</th>
-							  <th>{{ trans('adminlte_lang::message.lastname') }}</th>
+							  <th>{{ trans('title.firstname') }}</th>
+							  <th>{{ trans('title.lastname') }}</th>
 							  <th>{{ trans('adminlte_lang::message.vintage') }}</th>
 							  <th>{{ trans('adminlte_lang::message.club') }}</th>
 							  <th>{{ trans('adminlte_lang::message.gender') }}</th>
@@ -71,8 +71,8 @@
 						<tfoot>
 							<tr>
 							 <th>ID</th>
-							 <th>{{ trans('adminlte_lang::message.firstname') }}</th>
-							 <th>{{ trans('adminlte_lang::message.lastname') }}</th>
+							 <th>{{ trans('title.firstname') }}</th>
+							 <th>{{ trans('title.lastname') }}</th>
 							 <th>{{ trans('adminlte_lang::message.vintage') }}</th>
 							 <th>{{ trans('adminlte_lang::message.club') }}</th>
 							 <th>{{ trans('adminlte_lang::message.gender') }}</th>

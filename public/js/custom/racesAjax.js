@@ -21,8 +21,16 @@ $(document).ready(function(){
 		  	rows = rows + '<td>'+value.location+'</td>';
 		  	rows = rows + '<td>'+value.orgname+'</td>';     
 	        rows = rows + '<td>'+value.web+'</td>';
-	        rows = rows + '<td>'+value.email+'</td>';
-	        rows = rows + '<td>'+value.phone+'</td>';
+	        if(value.email != null){
+				rows = rows + '<td>'+value.email+'</td>';
+	        } else {
+	        	rows = rows + '<td></td>';
+	        }
+	        if(value.phone != null){
+				rows = rows + '<td>'+value.phone+'</td>';
+	        } else {
+	        	rows = rows + '<td></td>';
+	        }
 		  	rows = rows + '</tr>';
 		});
 		$("#races-table").find("tbody").html(rows);
@@ -55,6 +63,7 @@ $(document).ready(function(){
 			        console.log(data);
 			        console.log(textStatus);
 			        console.log(jqXHR);
+			        toastr.success('Race was updated.', 'Success', {timeOut: 5000});
 			        viewData()
 			    },
 			    onFail: function(jqXHR, textStatus, errorThrown) {
@@ -62,6 +71,7 @@ $(document).ready(function(){
 			        console.log(jqXHR);
 			        console.log(textStatus);
 			        console.log(errorThrown);
+			        swal('Error', data,'error');
 			    },
 			    onAlways: function() {
 			        console.log('onAlways()');

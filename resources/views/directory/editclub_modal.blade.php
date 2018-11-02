@@ -126,8 +126,8 @@
               </div>
               <div class="col-xs-7">
                 <div class="form-group">
-                  <label for="webpage" class=" form-control-label">Web</label><input
-                    type="url" id="webpage" name="webpage"
+                  <label for="web" class=" form-control-label">Web</label><input
+                    type="url" id="web" name="web"
                     placeholder="{{ trans('adminlte_lang::message.fillweb') }}"
                     pattern="^(http\:\/\/|https\:\/\/)?([a-z0-9][a-z0-9\-]*\.)+[a-z0-9][a-z0-9\-]*$"
                     class="form-control" maxlength="50" />

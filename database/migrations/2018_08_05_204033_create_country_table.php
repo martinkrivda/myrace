@@ -21,6 +21,7 @@ class CreateCountryTable extends Migration
 			$table->primary('country_code');
 			$table->unique('country_ID');
         });
+        DB::statement("ALTER TABLE country comment 'Table records countries of the world.'");
     }
 
     /**

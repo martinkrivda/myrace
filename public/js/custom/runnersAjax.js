@@ -176,8 +176,8 @@ $(".crud-submit-edit").click(function(e) {
     var lastname = $("#edit-runner").find("input[name='lastname']").val();
     var vintage = $("#edit-runner").find("input[name='vintage']").val();
     var gender = $("#edit-runner").find("select[name='gender']").val();
-    var club = $("#create-runner").find("input[name='club']").val();
-    var club_ID = $("#create-runner").find("input[name='club_ID']").val();
+    var club = $("#edit-runner").find("input[name='club']").val();
+    var club_ID = $("#edit-runner").find("input[name='club_ID']").val();
     var email = $("#edit-runner").find("input[name='email']").val();
     var phone = $("#edit-runner").find("input[name='phone']").val();
     var country = $("#edit-runner").find("select[name='country']").val();
@@ -217,6 +217,7 @@ $(document).ready(function(){
     });
     $('#clubedit').click(function(){
         var query = $(this).val();
+        $('#clubedit_ID').val('');  
         searchclubedit(query);  
     });
 
@@ -234,7 +235,7 @@ $(document).ready(function(){
         var string = $(this).text();
         var club = string.split(" - ",3);
         $('#clubedit').val(club[0]);
-        $('#club_ID').val(club[2]);  
+        $('#clubedit_ID').val(club[2]);  
         $('#livesearchclubsedit').fadeOut();  
     });
     $(document).on('click', 'div', function(){  

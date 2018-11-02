@@ -91,8 +91,12 @@ $(".crud-submit").click(function(e) {
             $(".modal").modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
-            toastr.success('New club was created.', 'Success', {timeOut: 5000});
-            $(".formclub").trigger("reset");
+            if (typeof data === 'object'){
+                toastr.success('New club was created.', 'Success', {timeOut: 5000});
+                $(".formclub").trigger("reset");
+            } else {
+                swal('Error', data,'error');
+            }
         });
     }  else {
         toastr.warning('Select country.', 'Country field must be chosen!', {timeOut: 5000});
@@ -158,7 +162,7 @@ $("body").on("click",".edit-club",function() {
     var taxid = columns[7].innerHTML;
     var vatid = columns[8].innerHTML;
     var country = columns[6].innerHTML;
-    var web = columns[12].innerHTML;
+    var web = columns[9].innerHTML;
     if (web == 'null'){web = ''};
     if (taxid == 'null'){taxid = ''};
     if (vatid == 'null'){vatid = ''};
@@ -207,7 +211,12 @@ $(".crud-submit-edit").click(function(e) {
         $(".modal").modal('hide');
         $('body').removeClass('modal-open');
         $('.modal-backdrop').remove();
-        toastr.success('Club updated successfully.', 'Success', {timeOut: 5000});
+         if (data == true){
+                toastr.success('Club updated successfully.', 'Success', {timeOut: 5000});
+                $(".formclub").trigger("reset");
+            } else {
+                swal('Error', data,'error');
+            }
     });
     }  else {
         toastr.warning('Select country.', 'Country field must be chosen!', {timeOut: 5000});

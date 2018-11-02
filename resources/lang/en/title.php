@@ -111,4 +111,6 @@ return [
     'fillyearofbirth' => 'Year of birth',
     'addcategory' => 'Create new category',
     'reset' => 'Reset',
+    'lastname' => 'Last name',
+    'firstname' => 'First name',
 ];

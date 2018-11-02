@@ -78,8 +78,12 @@ $(".crud-edition-submit").click(function(e) {
             $(".modal").modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
-            toastr.success('New race edition was created.', 'Success', {timeOut: 5000});
-            $(".formedition").trigger("reset");
+            if (typeof data === 'object'){
+                toastr.success('New race edition was created.', 'Success', {timeOut: 5000});
+                $(".formedition").trigger("reset");
+            } else {
+                swal('Error', data,'error');
+            }
         });
     }  else {
         toastr.warning('Select race.', 'Race field must be chosen!', {timeOut: 5000});
