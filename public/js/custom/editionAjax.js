@@ -81,6 +81,7 @@ $(".crud-edition-submit").click(function(e) {
             if (typeof data === 'object'){
                 toastr.success('New race edition was created.', 'Success', {timeOut: 5000});
                 $(".formedition").trigger("reset");
+                location.reload();
             } else {
                 swal('Error', data,'error');
             }
