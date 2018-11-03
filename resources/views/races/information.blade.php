@@ -169,7 +169,36 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              The body of the box
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{{ trans('title.name') }}</th>
+                    <th>{{ trans('title.length') }}</th>
+                    <th>{{ trans('title.climb') }}</th>
+                    <th>{{ trans('title.entryfee') }}</th>
+                    <th>{{ trans('title.currency') }}</th>
+                    <th>{{ trans('title.birthfrom') }}</th>
+                    <th>{{ trans('title.birthto') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @forelse ($categories as $category)
+                  <tr>
+                    <td>{{ $category->categoryname }}</td>
+                    <td>{{ $category->length }} m</td>
+                    <td>{{ $category->climb }} m</td>
+                    <td>{{ $category->entryfee }}</td>
+                    <td>{{ $category->currency }}</td>
+                    <td>{{ $category->birthfrom }}</td>
+                    <td>{{ $category->birthto }}</td>
+                  </tr>
+                  @empty
+                  <tr>
+                      <td colspan="7"><center>No Category</center></td>
+                  </tr>
+                  @endforelse
+                </tbody>
+              </table>
             </div>
             <!-- /.box-body -->
           </div>

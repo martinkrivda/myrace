@@ -49,7 +49,7 @@ function manageRow(data) {
         rows = rows + '<td>'+value.email+'</td>';
         rows = rows + '<td>'+value.phone+'</td>';
 	  	rows = rows + '<td data-id="'+value.club_ID+'">';
-        rows = rows + '<button data-toggle="modal" data-target="#edit-club" class="btn btn-primary edit-club"><i class="fa fa-pencil"></i></button> ';
+        rows = rows + '<button data-toggle="modal" data-target="#edit-club" class="btn btn-small btn-info edit-club"><i class="fa fa-pencil"></i></button> ';
         rows = rows + '<button class="btn btn-danger remove-club"><i class="fa fa-trash-o"></i></button>';
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';

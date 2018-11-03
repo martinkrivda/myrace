@@ -31,7 +31,7 @@ function manageEditionRow(data) {
         rows = rows + '<td>'+value.location+'</td>';
         rows = rows + '<td>'+value.web+'</td>';
 	  	rows = rows + '<td data-id="'+value.edition_ID+'">';
-        rows = rows + '<button data-toggle="modal" data-target="#edit-edition" class="btn btn-primary edit-edition"><i class="fa fa-pencil"></i></button> ';
+        rows = rows + '<button data-toggle="modal" data-target="#edit-edition" class="btn btn-small btn-info edit-edition"><i class="fa fa-pencil"></i></button> ';
         rows = rows + '<button class="btn btn-danger remove-edition"><i class="fa fa-trash-o"></i></button>';
         rows = rows + '</td>';
 	  	rows = rows + '</tr>';

@@ -75,7 +75,6 @@
                   <th>{{ trans('title.name') }}</th>
                   <th>{{ trans('title.gender') }}</th>
                   <th>{{ trans('title.length') }}</th>
-                  <th>{{ trans('title.length') }}</th>
                   <th>{{ trans('title.climb') }}</th>
                   <th>{{ trans('title.entryfee') }}</th>
                   <th>{{ trans('title.currency') }}</th>
@@ -90,22 +89,45 @@
             <tbody>
                 @forelse ($categories as $category)
                     <tr>
-                        <td>{{ $category->category_ID }}<td>
-                        <td>{{ $category->categoryname }}<td>
-                        <!-- show, edit, and delete buttons -->
+                        <td>{{ $category->category_ID }}</td>
+                        <td>{{ $category->categoryname }}</td>
+                        <td>{{ $category->gender }}</td>
+                        <td>{{ $category->length }}</td>
+                        <td>{{ $category->climb }}</td>
+                        <td>{{ $category->entryfee }}</td>
+                        <td>{{ $category->currency }}</td>
+                        <td>{{ $category->starttime }}</td>
+                        <td>{{ $category->sinterval }}</td>
+                        <td>{{ $category->timelimit }}</td>
                         <td>
+                          @if ($category->checkage == 1)
+                              {{Form::checkbox('checkage', '$category->checkage', true, array('style' => 'margin-left: 15%;', 'disabled' => 'disabled'))}}
+                          @else
+                              {{Form::checkbox('checkage', '$category->checkage', false, array('style' => 'margin-left: 15%;', 'disabled' => 'disabled'))}}
+                          @endif
+                        </td>
+                        <td>{{ $category->birthfrom }}</td>
+                        <td>{{ $category->birthto }}</td>
+                        <!-- show, edit, and delete buttons -->
+                        <td data-id="{{$category->category_ID}}">
                             <!-- delete the category (uses the destroy method DESTROY /race/category/{edition_ID}/{id} -->
                             <!-- we will add this later since its a little more complicated than the other two buttons -->
 
                             <!-- show the nerd (uses the show method found at GET /nerds/{id} -->
-                            <a class="btn btn-small btn-success" href="{{ URL::to('race/category/'.$edition_ID.'/'. $category->category_ID) }}">Show</a>
+                            <a class="btn btn-sm btn-success pull-left" href="{{ URL::to('race/'.$edition_ID.'/category/'.$category->category_ID) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
                             <!-- edit this nerd (uses the edit method found at GET /nerds/{id}/edit -->
-                            <a class="btn btn-small btn-info" href="{{ URL::to('race/category/'.$edition_ID.'/' . $category->category_ID . '/edit') }}">Edit</a>
+                            <a class="btn btn-sm btn-info pull-left" style="margin-left: 3px;" href="{{ URL::to('race/'.$edition_ID.'/category/'.$category->category_ID.'/edit') }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            {{ Form::open(array('url' => URL::to('race/'.$edition_ID.'/category/'.$category->category_ID), 'id' => 'deleteForm', 'method' => 'POST', 'onsubmit' => 'return confirm("Do you really want to delete the category?"");', 'class' => 'pull-left', 'style' => 'margin-left: 3px;')) }}
+                            {{ Form::hidden('_method', 'DELETE') }}
+                            {{ Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>', array('class' => 'btn btn-sm btn-danger remove-category', 'type' => 'submit'))}}
+                            {{ Form::close() }}
 
             </td>
                     </tr>
                 @empty
-                    <td colspan="13"><center>No Category</center><td>
+                <tr>
+                    <td colspan="13"><center>No Category</center></td>
+                </tr>
                 @endforelse
                 </tbody>
               </table>
@@ -117,5 +139,10 @@
     <!-- /.col -->
 </div>
 <!-- /.row -->
+@endsection
+@section('scripts')
+@parent
+<script type="text/javascript">
 
+</script>
 @endsection

@@ -1,10 +1,10 @@
 @extends('adminlte::page')
 
 @section('htmlheader_title')
-    {{ trans('title.createcategory') }}
+    {{ trans('title.editcategory') }}
 @endsection
 @section('contentheader_title')
-    {{ trans('title.createcategory') }}
+    {{ trans('title.editcategory') }}
 @endsection
 
 
@@ -21,7 +21,7 @@
         <div class="box-header with-border">
           <i aria-hidden="true" class="fa fa-newspaper-o"></i>
 
-          <h3 class="box-title">{{ trans('title.createcategory') }}</h3>
+          <h3 class="box-title">{{ trans('title.editcategory') }} - {{$category->categoryname}}</h3>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -36,11 +36,11 @@
 </div>
 @endif
 
-{{ Form::open(array('url' => 'race/'.$edition_ID.'/category')) }}
+{{ Form::open(array('url' => 'race/'.$edition_ID.'/category/'.$category->category_ID, 'method' => 'PUT')) }}
 
     <div class="form-group">
         {{ Form::label('categoryname', trans('title.name')) }}
-        {{ Form::text('categoryname', null,
+        {{ Form::text('categoryname', $category->categoryname,
       array(
         'class'=>'form-control',
         'placeholder'=>trans('title.fillname'),
@@ -52,7 +52,7 @@
     </div>
     <div class="form-group">
         {{ Form::label('gender', trans('title.gender')) }}
-        {{Form::select('gender', array('male' => trans('title.male'), 'female' => trans('title.female')), null, array(
+        {{Form::select('gender', array('male' => trans('title.male'), 'female' => trans('title.female')), $category->gender, array(
         'required' => 'required',
         'id' => 'gender',
         'class'=>'form-control',
@@ -62,7 +62,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('length', trans('title.length')) }}
-            {{ Form::number('length', null,
+            {{ Form::number('length', $category->length,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.filllength'),
@@ -76,7 +76,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('climb', trans('title.climb')) }}
-            {{ Form::number('climb', null,
+            {{ Form::number('climb', $category->climb,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.fillclimb'),
@@ -92,7 +92,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('entryfee', trans('title.entryfee')) }}
-            {{ Form::number('entryfee', null,
+            {{ Form::number('entryfee', $category->entryfee,
                 array(
                     'class'=>'form-control',
                     'pattern' => '^\d*(\.\d{0,2})?$',
@@ -106,7 +106,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('currency', trans('title.currency')) }}
-            {{Form::select('currency', array(), null, array(
+            {{Form::select('currency', array(), $category->currency, array(
             'id' => 'currency',
             'class'=>'form-control',
             ))}}
@@ -117,13 +117,14 @@
         <label for="starttime" class=" form-control-label">{{ trans('title.starttime') }}</label><input type="datetime-local"
             id="starttime" name="starttime"
             placeholder="{{ trans('title.fillstarttime') }}"
+            value="{{str_replace(' ','T',$category->starttime)}}"
             class="form-control"/>
     </div>
     <div class="row">
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('sinterval', trans('title.sinterval')) }}
-            {{ Form::number('sinterval', null,
+            {{ Form::number('sinterval', $category->sinterval,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.fillsinterval'),
@@ -137,7 +138,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('timelimit', trans('title.timelimit')) }}
-            {{ Form::number('timelimit', null,
+            {{ Form::number('timelimit', $category->timelimit,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.filltimelimit'),
@@ -153,18 +154,17 @@
         <div class="col-xs-2">
             <div class="form-group">
             {{ Form::label('checkage', trans('title.checkage')) }}
-            {{ Form::checkbox('checkage', '1', false,
-                array(
-                    'title' => 'Check runner\'s age.',
-                    'id' => 'checkage',
-
-                ))}}
+            @if ($category->checkage == 1)
+                              {{Form::checkbox('checkage', '$category->checkage', true, array('title' => 'Check runner\'s age.', 'id' => 'checkage'))}}
+                          @else
+                              {{Form::checkbox('checkage', '$category->checkage', false, array('title' => 'Check runner\'s age.', 'id' => 'checkage'))}}
+                          @endif
             </div>
         </div>
         <div class="col-xs-5">
             <div class="form-group">
             {{ Form::label('birthfrom', trans('title.birthfrom')) }}
-            {{ Form::number('birthfrom', null,
+            {{ Form::number('birthfrom', $category->birthfrom,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.fillyearofbirth'),
@@ -178,7 +178,7 @@
         <div class="col-xs-5">
             <div class="form-group">
             {{ Form::label('birthto', trans('title.birthto')) }}
-            {{ Form::number('birthto', null,
+            {{ Form::number('birthto', $category->birthto,
                 array(
                     'class'=>'form-control',
                     'placeholder'=>trans('title.fillyearofbirth'),
@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    {{ Form::submit(trans('title.addcategory'), array('class' => 'btn btn-primary')) }}
+    {{ Form::submit(trans('title.editcategory'), array('class' => 'btn btn-primary')) }}
     {{ Form::reset(trans('title.reset'), array('class' => 'btn')) }}
 
     {{ Form::close() }}

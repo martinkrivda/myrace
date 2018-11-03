@@ -43,7 +43,7 @@ function manageRow(data) {
         }
         rows = rows + '<td>'+value.lastlogin+'</td>';
         rows = rows + '<td data-id="'+value.id+'">';
-        rows = rows + '<button data-toggle="modal" data-target="#edit-user" class="btn btn-primary edit-user"><i class="fa fa-pencil"></i></button> ';
+        rows = rows + '<button data-toggle="modal" data-target="#edit-user" class="btn btn-small btn-info edit-user"><i class="fa fa-pencil"></i></button> ';
         rows = rows + '<button class="btn btn-danger remove-user"><i class="fa fa-trash-o"></i></button>';
         rows = rows + '</td>';
         rows = rows + '</tr>';
