@@ -152,7 +152,7 @@ return [
 		RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 		Brian2694\Toastr\ToastrServiceProvider::class,
 		Collective\Html\HtmlServiceProvider::class,
-		Acacha\LaravelSocial\Providers\LaravelSocialServiceProvider::class
+		Laravel\Socialite\SocialiteServiceProvider::class,
 
 		/*
 			         * Package Service Providers...
@@ -167,7 +167,6 @@ return [
 		App\Providers\EventServiceProvider::class,
 		App\Providers\RouteServiceProvider::class,
 		App\Providers\ComposerServiceProvider::class,
-
 
 	],
 
@@ -223,6 +222,7 @@ return [
 		'Toastr' => Brian2694\Toastr\Facades\Toastr::class,
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
+		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
 	],
 

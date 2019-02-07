@@ -50,7 +50,7 @@ Route::get('race/{edition_ID}/history', 'HistoryController@history', ['parameter
 //Route::post('/tags/export', 'TagController');
 
 Route::get('/auth/google', 'Auth\LoginController@redirectToProvider');
-Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('/auth/google/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::group(['middleware' => 'auth'], function () {
 	//    Route::get('/link1', function ()    {

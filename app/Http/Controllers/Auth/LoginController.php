@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Socialite;
 
 class LoginController extends Controller {
 	/*
@@ -102,7 +104,7 @@ class LoginController extends Controller {
 			return redirect('/login');
 		}
 		// check if they're an existing user
-		$existingUser = User::where('email', $user->email)->first();
+		$existingUser = User::where('google_ID', $user->id)->first();
 		if ($existingUser) {
 			// log them in
 			auth()->login($existingUser, true);

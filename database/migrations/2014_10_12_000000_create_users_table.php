@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration {
 			$table->string('remember_token', 100)->nullable();
 			$table->string('hash', 32);
 			$table->binary('avatar')->nullable();
+			$table->char('google_ID', 21)->nullable()->unique();
 			$table->boolean('active')->default(0);
 			$table->dateTime('lastlogin');
 			$table->timestamps();
