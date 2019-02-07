@@ -40,7 +40,7 @@ class RunnersController extends Controller {
 		//$runners = Runner::all();
 		try {
 			$runners = DB::table('runner')
-				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'vintage', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
+				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
 				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
 				->get();
 		} catch (\Exception $e) {
@@ -69,7 +69,7 @@ class RunnersController extends Controller {
 			$this->validate($request, array(
 				'firstname' => 'required|string|max:50',
 				'lastname' => 'required|string|max:255',
-				'vintage' => 'required|numeric|min:1900',
+				'yearofbirth' => 'required|numeric|min:1900',
 				'gender' => ['required', 'regex:/^(male|female)$/', 'max:255'],
 				'email' => 'email|nullable|max:255',
 				'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
@@ -126,7 +126,7 @@ class RunnersController extends Controller {
 			$this->validate($request, array(
 				'firstname' => 'required|string|max:50',
 				'lastname' => 'required|string|max:255',
-				'vintage' => 'required|numeric|min:1900',
+				'yearofbirth' => 'required|numeric|min:1900',
 				'gender' => ['required', 'regex:/^(male|female)$/', 'max:255'],
 				'email' => 'email|nullable|max:255',
 				'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
@@ -165,5 +165,48 @@ class RunnersController extends Controller {
 			Log::error('Runner wasn`t deleted from DB.', ['runner_ID' => $runner_ID]);
 		}
 		return response()->json(['message' => 'Runner deleted successfully', 'status' => 'success', 'done']);
+	}
+
+	public function searchrunner(Request $request) {
+		if ($request->get('query')) {
+			$query = $request->get('query');
+			$data = DB::table('runner')
+				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
+				->where('runner.firstname', 'LIKE', "%{$query}%")
+				->orWhere('runner.lastname', 'LIKE', "%{$query}%")
+				->orWhere('runner.yearofbirth', 'LIKE', "%{$query}%")
+				->orWhere('runner.runner_ID', 'LIKE', "%{$query}%")
+				->orWhere('runner.yearofbirth', 'LIKE', "%{$query}%")
+				->orWhere('club.clubname', 'LIKE', "%{$query}%")
+				->orWhere('club.clubabbr', 'LIKE', "%{$query}%")
+				->get();
+			$output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+			foreach ($data as $row) {
+				$output .= '
+       <li><a href="#">' . $row->lastname . ' ' . $row->firstname . ' - ' . $row->clubname . ' - ' . $row->yearofbirth . ' (' . $row->runner_ID . ')</a></li>
+       ';
+			}
+			$output .= '</ul>';
+			echo $output;
+		}
+	}
+
+	/** Return runner by ID .
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getRunnerByID(Request $request) {
+		try {
+			$runner_ID = $request->get('runner_ID');
+			$runnerList = DB::table('runner')
+				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
+				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
+				->where('runner_ID', '=', $runner_ID)
+				->get();
+			return response()->json(['data' => $runnerList]);
+		} catch (\Exception $e) {
+			alert()->error('Error!', $e->getMessage());
+			return $e->getMessage();
+		}
 	}
 }

@@ -46,7 +46,7 @@
         'placeholder'=>trans('title.fillname'),
         'id' => 'categoryname',
         'maxlength' => '30',
-        'pattern' => '[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,30}',
+        'pattern' => '[a-zA-Z0-9 \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍĚÉÚŮ\.]{1,30}',
         'required' => 'required',
       ))}}
     </div>
@@ -135,7 +135,7 @@
                 ))}}
             </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-3">
             <div class="form-group">
             {{ Form::label('timelimit', trans('title.timelimit')) }}
             {{ Form::number('timelimit', $category->timelimit,
@@ -149,16 +149,31 @@
                 ))}}
             </div>
         </div>
+        <div class="col-xs-3">
+            <div class="form-group">
+            {{ Form::label('capacity', trans('title.capacity')) }}
+            {{ Form::number('capacity', $category->capacity,
+                array(
+                    'class'=>'form-control',
+                    'placeholder'=>trans('title.fillcapacity'),
+                    'id' => 'capacity',
+                    'min' => 0,
+                    'max' => 2147483647,
+                    'step'=>'1',
+                ))}}
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-2">
-            <div class="form-group">
+           <div class="form-group">
             {{ Form::label('checkage', trans('title.checkage')) }}
-            @if ($category->checkage == 1)
-                              {{Form::checkbox('checkage', '$category->checkage', true, array('title' => 'Check runner\'s age.', 'id' => 'checkage'))}}
-                          @else
-                              {{Form::checkbox('checkage', '$category->checkage', false, array('title' => 'Check runner\'s age.', 'id' => 'checkage'))}}
-                          @endif
+            {{ Form::checkbox('checkage', '1', false,
+                array(
+                    'title' => 'Check runner\'s age.',
+                    'id' => 'checkage',
+
+                ))}}
             </div>
         </div>
         <div class="col-xs-5">

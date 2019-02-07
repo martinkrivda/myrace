@@ -30,10 +30,10 @@
             <div class="row">
               <div class="col-xs-3">
                 <div class="form-group">
-                  <label for="vintage" class=" form-control-label">{{ trans('adminlte_lang::message.vintage') }}</label><input
-                    type="number" id="vintage" name="vintage" min="1900"
+                  <label for="yearofbirth" class=" form-control-label">{{ trans('adminlte_lang::message.yearofbirth') }}</label><input
+                    type="number" id="yearofbirth" name="yearofbirth" min="1900"
                     max="<?php echo date("Y"); ?>" step="1"
-                    placeholder="{{ trans('adminlte_lang::message.vintage') }}"
+                    placeholder="{{ trans('adminlte_lang::message.yearofbirth') }}"
                     class="form-control" required />
                 </div>
               </div>
@@ -55,7 +55,7 @@
                     pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,70}"
                     placeholder="{{ trans('adminlte_lang::message.fillclub') }}"
                     class="form-control" maxlength="70" autocomplete="off"/>
-                    <input type="hidden" id="club_ID" name="club_ID" patter="\d{1,10}"
+                    <input type="hidden" id="club_ID" name="club_ID" pattern="\d{1,10}"
                     class="form-control" maxlength="10" autocomplete="off"/>
                   <!--<datalist id="clubs" list="clubs">
                   </datalist>-->

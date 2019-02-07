@@ -1,0 +1,150 @@
+<?php
+
+namespace App\DataTables;
+
+use App\Registration;
+use Yajra\DataTables\Services\DataTable;
+
+class RegistrationDataTable extends DataTable {
+	public function ajax() {
+
+		return datatables()->eloquent($this->query())
+			->addColumn('action', '<a class="btn btn-xs btn-success" href=""><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a class="btn btn-xs btn-danger" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i>')
+			->make(true);
+	}
+	/**
+	 * Build DataTable class.
+	 *
+	 * @param mixed $query Results from query() method.
+	 * @return \Yajra\DataTables\DataTableAbstract
+	 */
+	public function dataTable($query) {
+		return datatables($query)
+			->addColumn('action', 'registrationdatatable.action');
+	}
+
+	/**
+	 * Get query source of dataTable.
+	 *
+	 * @param \App\User $model
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	protected function query() {
+		$edition_ID = $this->raceedition;
+		$registration = Registration::query()
+			->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
+			->where('registration.edition_ID', $edition_ID)
+			->select([
+				'registration_ID',
+				'registration.firstname',
+				'registration.lastname',
+				'category.categoryname',
+				'registration.start_nr',
+				'registration.yearofbirth',
+				'registration.gender',
+				'registration.club',
+				'registration.entryfee',
+				'registration.payref',
+				'registration.paid',
+				'registration.DNS',
+				'registration.DNF',
+				'registration.DSQ',
+			]);
+		return $this->applyScopes($registration);
+	}
+
+	/**
+	 * Optional method if you want to use html builder.
+	 *
+	 * @return \Yajra\DataTables\Html\Builder
+	 */
+	public function html() {
+		return $this->builder()
+			->columns($this->getColumns())
+			->addAction(['width' => '80px', 'printable' => false, 'exportable' => false])
+			->minifiedAjax()
+			->parameters([
+				'dom' => 'lBfrtip',
+				'paging' => true,
+				'searching' => true,
+				'responsive' => true,
+				'buttons' => [
+					'create',
+					[
+						'extend' => 'collection',
+						'text' => '<i class="fa fa-download"></i> Export',
+						'buttons' => [
+							'csv',
+							'excel',
+							'pdf',
+						],
+					],
+					'print',
+					'reset',
+					'reload',
+					'colvis',
+				],
+				'processing' => true,
+				'serverSide' => true,
+				'initComplete' => "function () {
+                            this.api().columns().every(function () {
+                                var column = this;
+                                var input = document.createElement(\"input\");
+                                $(input).appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    column.search($(this).val(), false, false, true).draw();
+                                });
+                            });
+                        }",
+			]);
+	}
+
+	/**
+	 * Get columns.
+	 *
+	 * @return array
+	 */
+	protected function getColumns() {
+		return [
+			'id' => [
+				'name' => 'registration.registration_ID',
+				'data' => 'registration_ID',
+				'title' => 'ID',
+				'visible' => true,
+			],
+			'firstname',
+			'lastname',
+			'category' => [
+				'name' => 'category.categoryname',
+				'data' => 'categoryname',
+				'title' => 'Category',
+				'visible' => true,
+			],
+			'start_nr',
+			'yearofbirth',
+			'gender',
+			'club',
+			'entryfee',
+			'payref',
+			'paid',
+			'DNS',
+			'DNF',
+			'DSQ',
+		];
+	}
+
+	/**
+	 * Get filename for export.
+	 *
+	 * @return string
+	 */
+	protected function filename() {
+		return 'Registration_' . date('YmdHis');
+	}
+
+	protected $raceedition;
+	public function forRaceEdition($edition_ID) {
+		$this->raceedition = $edition_ID;
+		return $this;
+	}
+}

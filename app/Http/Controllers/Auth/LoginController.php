@@ -6,85 +6,108 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
-class LoginController extends Controller
-{
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-     */
+class LoginController extends Controller {
+	/*
+		    |--------------------------------------------------------------------------
+		    | Login Controller
+		    |--------------------------------------------------------------------------
+		    |
+		    | This controller handles authenticating users for the application and
+		    | redirecting them to your home screen. The controller uses a trait
+		    | to conveniently provide its functionality to your applications.
+		    |
+	*/
 
-    use AuthenticatesUsers {
-        attemptLogin as attemptLoginAtAuthenticatesUsers;
-    }
+	use AuthenticatesUsers {
+		attemptLogin as attemptLoginAtAuthenticatesUsers;
+	}
 
-    /**
-     * Show the application's login form.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    function showLoginForm()
-    {
-        return view('adminlte::auth.login');
-    }
+	/**
+	 * Show the application's login form.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	function showLoginForm() {
+		return view('adminlte::auth.login');
+	}
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
+	/**
+	 * Where to redirect users after login.
+	 *
+	 * @var string
+	 */
+	protected $redirectTo = '/home';
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
-    }
+	/**
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	function __construct() {
+		$this->middleware('guest', ['except' => 'logout']);
+	}
 
-    /**
-     * Returns field name to use at login.
-     *
-     * @return string
-     */
-    function username()
-    {
-        return config('auth.providers.users.field', 'email');
-    }
+	/**
+	 * Returns field name to use at login.
+	 *
+	 * @return string
+	 */
+	function username() {
+		return config('auth.providers.users.field', 'email');
+	}
 
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    function attemptLogin(Request $request)
-    {
-        if ($this->username() === 'email') {
-            return $this->attemptLoginAtAuthenticatesUsers($request);
-        } else {
-            return $this->attempLoginUsingUsernameAsAnEmail($request);
-        }
+	/**
+	 * Attempt to log the user into the application.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return bool
+	 */
+	function attemptLogin(Request $request) {
+		if ($this->username() === 'email') {
+			return $this->attemptLoginAtAuthenticatesUsers($request);
+		} else {
+			return $this->attempLoginUsingUsernameAsAnEmail($request);
+		}
 
-    }
-    /**
-     * Attempt to log the user into application using username as an email.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return bool
-     */
-    function attempLoginUsingUsernameAsAnEmail(Request $request)
-    {
-        return $this->guard()->attempt(
-            ['username' => $request->input('username'), 'password' => $request->input('password')],
-            $request->has('remember'));
-    }
+	}
+	/**
+	 * Attempt to log the user into application using username as an email.
+	 *
+	 * @param \Illuminate\Http\Request $request
+	 * @return bool
+	 */
+	function attempLoginUsingUsernameAsAnEmail(Request $request) {
+		return $this->guard()->attempt(
+			['username' => $request->input('username'), 'password' => $request->input('password')],
+			$request->has('remember'));
+	}
+
+	/**
+	 * Redirect the user to the Google authentication page.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function redirectToProvider() {
+		return Socialite::driver('google')->redirect();
+	}
+	/**
+	 * Obtain the user information from Google.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function handleProviderCallback() {
+		try {
+			$user = Socialite::driver('google')->user();
+		} catch (\Exception $e) {
+			return redirect('/login');
+		}
+		// check if they're an existing user
+		$existingUser = User::where('email', $user->email)->first();
+		if ($existingUser) {
+			// log them in
+			auth()->login($existingUser, true);
+		}
+		return redirect()->to('/home');
+	}
+
 }

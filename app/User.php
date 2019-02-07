@@ -28,4 +28,11 @@ class User extends Authenticatable {
 
 	protected $table = 'users';
 	protected $primaryKey = 'id';
+
+	/**
+	 * The role that belong to the user.
+	 */
+	public function roles() {
+		return $this->belongsToMany('App\Role', 'user_role', 'user_ID', 'role_ID');
+	}
 }

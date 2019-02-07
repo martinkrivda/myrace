@@ -42,7 +42,7 @@
                     <ul class="treeview-menu">
                         <li><a href="{{ URL::to('race/information/' . $nav->edition_ID) }}"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> {{ trans('menu.information') }}</a></li>
                         <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/category') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ trans('menu.category') }}</a></li>
-                        <li><a href="{{ URL::to('race/registrations/' . $nav->edition_ID) }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
+                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/registration') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
                         <li><a href="{{ URL::to('race/payments/' . $nav->edition_ID) }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
                         <li><a href="{{ URL::to('race/aservices/' . $nav->edition_ID) }}"><i class="fa fa-share-square-o" aria-hidden="true"></i> {{ trans('menu.additionalserv') }}</a></li>
                         <li><a href="{{ URL::to('race/rfidreader/' . $nav->edition_ID) }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>

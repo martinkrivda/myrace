@@ -57,7 +57,7 @@
 							  <th>ID</th>
 							  <th>{{ trans('title.firstname') }}</th>
 							  <th>{{ trans('title.lastname') }}</th>
-							  <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							  <th>{{ trans('adminlte_lang::message.yearofbirth') }}</th>
 							  <th>{{ trans('adminlte_lang::message.club') }}</th>
 							  <th>{{ trans('adminlte_lang::message.gender') }}</th>
 							  <th>{{ trans('adminlte_lang::message.country') }}</th>
@@ -73,7 +73,7 @@
 							 <th>ID</th>
 							 <th>{{ trans('title.firstname') }}</th>
 							 <th>{{ trans('title.lastname') }}</th>
-							 <th>{{ trans('adminlte_lang::message.vintage') }}</th>
+							 <th>{{ trans('adminlte_lang::message.yearofbirth') }}</th>
 							 <th>{{ trans('adminlte_lang::message.club') }}</th>
 							 <th>{{ trans('adminlte_lang::message.gender') }}</th>
 							 <th>{{ trans('adminlte_lang::message.country') }}</th>

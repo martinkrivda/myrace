@@ -35,7 +35,7 @@ function manageRow(data) {
 	  	rows = rows + '<td>'+value.runner_ID+'</td>';
 	  	rows = rows + '<td>'+value.firstname+'</td>';
         rows = rows + '<td>'+value.lastname+'</td>';
-        rows = rows + '<td>'+value.vintage+'</td>';
+        rows = rows + '<td>'+value.yearofbirth+'</td>';
         if (value.club_ID !== null){
             rows = rows + '<td id="'+ value.club_ID +'" title="'+ value.clubabbr +'">'+value.clubname+'</td>';
         } else if (value.club !== null) {
@@ -63,19 +63,19 @@ $(".crud-submit").click(function(e) {
     var form_action = $("#create-runner").find("form").attr("action");
     var firstname = $("#create-runner").find("input[name='firstname']").val();
     var lastname = $("#create-runner").find("input[name='lastname']").val();
-    var vintage = $("#create-runner").find("input[name='vintage']").val();
+    var yearofbirth = $("#create-runner").find("input[name='yearofbirth']").val();
     var gender = $("#create-runner").find("select[name='gender']").val();
     var club = $("#create-runner").find("input[name='club']").val();
     var club_ID = $("#create-runner").find("input[name='club_ID']").val();
     var email = $("#create-runner").find("input[name='email']").val();
     var phone = $("#create-runner").find("input[name='phone']").val();
     var country = $("#create-runner").find("select[name='country']").val();
-    if (firstname != '' && lastname !='' && vintage != '' && country != null && gender != null){
+    if (firstname != '' && lastname !='' && yearofbirth != '' && country != null && gender != null){
         $.ajax({
             dataType: 'json',
             type:'POST',
             url: form_action,
-            data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
+            data:{firstname:firstname, lastname:lastname, yearofbirth:yearofbirth, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -146,7 +146,7 @@ $("body").on("click",".edit-runner",function() {
     var columns = row.find('td');
     var firstname = columns[1].innerHTML;
     var lastname = columns[2].innerHTML;
-    var vintage = columns[3].innerHTML;
+    var yearofbirth = columns[3].innerHTML;
     var club = columns[4].innerHTML;
     var club_ID = columns[4].id;
     var gender = columns[5].innerHTML;
@@ -157,7 +157,7 @@ $("body").on("click",".edit-runner",function() {
     if (phone == 'null'){phone = ''};
     $("#edit-runner").find("input[name='firstname']").val(firstname);
     $("#edit-runner").find("input[name='lastname']").val(lastname);
-    $("#edit-runner").find("input[name='vintage']").val(vintage);
+    $("#edit-runner").find("input[name='yearofbirth']").val(yearofbirth);
     $("#edit-runner").find("input[name='club']").val(club);
     $("#edit-runner").find("input[name='club_ID']").val(club_ID);
     $("#edit-runner").find("select[name='gender']").val(gender);
@@ -174,19 +174,19 @@ $(".crud-submit-edit").click(function(e) {
     var form_action = $("#edit-runner").find("form").attr("action");
     var firstname = $("#edit-runner").find("input[name='firstname']").val();
     var lastname = $("#edit-runner").find("input[name='lastname']").val();
-    var vintage = $("#edit-runner").find("input[name='vintage']").val();
+    var yearofbirth = $("#edit-runner").find("input[name='yearofbirth']").val();
     var gender = $("#edit-runner").find("select[name='gender']").val();
     var club = $("#edit-runner").find("input[name='club']").val();
     var club_ID = $("#edit-runner").find("input[name='club_ID']").val();
     var email = $("#edit-runner").find("input[name='email']").val();
     var phone = $("#edit-runner").find("input[name='phone']").val();
     var country = $("#edit-runner").find("select[name='country']").val();
-    if (firstname != '' && lastname !='' && vintage != '' && country != null && gender != null){
+    if (firstname != '' && lastname !='' && yearofbirth != '' && country != null && gender != null){
         $.ajax({
         dataType: 'json',
         type:'PUT',
         url: form_action,
-        data:{firstname:firstname, lastname:lastname, vintage:vintage, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
+        data:{firstname:firstname, lastname:lastname, yearofbirth:yearofbirth, gender:gender, club:club, club_ID:club_ID, email:email, phone:phone, country:country},
     }).done(function(data){
         manageData();
         $(".modal").modal('hide');

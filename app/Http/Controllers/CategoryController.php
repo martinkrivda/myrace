@@ -41,6 +41,53 @@ class CategoryController extends Controller {
 
 	}
 
+	/** Return list of all categories .
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getCategory(Request $request) {
+		try {
+			$edition_ID = $request->get('edition_ID');
+			$year = $request->get('year');
+			$gender = $request->get('gender');
+			$categoryList = DB::table('category')
+				->where('edition_ID', '=', $edition_ID)
+				->where('gender', $gender)
+				->where(function ($query) use ($year) {
+					$query->where('birthfrom', '>=', $year)
+						->where('birthto', '<=', $year)
+						->orWhere('birthto', '<=', $year)
+						->orWhere('birthfrom', '>=', $year)
+						->orWhereNull('birthfrom')
+						->whereNull('birthto');
+				})
+				->get();
+			return response()->json(['data' => $categoryList]);
+		} catch (\Exception $e) {
+			alert()->error('Error!', $e->getMessage());
+			return $e->getMessage();
+		}
+	}
+
+	/** Return list of all categories .
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getCategoryByID(Request $request) {
+		try {
+			$edition_ID = $request->get('edition_ID');
+			$category_ID = $request->get('category_ID');
+			$categoryList = DB::table('category')
+				->where('edition_ID', '=', $edition_ID)
+				->where('category_ID', $category_ID)
+				->get();
+			return response()->json(['data' => $categoryList]);
+		} catch (\Exception $e) {
+			alert()->error('Error!', $e->getMessage());
+			return $e->getMessage();
+		}
+	}
+
 	/**
 	 * Show the form for creating a new resource.
 	 *
@@ -71,6 +118,7 @@ class CategoryController extends Controller {
 				'starttime' => 'date|nullable',
 				'sinterval' => 'numeric|nullable',
 				'timelimit' => 'numeric|nullable',
+				'capacity' => 'numeric|nullable',
 				'checkage' => 'boolean',
 				'birthfrom' => 'date_format:Y|nullable',
 				'birthto' => 'date_format:Y|nullable',
@@ -96,6 +144,7 @@ class CategoryController extends Controller {
 				if (Input::get('starttime')) {$category->starttime = $request->input('starttime');}
 				if (Input::get('sinterval')) {$category->sinterval = $request->input('sinterval');}
 				if (Input::get('timelimit')) {$category->timelimit = $request->input('timelimit');}
+				if (Input::get('capacity')) {$category->capacity = $request->input('capacity');}
 				if (Input::get('checkage')) {$category->checkage = $request->input('checkage');}
 				if (Input::get('birthfrom')) {$category->birthfrom = $request->input('birthfrom');}
 				if (Input::get('birthto')) {$category->birthto = $request->input('birthto');}
@@ -171,6 +220,7 @@ class CategoryController extends Controller {
 				'starttime' => 'date|nullable',
 				'sinterval' => 'numeric|nullable',
 				'timelimit' => 'numeric|nullable',
+				'capacity' => 'numeric|nullable',
 				'checkage' => 'boolean',
 				'birthfrom' => 'date_format:Y|nullable',
 				'birthto' => 'date_format:Y|nullable',
@@ -194,7 +244,8 @@ class CategoryController extends Controller {
 				//$category->currency = Input::get('currency');
 				if (Input::get('starttime')) {$category->starttime = $request->input('starttime');}
 				if (Input::get('sinterval')) {$category->sinterval = $request->input('sinterval');}
-				if (Input::get('timelimit')) {$category->timelimit = $request->input('timelimit');}
+				$category->timelimit = $request->input('timelimit');
+				$category->capacity = $request->input('capacity');
 				if (Input::get('checkage')) {$category->checkage = $request->input('checkage');}
 				if (Input::get('birthfrom')) {$category->birthfrom = $request->input('birthfrom');}
 				if (Input::get('birthto')) {$category->birthto = $request->input('birthto');}

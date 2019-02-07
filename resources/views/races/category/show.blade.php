@@ -67,6 +67,10 @@
               <td>{{$category->timelimit}}</td>
             </tr>
             <tr>
+              <th>{{ trans('title.capacity') }}:</th>
+              <td>{{$category->capacity}}</td>
+            </tr>
+            <tr>
                 <th>{{ trans('title.checkage') }}:</th>
                 <td>
                 @if ($category->checkage == 1)

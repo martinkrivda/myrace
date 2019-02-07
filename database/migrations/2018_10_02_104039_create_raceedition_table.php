@@ -35,6 +35,7 @@ class CreateRaceeditionTable extends Migration {
 			$table->text('protocol')->nullable();
 			$table->timestamps();
 			$table->foreign('race_ID')->references('race_ID')->on('race')->onDelete('restrict');
+			$table->index('editionname');
 		});
 		DB::statement("ALTER TABLE raceedition comment 'Table records year edition of the races.'");
 	}

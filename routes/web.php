@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,14 +27,30 @@ Route::resource('races-data', 'RacesController');
 Route::resource('editions-data', 'EditionController');
 Route::get('users', 'UsersController@users');
 Route::resource('users-data', 'UsersController');
+Route::resource('tags', 'TagController');
 
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
+Route::post('runners/searchrunner', 'RunnersController@searchrunner')->name('runners.searchrunner');
+Route::post('runners/searchrunnerid', 'RunnersController@getRunnerByID')->name('runners.searchrunnerid');
 
 Route::get('race/information/{edition_ID}', 'InformationController@information');
 //Route::pattern('edition_ID', '{0-9}+');
 Route::resource('race/{edition_ID}/category', 'CategoryController', ['parameters' => [
 	'edition_ID' => 'edition_ID',
 ]]);
+Route::post('race/category-data', 'CategoryController@getCategory')->name('category.categoryid-data');
+Route::post('race/categoryid-data', 'CategoryController@getCategoryByID')->name('category.category-data');
+Route::resource('race/{edition_ID}/registration', 'RegistrationController', ['parameters' => [
+	'edition_ID' => 'edition_ID',
+]]);
+Route::resource('race/{edition_ID}/regsummary', 'RegSummaryController', ['parameters' => [
+	'edition_ID' => 'edition_ID',
+]]);
+Route::get('race/{edition_ID}/history', 'HistoryController@history', ['parameters' => ['edition_ID' => 'edition_ID']]);
+//Route::post('/tags/export', 'TagController');
+
+Route::get('/auth/google', 'Auth\LoginController@redirectToProvider');
+Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
 
 Route::group(['middleware' => 'auth'], function () {
 	//    Route::get('/link1', function ()    {

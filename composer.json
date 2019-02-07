@@ -15,6 +15,8 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
         "realrashid/sweet-alert": "^1.1",
+        "select2/select2": "^4.0",
+        "yajra/laravel-datatables-buttons": "^3.0",
         "yajra/laravel-datatables-oracle": "^8.7"
     },
     "require-dev": {

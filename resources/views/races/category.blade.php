@@ -81,9 +81,11 @@
                   <th>{{ trans('title.starttime') }}</th>
                   <th>{{ trans('title.sinterval') }}</th>
                   <th>{{ trans('title.timelimit') }}</th>
+                  <th>{{ trans('title.capacity') }}</th>
                   <th>{{ trans('title.checkage') }}</th>
                   <th>{{ trans('title.birthfrom') }}</th>
                   <th>{{ trans('title.birthto') }}</th>
+                  <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -92,13 +94,14 @@
                         <td>{{ $category->category_ID }}</td>
                         <td>{{ $category->categoryname }}</td>
                         <td>{{ $category->gender }}</td>
-                        <td>{{ $category->length }}</td>
-                        <td>{{ $category->climb }}</td>
+                        <td>{{ $category->length }} m</td>
+                        <td>{{ $category->climb }} m</td>
                         <td>{{ $category->entryfee }}</td>
                         <td>{{ $category->currency }}</td>
                         <td>{{ $category->starttime }}</td>
                         <td>{{ $category->sinterval }}</td>
                         <td>{{ $category->timelimit }}</td>
+                        <td>{{ $category->capacity }}</td>
                         <td>
                           @if ($category->checkage == 1)
                               {{Form::checkbox('checkage', '$category->checkage', true, array('style' => 'margin-left: 15%;', 'disabled' => 'disabled'))}}
@@ -117,7 +120,7 @@
                             <a class="btn btn-sm btn-success pull-left" href="{{ URL::to('race/'.$edition_ID.'/category/'.$category->category_ID) }}"><i class="fa fa-eye" aria-hidden="true"></i></a>
                             <!-- edit this nerd (uses the edit method found at GET /nerds/{id}/edit -->
                             <a class="btn btn-sm btn-info pull-left" style="margin-left: 3px;" href="{{ URL::to('race/'.$edition_ID.'/category/'.$category->category_ID.'/edit') }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                            {{ Form::open(array('url' => URL::to('race/'.$edition_ID.'/category/'.$category->category_ID), 'id' => 'deleteForm', 'method' => 'POST', 'onsubmit' => 'return confirm("Do you really want to delete the category?"");', 'class' => 'pull-left', 'style' => 'margin-left: 3px;')) }}
+                            {{ Form::open(array('url' => URL::to('race/'.$edition_ID.'/category/'.$category->category_ID), 'id' => 'deleteForm', 'method' => 'POST', 'onsubmit' => 'return confirm("Do you really want to delete the category?");', 'class' => 'pull-left', 'style' => 'margin-left: 3px;')) }}
                             {{ Form::hidden('_method', 'DELETE') }}
                             {{ Form::button('<i class="fa fa-trash-o" aria-hidden="true"></i>', array('class' => 'btn btn-sm btn-danger remove-category', 'type' => 'submit'))}}
                             {{ Form::close() }}
