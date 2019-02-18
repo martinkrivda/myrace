@@ -156,5 +156,6 @@ return [
 	'dnq' => 'Did not qualified',
 	'creator' => 'Creator',
 	'finishtime' => 'Finish time',
+	'editregistration' => 'Edit registration',
 
 ];

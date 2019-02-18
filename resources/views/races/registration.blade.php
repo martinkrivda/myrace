@@ -44,7 +44,6 @@
           <div class="small-box bg-yellow">
             <div class="inner">
               <h3>{{$totalmenregistered}}</h3>
-
                <p>{{ trans('title.maleregistrations') }}</p>
             </div>
             <div class="icon">
@@ -112,6 +111,7 @@
 <script src="{{ asset('js/pdfmake.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/vfs_fonts.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/buttons.html5.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/custom/registrationDelete.js') }}" type="text/javascript"></script>
 {!! $dataTable->scripts() !!}
 {!! Toastr::message() !!}
 @endsection

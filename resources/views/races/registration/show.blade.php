@@ -52,7 +52,7 @@
             </tr>
             <tr>
               <th>{{ trans('title.category') }}:</th>
-              <td>{{$registration->categoryname}}</td>
+              <td>{{$registration->categoryname}}  <small>({{$registration->length}}m / {{$registration->climb}}m)</small></td>
             </tr>
             <tr>
               <th>{{ trans('title.start_nr') }}:</th>
@@ -64,7 +64,7 @@
             </tr>
             <tr>
               <th>{{ trans('title.starttime') }}:</th>
-              <td>{{$registration->stime}}</td>
+              <td>{{$registration->startInMinutes}} = {{date('H:i:s', strtotime($registration->stime))}}</td>
             </tr>
             <tr>
               <th>{{ trans('title.finishtime') }}:</th>

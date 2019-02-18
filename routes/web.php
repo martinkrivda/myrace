@@ -34,6 +34,7 @@ Route::post('runners/searchrunner', 'RunnersController@searchrunner')->name('run
 Route::post('runners/searchrunnerid', 'RunnersController@getRunnerByID')->name('runners.searchrunnerid');
 Route::post('runners/searchsimilar', 'RegistrationController@getSimilarRunnerWith')->name('registrations.getsimilarrunner');
 Route::post('registrations/searchexisting', 'RegistrationController@isTooSimilarWith')->name('registrations.getsimilarregistration');
+Route::post('registrations/ischangedname', 'RegistrationController@isChangedName')->name('registrations.isechangedname');
 
 Route::get('race/information/{edition_ID}', 'InformationController@information');
 //Route::pattern('edition_ID', '{0-9}+');
@@ -59,6 +60,12 @@ Route::group(['middleware' => 'auth'], function () {
 	//        // Uses Auth Middleware
 	//    });
 	Route::post('/registration-data', 'RegistrationController@store');
+	Route::put('/registration-update/{registration_ID}', 'RegistrationController@update', ['parameters' => [
+		'registration_ID' => 'registration_ID',
+	]]);
+	Route::delete('/registration-delete/{registration_ID}', 'RegistrationController@destroy', ['parameters' => [
+		'registration_ID' => 'registration_ID',
+	]]);
 
 	//Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
 	#adminlte_routes

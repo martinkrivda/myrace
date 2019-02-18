@@ -56,6 +56,7 @@ $(document).ready(function(){
           });
   }
   $("[name='notcompeting']").bootstrapSwitch();
+  $("[name='paid']").bootstrapSwitch();
   $(document).ready(function() {
   $('#registrationsum').select2();
   document.getElementById("searchdirectory").focus();
@@ -179,6 +180,7 @@ $(".crud-submit").click(function(e) {
       var start_nr = $("#create-registration").find("input[name='start_nr']").val();
       var category = $("#create-registration").find("select[name='category']").val();
       var notcompeting = $('#notcompeting:checked').val()?1:0;
+      var paid = $('#paid:checked').val()?1:0;
       var note = $("#create-registration").find("textarea[name='note']").val();
       var registrationsum = $("#create-registration").find("select[name='registrationsum']").val();
       var form_action = $("#create-registration").attr("action");
@@ -251,7 +253,7 @@ $(".crud-submit").click(function(e) {
             dataType: 'json',
             type:'POST',
             url: form_action,
-            data:{edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, registrationsum, notcompeting, note, _token:_token},
+            data:{edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, registrationsum, notcompeting, paid, note, _token:_token},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -262,8 +264,121 @@ $(".crud-submit").click(function(e) {
                 swal('Ooops, something went wrong!',message,'error');
             }
         }).done(function(data){
-            toastr.success('New registration was created.', 'Success', {timeOut: 5000});
             $(".formregistration").trigger("reset");
+            toastr.success('New registration was created.', 'Success', {timeOut: 5000});
+            //setTimeout(function(){}, 5000);
+            //window.location.replace('/race/'+edition_ID+'/registration');
+        });
+    }  else {
+        toastr.warning('Select gender, category and country.', 'Gender, category and country fields must be chosen!', {timeOut: 5000});
+    }
+  }
+});
+
+/* Create new Post */
+$(".crud-edit").click(function(e) {
+    if($(this).closest('form')[0].checkValidity()){
+      e.preventDefault();
+      var edition_ID = $("#create-registration").data("resource");
+      var runner_ID = $("#create-registration").find("input[name='runner_ID']").val();
+      var firstname = $("#create-registration").find("input[name='firstname']").val();
+      var lastname = $("#create-registration").find("input[name='lastname']").val();
+      var yearofbirth = $("#create-registration").find("input[name='yearofbirth']").val();
+      var gender = $("#create-registration").find("select[name='gender']").val();
+      var club = $("#create-registration").find("input[name='club']").val();
+      var club_ID = $("#create-registration").find("input[name='club_ID']").val();
+      var email = $("#create-registration").find("input[name='email']").val();
+      var phone = $("#create-registration").find("input[name='phone']").val();
+      var country = $("#create-registration").find("select[name='country']").val();
+      var entryfee = $("#create-registration").find("input[name='entryfee']").val();
+      var start_nr = $("#create-registration").find("input[name='start_nr']").val();
+      var category = $("#create-registration").find("select[name='category']").val();
+      var notcompeting = $('#notcompeting:checked').val()?1:0;
+      var paid = $('#paid:checked').val()?1:0;
+      var note = $("#create-registration").find("textarea[name='note']").val();
+      var registrationsum = $("#create-registration").find("select[name='registrationsum']").val();
+      var form_action = $("#create-registration").attr("action");
+      var _token = $('meta[name=csrf-token]').attr('content');
+      if (firstname != '' && lastname !='' && yearofbirth != '' && category != null && country != null && gender != null){
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: '/registrations/ischangedname',
+            data:{firstname, lastname, yearofbirth, runner_ID, _token:_token},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+            }
+        }).done(function(data){
+          if (data == true){
+            toastr.warning('Name of runner is different than in the database.', 'Warning', {timeOut: 5000});
+            const swalWithBootstrapButtons = Swal.mixin({
+              confirmButtonClass: 'btn btn-success',
+              cancelButtonClass: 'btn btn-danger',
+              buttonsStyling: false,
+            })
+            swalWithBootstrapButtons.fire({
+              title: 'Are you sure?',
+              text: "Do you really want rewrite the name in the runner table?",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, rewrite it!',
+              cancelButtonText: 'No, cancel!',
+              reverseButtons: true
+            }).then((result) => {
+              if (result.value) {
+
+              } else if (
+                // Read more about handling dismissals
+                result.dismiss === Swal.DismissReason.cancel
+              ) {
+                swalWithBootstrapButtons.fire(
+                  'Cancelled',
+                  'The action was cancelled',
+                  'warning'
+                )
+                return;
+              }
+            });
+          }
+        });
+      if(runner_ID == '-1' || runner_ID == ''){
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: '/runners/searchsimilar',
+            data:{firstname, lastname, yearofbirth, _token:_token},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+                //alert(err.message);
+            }
+        }).done(function(data){
+          if (data != null){
+            toastr.warning('Found existing runner.', 'Warning', {timeOut: 5000});
+            runner_ID = data.runner_ID;
+            if(email == ''){mail = data.email}
+          }
+        });
+      }
+        $.ajax({
+            dataType: 'json',
+            type:'PUT',
+            url: form_action,
+            data:{edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, registrationsum, notcompeting, paid, note, _token:_token},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                var message = "";
+                Object.keys(err).forEach(function(k){
+                  message += err[k];
+                });
+                swal('Ooops, something went wrong!',message,'error');
+            }
+        }).done(function(data){
+            toastr.success('Registration was updated successfully.', 'Success', {timeOut: 5000});
         });
     }  else {
         toastr.warning('Select gender, category and country.', 'Gender, category and country fields must be chosen!', {timeOut: 5000});

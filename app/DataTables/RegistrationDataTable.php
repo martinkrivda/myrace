@@ -10,7 +10,7 @@ class RegistrationDataTable extends DataTable {
 
 		return datatables()->eloquent($this->query())
 			->addColumn('action', function ($registration) {
-				return '<a class="btn btn-xs btn-success" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '"><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a class="btn btn-xs btn-danger" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i>';
+				return '<a class="btn btn-xs btn-success" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '"><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '/edit"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a onclick="deleteRegistration(' . $registration->registration_ID . ')" class="btn btn-xs btn-danger remove-registration" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
 			})
 			->make(true);
 	}
@@ -36,6 +36,7 @@ class RegistrationDataTable extends DataTable {
 		$registration = Registration::query()
 			->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
 			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
+			->leftJoin('registrationsum', 'registration.regsummary_ID', '=', 'registrationsum.regsummary_ID')
 			->where('registration.edition_ID', $edition_ID)
 			->select([
 				'registration_ID',
@@ -47,7 +48,7 @@ class RegistrationDataTable extends DataTable {
 				'registration.gender',
 				'club.clubname',
 				'registration.entryfee',
-				'registration.payref',
+				'registrationsum.payref',
 				'registration.paid',
 				'registration.DNS',
 				'registration.DNF',
@@ -138,7 +139,12 @@ class RegistrationDataTable extends DataTable {
 				'title' => 'Entry Fee',
 				'visible' => true,
 			],
-			'payref',
+			'payref' => [
+				'name' => 'registrationsum.payref',
+				'data' => 'payref',
+				'title' => 'Pay reference',
+				'visible' => true,
+			],
 			'paid',
 			'DNS',
 			'DNF',
