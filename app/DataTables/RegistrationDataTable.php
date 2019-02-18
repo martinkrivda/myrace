@@ -9,7 +9,9 @@ class RegistrationDataTable extends DataTable {
 	public function ajax() {
 
 		return datatables()->eloquent($this->query())
-			->addColumn('action', '<a class="btn btn-xs btn-success" href=""><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a class="btn btn-xs btn-danger" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i>')
+			->addColumn('action', function ($registration) {
+				return '<a class="btn btn-xs btn-success" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '"><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a class="btn btn-xs btn-danger" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i>';
+			})
 			->make(true);
 	}
 	/**
@@ -33,6 +35,7 @@ class RegistrationDataTable extends DataTable {
 		$edition_ID = $this->raceedition;
 		$registration = Registration::query()
 			->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
+			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
 			->where('registration.edition_ID', $edition_ID)
 			->select([
 				'registration_ID',
@@ -42,7 +45,7 @@ class RegistrationDataTable extends DataTable {
 				'registration.start_nr',
 				'registration.yearofbirth',
 				'registration.gender',
-				'registration.club',
+				'club.clubname',
 				'registration.entryfee',
 				'registration.payref',
 				'registration.paid',
@@ -112,8 +115,8 @@ class RegistrationDataTable extends DataTable {
 				'title' => 'ID',
 				'visible' => true,
 			],
-			'firstname',
 			'lastname',
+			'firstname',
 			'category' => [
 				'name' => 'category.categoryname',
 				'data' => 'categoryname',
@@ -123,8 +126,18 @@ class RegistrationDataTable extends DataTable {
 			'start_nr',
 			'yearofbirth',
 			'gender',
-			'club',
-			'entryfee',
+			'club' => [
+				'name' => 'club.clubname',
+				'data' => 'clubname',
+				'title' => 'Club',
+				'visible' => true,
+			],
+			'entryfee' => [
+				'name' => 'registration.entryfee',
+				'data' => 'entryfee',
+				'title' => 'Entry Fee',
+				'visible' => true,
+			],
 			'payref',
 			'paid',
 			'DNS',

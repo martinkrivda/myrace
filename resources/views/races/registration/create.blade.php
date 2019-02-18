@@ -49,7 +49,7 @@
           <div id="livesearchrunners" class="position-absolute" style="position: absolute; z-index: 2;"></div>
 </div>
 
-{{ Form::open(array('url' => 'race/'.$edition_ID.'/registration')) }}
+{{ Form::open(array('url' => '/registration-data', 'method' => 'POST', 'id' => 'create-registration', 'data-resource' => $edition_ID, 'class' => 'formregistration')) }}
 <div class="form-group">
             {{ Form::label('registrationsum', trans('title.reggroup')) }}
             <select id="registrationsum" class="form-control" name="registrationsum">
@@ -87,7 +87,7 @@
             'required' => 'required',
           ))}}
           <input type="hidden" id="runner_ID" name="runner_ID" pattern="\d{1,10}"
-                    class="form-control" maxlength="10" autocomplete="off"/>
+                    class="form-control" maxlength="10" autocomplete="off" value=""/>
         </div>
     </div>
 </div>
@@ -127,7 +127,7 @@
                 'id' => 'club',
                 'maxlength' => '70',
                 'pattern' => '[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,70}',
-                'required' => 'required',
+                'autocomplete' => 'off',
               ))}}
             <input type="hidden" id="club_ID" name="club_ID" pattern="\d{1,10}"
                     class="form-control" maxlength="10" autocomplete="off"/>
@@ -208,7 +208,7 @@
     </label>
 </div>
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    {{ Form::submit(trans('title.saveregistration'), array('class' => 'btn btn-primary')) }}
+    {{ Form::submit(trans('title.saveregistration'), array('class' => 'btn btn-primary crud-submit')) }}
     {{ Form::reset(trans('title.reset'), array('class' => 'btn')) }}
 
     {{ Form::close() }}

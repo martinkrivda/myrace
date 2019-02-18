@@ -119,6 +119,7 @@ return [
 	'tags' => 'RFID Tags',
 	'totaltags' => 'Total Tags',
 	'created_at' => 'Created at',
+	'updated_at' => 'Updated at',
 	'epc' => 'EPC',
 	'tagrecords' => 'RFID Tags Records',
 	'addtag' => 'Add new RFID Tag',
@@ -147,5 +148,13 @@ return [
 	'searchdirectory' => 'Search in directory',
 	'trytofind' => 'Try to find in directory',
 	'reggroup' => 'Group of registrations',
+	'showregistration' => 'Show registration',
+	'paid' => 'Paid',
+	'payref' => 'Pay reference',
+	'dns' => 'Did not start',
+	'dnf' => 'Did not finish',
+	'dnq' => 'Did not qualified',
+	'creator' => 'Creator',
+	'finishtime' => 'Finish time',
 
 ];

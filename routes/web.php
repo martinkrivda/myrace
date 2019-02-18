@@ -32,6 +32,8 @@ Route::resource('tags', 'TagController');
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
 Route::post('runners/searchrunner', 'RunnersController@searchrunner')->name('runners.searchrunner');
 Route::post('runners/searchrunnerid', 'RunnersController@getRunnerByID')->name('runners.searchrunnerid');
+Route::post('runners/searchsimilar', 'RegistrationController@getSimilarRunnerWith')->name('registrations.getsimilarrunner');
+Route::post('registrations/searchexisting', 'RegistrationController@isTooSimilarWith')->name('registrations.getsimilarregistration');
 
 Route::get('race/information/{edition_ID}', 'InformationController@information');
 //Route::pattern('edition_ID', '{0-9}+');
@@ -56,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
 	//    Route::get('/link1', function ()    {
 	//        // Uses Auth Middleware
 	//    });
+	Route::post('/registration-data', 'RegistrationController@store');
 
 	//Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
 	#adminlte_routes
