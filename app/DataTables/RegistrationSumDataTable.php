@@ -2,16 +2,27 @@
 
 namespace App\DataTables;
 
-use App\Registration;
+use App\RegistrationSum;
 use Yajra\DataTables\Services\DataTable;
 
-class RegistrationDataTable extends DataTable {
+class RegistrationSumDataTable extends DataTable {
 	public function ajax() {
 
 		return datatables()->eloquent($this->query())
-			->addColumn('action', function ($registration) {
-				return '<a class="btn btn-xs btn-success" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '"><i class="fa fa-eye" aria-hidden="true"></i></a> <a class="btn btn-xs btn-info" href="/race/' . $this->raceedition . '/registration/' . $registration->registration_ID . '/edit"><i class="fa fa-pencil" aria-hidden="true"></i></a> <a onclick="deleteRegistration(' . $registration->registration_ID . ')" class="btn btn-xs btn-danger remove-registration" href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a>';
+			->editColumn('status', function ($regsummary) {
+				switch ($regsummary->status) {
+				case 0:
+					$label = '<span class="label label-danger">Neuhrazeno</span>';
+					break;
+				case 3:
+					$label = '<span class="label label-success">Uhrazeno</span>';
+					break;
+				default:
+					$label = '<span class="label label-warning">Neznámý</span>';
+				}
+				return $label;
 			})
+			->rawColumns(['status'])
 			->make(true);
 	}
 	/**
@@ -21,8 +32,7 @@ class RegistrationDataTable extends DataTable {
 	 * @return \Yajra\DataTables\DataTableAbstract
 	 */
 	public function dataTable($query) {
-		return datatables($query)
-			->addColumn('action', 'registrationdatatable.action');
+		return datatables($query);
 	}
 
 	/**
@@ -31,30 +41,22 @@ class RegistrationDataTable extends DataTable {
 	 * @param \App\User $model
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
-	protected function query() {
+	public function query() {
 		$edition_ID = $this->raceedition;
-		$registration = Registration::query()
-			->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
-			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
-			->leftJoin('registrationsum', 'registration.regsummary_ID', '=', 'registrationsum.regsummary_ID')
-			->where('registration.edition_ID', $edition_ID)
+		$registrationSum = RegistrationSum::query()
+			->where('registrationsum.edition_ID', $edition_ID)
 			->select([
-				'registration_ID',
-				'registration.firstname',
-				'registration.lastname',
-				'category.categoryname',
-				'registration.start_nr',
-				'registration.yearofbirth',
-				'registration.gender',
-				'club.clubname',
-				'registration.entryfee',
+				'regsummary_ID',
+				'registrationsum.name',
+				'registrationsum.email',
+				'registrationsum.price',
+				'registrationsum.discount',
+				'registrationsum.totalprice',
 				'registrationsum.payref',
-				'registration.paid',
-				'registration.DNS',
-				'registration.DNF',
-				'registration.DSQ',
+				'registrationsum.status',
+				'registrationsum.created_at',
 			]);
-		return $this->applyScopes($registration);
+		return $this->applyScopes($registrationSum);
 	}
 
 	/**
@@ -65,7 +67,6 @@ class RegistrationDataTable extends DataTable {
 	public function html() {
 		return $this->builder()
 			->columns($this->getColumns())
-			->addAction(['width' => '80px', 'printable' => false, 'exportable' => false])
 			->minifiedAjax()
 			->parameters([
 				'dom' => 'lBfrtip',
@@ -75,7 +76,6 @@ class RegistrationDataTable extends DataTable {
 				'autoWidth' => false,
 				'pageLength' => 50,
 				'buttons' => [
-					'create',
 					[
 						'extend' => 'collection',
 						'text' => '<i class="fa fa-download"></i> Export',
@@ -113,32 +113,39 @@ class RegistrationDataTable extends DataTable {
 	protected function getColumns() {
 		return [
 			'id' => [
-				'name' => 'registration.registration_ID',
-				'data' => 'registration_ID',
+				'name' => 'registrationsum.regsummary_ID',
+				'data' => 'regsummary_ID',
 				'title' => 'ID',
 				'visible' => true,
 			],
-			'lastname',
-			'firstname',
-			'category' => [
-				'name' => 'category.categoryname',
-				'data' => 'categoryname',
-				'title' => 'Category',
+			'name' => [
+				'name' => 'registrationsum.name',
+				'data' => 'name',
+				'title' => 'Name',
 				'visible' => true,
 			],
-			'start_nr',
-			'yearofbirth',
-			'gender',
-			'club' => [
-				'name' => 'club.clubname',
-				'data' => 'clubname',
-				'title' => 'Club',
+			'email' => [
+				'name' => 'registrationsum.email',
+				'data' => 'email',
+				'title' => 'E-mail',
 				'visible' => true,
 			],
-			'entryfee' => [
-				'name' => 'registration.entryfee',
-				'data' => 'entryfee',
-				'title' => 'Entry Fee',
+			'price' => [
+				'name' => 'registrationsum.price',
+				'data' => 'price',
+				'title' => 'Price',
+				'visible' => true,
+			],
+			'discount' => [
+				'name' => 'registrationsum.discount',
+				'data' => 'discount',
+				'title' => 'Discount',
+				'visible' => true,
+			],
+			'totalprice' => [
+				'name' => 'registrationsum.totalprice',
+				'data' => 'totalprice',
+				'title' => 'Total Price',
 				'visible' => true,
 			],
 			'payref' => [
@@ -147,10 +154,19 @@ class RegistrationDataTable extends DataTable {
 				'title' => 'Pay reference',
 				'visible' => true,
 			],
-			'paid',
-			'DNS',
-			'DNF',
-			'DSQ',
+			'status' => [
+				'name' => 'registrationsum.status',
+				'data' => 'status',
+				'title' => 'Status',
+				'visible' => true,
+			],
+			'created_at' => [
+				'name' => 'registrationsum.created_at',
+				'data' => 'created_at',
+				'title' => 'Created At',
+				'visible' => true,
+				'printable' => false,
+			],
 		];
 	}
 
@@ -160,7 +176,7 @@ class RegistrationDataTable extends DataTable {
 	 * @return string
 	 */
 	protected function filename() {
-		return 'Registration_' . date('YmdHis');
+		return 'RegistrationSum_' . date('YmdHis');
 	}
 
 	protected $raceedition;

@@ -66,6 +66,27 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::delete('/registration-delete/{registration_ID}', 'RegistrationController@destroy', ['parameters' => [
 		'registration_ID' => 'registration_ID',
 	]]);
+	Route::resource('race/{edition_ID}/rfidreader', 'RfidReaderController', ['parameters' => [
+		'edition_ID' => 'edition_ID',
+	]]);
+	Route::get('race/rfidreader/lasttag', 'RfidReaderController@getLastTag', ['parameters' => [
+		'edition_ID' => 'edition_ID',
+	]]);
+	Route::post('rfid-data', 'RfidReaderController@store');
+
+	Route::group(['prefix' => 'race'], function () {
+		Route::group(['prefix' => '{edition_ID}'], function ($edition_ID) {
+
+			// Payments
+			Route::resource('payment', 'PaymentController');
+			// Start list
+			Route::resource('startlist', 'StartTimeController');
+			Route::post('startlist/generatetime', 'StartTimeController@generateStartTime')->name('generatetime');
+			Route::post('startlist/assigntags', 'StartTimeController@assignTags')->name('assigntags');
+			Route::post('startlist/drawstartlist', 'StartTimeController@drawStartList')->name('drawstartlist');
+
+		});
+	});
 
 	//Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
 	#adminlte_routes

@@ -64,7 +64,7 @@
             </tr>
             <tr>
               <th>{{ trans('title.starttime') }}:</th>
-              <td>{{$registration->startInMinutes}} = {{date('H:i:s', strtotime($registration->stime))}}</td>
+              <td>{{ $registration->stime != null ? ($registration->startInMinutes .' = '. date('H:i:s', strtotime($registration->stime))) : ''}}</td>
             </tr>
             <tr>
               <th>{{ trans('title.finishtime') }}:</th>

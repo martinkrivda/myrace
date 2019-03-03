@@ -1,10 +1,11 @@
-@extends('adminlte::layouts.app')
+@extends('adminlte::page')
 
 @section('htmlheader_title')
-	{{ trans('adminlte_lang::message.home') }}
+    {{ trans('adminlte_lang::message.dashboard') }}
 @endsection
-
-
+@section('contentheader_title')
+    {{ trans('adminlte_lang::message.dashboard') }}
+@endsection
 @section('main-content')
 	<div class="container-fluid spark-screen">
 		<div class="row">

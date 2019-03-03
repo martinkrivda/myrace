@@ -36,6 +36,7 @@ class TagDataTable extends DataTable {
 				'paging' => true,
 				'searching' => true,
 				'responsive' => true,
+				'autoWidth' => false,
 				'buttons' => ['csv', 'excel', 'pdf', 'print', 'reset', 'reload', 'colvis'],
 				'processing' => false,
 				'serverSide' => true,

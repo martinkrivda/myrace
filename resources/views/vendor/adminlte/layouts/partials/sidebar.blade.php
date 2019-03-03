@@ -42,14 +42,17 @@
                     <ul class="treeview-menu">
                         <li><a href="{{ URL::to('race/information/' . $nav->edition_ID) }}"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> {{ trans('menu.information') }}</a></li>
                         <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/category') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ trans('menu.category') }}</a></li>
+                        @can('registrations.view', Auth::user())
                         <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/registration') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
-                        <li><a href="{{ URL::to('race/payments/' . $nav->edition_ID) }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
+                        @endcan
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/payment') }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
                         <li><a href="{{ URL::to('race/aservices/' . $nav->edition_ID) }}"><i class="fa fa-share-square-o" aria-hidden="true"></i> {{ trans('menu.additionalserv') }}</a></li>
-                        <li><a href="{{ URL::to('race/rfidreader/' . $nav->edition_ID) }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
-                        <li><a href="{{ URL::to('race/startlist/' . $nav->edition_ID) }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/rfidreader') }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startlist') }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
                         <li><a href="{{ URL::to('race/resultlist/' . $nav->edition_ID) }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>
                         <li><a href="{{ URL::to('race/speaker/' . $nav->edition_ID) }}"><i class="fa fa-microphone" aria-hidden="true"></i> {{ trans('menu.speaker') }}</a></li>
                         <li><a href="{{ URL::to('race/statistics/' . $nav->edition_ID) }}"><i class="fa fa-bar-chart-o" aria-hidden="true"></i> {{ trans('menu.statistics') }}</a></li>
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/history') }}"><i class="fa fa-history" aria-hidden="true"></i> {{ trans('menu.history') }}</a></li>
                     </ul>
                 </li>
             @endforeach

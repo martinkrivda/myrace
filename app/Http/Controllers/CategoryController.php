@@ -148,6 +148,7 @@ class CategoryController extends Controller {
 				if (Input::get('checkage')) {$category->checkage = $request->input('checkage');}
 				if (Input::get('birthfrom')) {$category->birthfrom = $request->input('birthfrom');}
 				if (Input::get('birthto')) {$category->birthto = $request->input('birthto');}
+				$category->lock = false;
 				$category->save();
 				// redirect
 				Log::info('New category was added to DB.', ['name' => $category->categoryname]);

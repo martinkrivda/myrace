@@ -22,5 +22,13 @@ class PermissionSeeder extends Seeder {
 			'name' => 'Registration-Delete',
 			'for' => 'registration',
 		]);
+		$regView = Permission::create([
+			'name' => 'Registration-View',
+			'for' => 'registration',
+		]);
+		$regView = Permission::create([
+			'name' => 'Registration-Audit',
+			'for' => 'registration',
+		]);
 	}
 }

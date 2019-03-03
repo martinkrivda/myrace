@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "acacha-forms": "^1.0.0",
-    "admin-lte": "^2.4.2",
+    "admin-lte": "^2.4.9",
     "axios": "^0.8",
     "babel-eslint": "^7.1.1",
     "bootstrap": "3.3.7",
@@ -32,10 +32,10 @@
     "laravel-mix": "^4.0.14",
     "lodash": "^4.17.11",
     "npm-install-webpack-plugin": "^4.0.5",
-    "popper.js": "^1.14.4",
-    "vue": "^2.5.17",
-    "webpack": "^4.23.1",
-    "webpack-command": "^0.4.1"
+    "popper.js": "^1.14.7",
+    "vue": "^2.6.7",
+    "webpack": "^4.29.5",
+    "webpack-command": "^0.4.2"
   },
   "dependencies": {
     "adminlte-vue": "^0.1.3"

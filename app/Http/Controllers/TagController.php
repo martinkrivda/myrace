@@ -74,6 +74,7 @@ class TagController extends Controller {
 				// store
 				$tag = new Tag;
 				$tag->EPC = $request->input('epc');
+				$tag->active = true;
 				$tag->save();
 				// redirect
 				Log::info('New tag was added to DB.', ['epc' => $tag->epc]);

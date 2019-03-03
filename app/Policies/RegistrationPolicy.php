@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Permission;
 use App\Registration;
 use App\User;
+use Exception;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RegistrationPolicy {
@@ -16,8 +18,21 @@ class RegistrationPolicy {
 	 * @param  \App\Registration  $registration
 	 * @return mixed
 	 */
-	public function view(User $user, Registration $registration) {
-		//
+	public function view(User $user) {
+		try {
+			$permissionRule = Permission::where('name', 'Registration-View')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
+		foreach ($user->roles as $role) {
+			foreach ($role->permissions as $permission) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -27,10 +42,15 @@ class RegistrationPolicy {
 	 * @return mixed
 	 */
 	public function create(User $user) {
-
+		try {
+			$permissionRule = Permission::where('name', 'Registration-Create')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
 		foreach ($user->roles as $role) {
 			foreach ($role->permissions as $permission) {
-				if ($permission->permission_ID == 1) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
 					return true;
 				}
 			}
@@ -45,8 +65,21 @@ class RegistrationPolicy {
 	 * @param  \App\Registration  $registration
 	 * @return mixed
 	 */
-	public function update(User $user, Registration $registration) {
-		//
+	public function update(User $user) {
+		try {
+			$permissionRule = Permission::where('name', 'Registration-Update')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
+		foreach ($user->roles as $role) {
+			foreach ($role->permissions as $permission) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -56,8 +89,21 @@ class RegistrationPolicy {
 	 * @param  \App\Registration  $registration
 	 * @return mixed
 	 */
-	public function delete(User $user, Registration $registration) {
-		//
+	public function delete(User $user) {
+		try {
+			$permissionRule = Permission::where('name', 'Registration-Delete')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
+		foreach ($user->roles as $role) {
+			foreach ($role->permissions as $permission) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -32,6 +32,7 @@ class RegistrationController extends Controller {
 	 */
 	public function __construct() {
 		$this->middleware('auth');
+		//$this->authorizeResource(Registration::class, 'registrations');
 	}
 
 	/**
@@ -40,6 +41,7 @@ class RegistrationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index(RegistrationDataTable $dataTable, $edition_ID) {
+		$this->authorize('registrations.view', Registration::class);
 		try {
 			$registration = DB::table('registration')
 				->where('edition_ID', $edition_ID)
@@ -60,6 +62,7 @@ class RegistrationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create($edition_ID) {
+		$this->authorize('registrations.create', Registration::class);
 		// load the create form (app/views/races/category/create.blade.php)
 		$categories = Category::where('edition_ID', $edition_ID)->orderBy('categoryname')->pluck('categoryname', 'category_ID');
 		$countries = Country::pluck('name', 'country_code');
@@ -201,6 +204,7 @@ class RegistrationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($edition_ID, $registration_ID) {
+		$this->authorize('registrations.view', Registration::class);
 		try {
 			// get the nerd
 			$registration = Registration::query()
@@ -237,7 +241,7 @@ class RegistrationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($edition_ID, $registration_ID) {
-
+		$this->authorize('registrations.update', Registration::class);
 		$registration = Registration::query()
 			->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')
 			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
@@ -362,6 +366,7 @@ class RegistrationController extends Controller {
 			$registration->paid = $request->paid;
 			$registration->note = $request->input('note');
 			$registration->edition_ID = $request->edition_ID;
+			$registration->version++;
 			$registration->save();
 
 			$history = new History;
@@ -389,6 +394,7 @@ class RegistrationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($registration_ID) {
+		$this->authorize('registrations.delete', Registration::class);
 		$user = Auth::user();
 		try {
 			$registration = Registration::find($registration_ID);
