@@ -83,6 +83,7 @@
             </li>
 			<li><a href="{{ url('organiser') }}"><i class='fa fa-briefcase'></i> <span>{{ trans('adminlte_lang::message.organiser') }}</span></a></li>
 			<li><a href="{{ url('newsletter') }}"><i class='fa fa-bullhorn'></i> <span>{{ trans('adminlte_lang::message.newsletters') }}</span></a></li>
+            <li><a href="{{ url('releasenotes') }}"><i class='fa fa-refresh'></i> <span>{{ trans('menu.releasenotes') }}</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

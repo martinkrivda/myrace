@@ -25,4 +25,5 @@ return [
 	'speaker' => 'Speaker',
 	'statistics' => 'Statistics',
 	'history' => 'History',
+	'releasenotes' => 'Release notes',
 ];

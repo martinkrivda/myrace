@@ -24,7 +24,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        Nahráváte čipy do databáze.
+                        <p>Nahráváte čipy do databáze závodu <strong>{{$race->editionname}}</strong></p>
                     </div>
                     <!-- /.box-body -->
                 </div>

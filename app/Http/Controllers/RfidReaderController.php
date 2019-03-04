@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\RaceEdition;
 use App\RfidReader;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,8 +28,9 @@ class RfidReaderController extends Controller {
 	 */
 	public function index($edition_ID) {
 		$tagsInFinish = RfidReader::distinct('EPC')->where('edition_ID', $edition_ID)->count('EPC');
+		$race = RaceEdition::where('edition_ID', $edition_ID)->first();
 
-		return view('races.rfidreader', ['edition_ID' => $edition_ID, 'tagsInFinish' => $tagsInFinish]);
+		return view('races.rfidreader', ['edition_ID' => $edition_ID, 'tagsInFinish' => $tagsInFinish, 'race' => $race]);
 	}
 
 	/**
