@@ -84,6 +84,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('startlist/generatetime', 'StartTimeController@generateStartTime')->name('generatetime');
 			Route::post('startlist/assigntags', 'StartTimeController@assignTags')->name('assigntags');
 			Route::post('startlist/drawstartlist', 'StartTimeController@drawStartList')->name('drawstartlist');
+			// History
+			Route::get('history', 'HistoryController@index');
+			// Results
+			Route::resource('resultlist', 'ResultListController');
 
 		});
 	});

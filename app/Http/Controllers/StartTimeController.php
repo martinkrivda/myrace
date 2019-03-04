@@ -99,8 +99,8 @@ class StartTimeController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function generateStartTime($edition_ID) {
-		$this->authorize('starttime-generate', StartTime::class);
-		$race = RaceEdition::where('edition_ID', $edition_ID)->get();
+		$this->authorize('starttime.generate', StartTime::class);
+		$race = RaceEdition::where('edition_ID', $edition_ID)->first();
 		$categories = Category::where('edition_ID', $edition_ID)->where('lock', false)->get();
 
 		$start_nr = 1;
@@ -111,7 +111,7 @@ class StartTimeController extends Controller {
 			if ($category->starttime != null) {
 				$startTime = $category->starttime;
 			} else {
-				$startTime = date('Y-m-d H:i:s', strtotime("$race->date $race->firstStart"));
+				$startTime = date('Y-m-d H:i:s', strtotime("$race->date $race->firststart"));
 			}
 			$interval = $category->sinterval;
 			for ($i = 0; $i < $registrations; $i++) {
@@ -139,7 +139,7 @@ class StartTimeController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function assignTags($edition_ID) {
-		$this->authorize('starttime-generate', StartTime::class);
+		$this->authorize('starttime.generate', StartTime::class);
 		$assignedTags = StartTime::where('edition_ID', $edition_ID)->whereNotNull('tag_ID')->select('tag_ID')->get();
 		$usedTags = array();
 		foreach ($assignedTags as $key => $assignedTag) {
@@ -172,7 +172,7 @@ class StartTimeController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function drawStartList($edition_ID) {
-		$this->authorize('starttime-generate', StartTime::class);
+		$this->authorize('starttime.generate', StartTime::class);
 		$categories = Category::where('edition_ID', $edition_ID)->get();
 		$updates = 0;
 

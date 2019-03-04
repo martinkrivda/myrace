@@ -49,10 +49,14 @@
                         <li><a href="{{ URL::to('race/aservices/' . $nav->edition_ID) }}"><i class="fa fa-share-square-o" aria-hidden="true"></i> {{ trans('menu.additionalserv') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/rfidreader') }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startlist') }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
-                        <li><a href="{{ URL::to('race/resultlist/' . $nav->edition_ID) }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>
+                        @can('results.view', Auth::user())
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/resultlist') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>
+                        @endcan
                         <li><a href="{{ URL::to('race/speaker/' . $nav->edition_ID) }}"><i class="fa fa-microphone" aria-hidden="true"></i> {{ trans('menu.speaker') }}</a></li>
                         <li><a href="{{ URL::to('race/statistics/' . $nav->edition_ID) }}"><i class="fa fa-bar-chart-o" aria-hidden="true"></i> {{ trans('menu.statistics') }}</a></li>
+                        @can('registrations.audit', Auth::user())
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/history') }}"><i class="fa fa-history" aria-hidden="true"></i> {{ trans('menu.history') }}</a></li>
+                        @endcan
                     </ul>
                 </li>
             @endforeach

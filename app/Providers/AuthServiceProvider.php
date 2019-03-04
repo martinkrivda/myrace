@@ -25,6 +25,9 @@ class AuthServiceProvider extends ServiceProvider {
 
 		Gate::resource('registrations', 'App\Policies\RegistrationPolicy');
 		Gate::resource('starttime', 'App\Policies\StartTimePolicy');
-		Gate::define('starttime-generate', 'App\Policies\StartTimePolicy@generate');
+		Gate::define('starttime.generate', 'App\Policies\StartTimePolicy@generate');
+		Gate::define('registrations.audit', 'App\Policies\RegistrationPolicy@audit');
+		//Result lists
+		Gate::resource('results', 'App\Policies\ResultListPolicy');
 	}
 }

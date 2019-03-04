@@ -176,4 +176,7 @@ return [
 	'drawStartList' => 'Draw start list',
 	'refresh' => 'Refresh',
 	'assignTags' => 'Assign tags',
+	'history' => 'History',
+	'audit' => 'Audit',
+	'results' => 'Results',
 ];

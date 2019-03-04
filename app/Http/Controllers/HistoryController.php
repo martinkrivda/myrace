@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\HistoryDataTable;
+
 class HistoryController extends Controller {
-	//
 	/**
-	 * Display a listing of the resource.
+	 * Create a new controller instance.
 	 *
-	 * @return \Illuminate\Http\Response
+	 * @return void
 	 */
-	public function history() {
-		return view('races.registration.history');
+	public function __construct() {
+		$this->middleware('auth');
 	}
 
 	/**
@@ -18,14 +19,8 @@ class HistoryController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index($edition_ID) {
-		try {
-			$history = DB::table('history')
-				->where('edition_ID', $edition_ID)
-				->get();
-		} catch (\Exception $e) {
-			alert()->error('Error!', $e->getMessage());
-		}
-		return response()->json(['data' => $history]);
+	public function index(HistoryDataTable $dataTable, $edition_ID) {
+		$this->authorize('registrations.audit', Registration::class);
+		return $dataTable->forRaceEdition($edition_ID)->render('races.history', ['edition_ID' => $edition_ID]);
 	}
 }

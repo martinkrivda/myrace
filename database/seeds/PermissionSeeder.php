@@ -30,5 +30,17 @@ class PermissionSeeder extends Seeder {
 			'name' => 'Registration-Audit',
 			'for' => 'registration',
 		]);
+		$startTime = Permission::create([
+			'name' => 'StartTime-View',
+			'for' => 'starttime',
+		]);
+		$startTime = Permission::create([
+			'name' => 'StartTime-Generate',
+			'for' => 'starttime',
+		]);
+		$resultList = Permission::create([
+			'name' => 'ResultList-View',
+			'for' => 'results',
+		]);
 	}
 }

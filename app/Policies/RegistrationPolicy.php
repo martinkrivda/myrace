@@ -127,4 +127,28 @@ class RegistrationPolicy {
 	public function forceDelete(User $user, Registration $registration) {
 		//
 	}
+
+	/**
+	 * Determine whether the user can open audit of the registrations.
+	 *
+	 * @param  \App\User  $user
+	 * @param  \App\Registration  $registration
+	 * @return mixed
+	 */
+	public function audit(User $user) {
+		try {
+			$permissionRule = Permission::where('name', 'Registration-Audit')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
+		foreach ($user->roles as $role) {
+			foreach ($role->permissions as $permission) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

@@ -180,6 +180,7 @@ class RegistrationController extends Controller {
 				}
 
 				$history = new History;
+				$history->edition_ID = $request->edition_ID;
 				$history->registration_ID = $registration->registration_ID;
 				$history->type = 'registration';
 				$history->description = 'Registration (' . $registration->registration_ID . ') ' . $registration->lastname . ' ' . $registration->firstname . ' was created successfully';
@@ -370,6 +371,7 @@ class RegistrationController extends Controller {
 			$registration->save();
 
 			$history = new History;
+			$history->edition_ID = $request->edition_ID;
 			$history->registration_ID = $registration->registration_ID;
 			$history->type = 'update';
 			$history->description = 'Registration (' . $registration->registration_ID . ') ' . $registration->lastname . ' ' . $registration->firstname . ' was updated successfully';
@@ -405,6 +407,7 @@ class RegistrationController extends Controller {
 			$registrationsum->save();
 
 			$history = new History;
+			$history->edition_ID = $registration->edition_ID;
 			$history->registration_ID = $registration->registration_ID;
 			$history->type = 'deregistration';
 			$history->description = 'Registration (' . $registration->registration_ID . ') ' . $registration->lastname . ' ' . $registration->firstname . ' was deleted successfully';
