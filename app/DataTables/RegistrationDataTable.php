@@ -37,13 +37,14 @@ class RegistrationDataTable extends DataTable {
 			->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
 			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
 			->leftJoin('registrationsum', 'registration.regsummary_ID', '=', 'registrationsum.regsummary_ID')
+			->leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')
 			->where('registration.edition_ID', $edition_ID)
 			->select([
 				'registration_ID',
 				'registration.firstname',
 				'registration.lastname',
 				'category.categoryname',
-				'registration.start_nr',
+				'starttime.start_nr',
 				'registration.yearofbirth',
 				'registration.gender',
 				'club.clubname',
@@ -126,7 +127,12 @@ class RegistrationDataTable extends DataTable {
 				'title' => 'Category',
 				'visible' => true,
 			],
-			'start_nr',
+			'start_nr' => [
+				'name' => 'starttime.start_nr',
+				'data' => 'start_nr',
+				'title' => 'Start Nr.',
+				'visible' => true,
+			],
 			'yearofbirth',
 			'gender',
 			'club' => [

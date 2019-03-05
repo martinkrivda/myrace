@@ -13,6 +13,7 @@ use App\RaceEdition;
 use App\Registration;
 use App\RegistrationSum;
 use App\Runner;
+use App\StartTime;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -67,9 +68,11 @@ class RegistrationController extends Controller {
 		$categories = Category::where('edition_ID', $edition_ID)->orderBy('categoryname')->pluck('categoryname', 'category_ID');
 		$countries = Country::pluck('name', 'country_code');
 		$registrationsum = RegistrationSum::ofEdition($edition_ID)->select('name', 'regsummary_ID', 'email')->get();
+		$occupiedNumbers = Registration::where('edition_ID', $edition_ID)->whereNotNull('stime_ID')->select('stime_ID')->get()->toArray();
+		$freeStartNr = StartTime::where('edition_ID', $edition_ID)->whereNotIn('stime_ID', $occupiedNumbers)->get();
 		$user = Auth::user();
 		Javascript::put(['userID' => $user->id]);
-		return view('races.registration.create', ['edition_ID' => $edition_ID, 'user' => $user, 'categories' => $categories, 'countries' => $countries], compact('registrationsum'));
+		return view('races.registration.create', ['edition_ID' => $edition_ID, 'user' => $user, 'categories' => $categories, 'countries' => $countries, 'freeStartNr' => $freeStartNr], compact('registrationsum'));
 	}
 
 	/**
@@ -109,6 +112,12 @@ class RegistrationController extends Controller {
 			return response()->json($validator->errors(), 422);
 		} else {
 			try {
+				$stime_ID = null;
+				if ($request->input('start_nr') != null) {
+					$startNr = StartTime::where('edition_ID', $edition_ID)->where('start_nr', $request->input('start_nr'))->select('stime_ID')->first();
+					$stime_ID = $start_nr != null ? $start_nr : null;
+				}
+
 				// store
 				$registration = new Registration;
 				if ($request->runner_ID == "-1" || $request->runner_ID == "") {
@@ -149,6 +158,7 @@ class RegistrationController extends Controller {
 				$registration->regsummary_ID = $registrationsum->regsummary_ID;
 				$registration->category_ID = $request->input('category');
 				if (Input::get('club_ID')) {$registration->club_ID = $request->input('club_ID');}
+				$registration->stime_ID = $stime_ID;
 				$registration->firstname = $request->input('firstname');
 				$registration->lastname = $request->input('lastname');
 				$registration->yearofbirth = $request->input('yearofbirth');
@@ -246,16 +256,19 @@ class RegistrationController extends Controller {
 		$registration = Registration::query()
 			->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')
 			->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
+			->leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')
 			->where('registration_ID', $registration_ID)
 			->where('registration.edition_ID', $edition_ID)
-			->select('club.clubname', 'runner.email', 'runner.phone', 'runner.country AS country', 'registration.*')
+			->select('club.clubname', 'runner.email', 'runner.phone', 'runner.country AS country', 'starttime.start_nr AS start_number', 'registration.*')
 			->first();
 		$categories = Category::where('edition_ID', $edition_ID)->orderBy('categoryname')->pluck('categoryname', 'category_ID');
 		$countries = Country::pluck('name', 'country_code');
 		$registrationsum = RegistrationSum::ofEdition($edition_ID)->select('name', 'regsummary_ID', 'email')->get();
+		$occupiedNumbers = Registration::where('edition_ID', $edition_ID)->whereNotNull('stime_ID')->select('stime_ID')->get()->toArray();
+		$freeStartNr = StartTime::where('edition_ID', $edition_ID)->whereNotIn('stime_ID', $occupiedNumbers)->get();
 
 		// show the edit form and pass the registration
-		return view('races.registration.edit', ['edition_ID' => $edition_ID, 'categories' => $categories, 'countries' => $countries], compact('registrationsum'))
+		return view('races.registration.edit', ['edition_ID' => $edition_ID, 'categories' => $categories, 'countries' => $countries, 'freeStartNr' => $freeStartNr], compact('registrationsum'))
 			->with('registration', $registration);
 	}
 
@@ -293,99 +306,107 @@ class RegistrationController extends Controller {
 		if ($validator->fails()) {
 			return response()->json($validator->errors(), 422);
 		} else {
-			//try {
-			// update
-			$registration = Registration::find($registration_ID);
+			try {
 
-			//update runner data
-			if ($registration->runner_ID == $request->runner_ID
-				&& ($registration->firstname != $request->firstname
-					|| $registration->lastname != $request->lastname)
-				&& $registration->yearofbirth == $request->yearofbirth) {
-				$runner = Runner::where('firstname', $request->firstname)->where('lastname', $request->lastname)->where('yearofbirth', $request->yearofbirth)->first();
-				if ($runner == null) {
-					$runner = new Runner;
+				$stime_ID = null;
+				if ($request->input('start_nr') != null) {
+					$startNr = StartTime::where('edition_ID', $request->edition_ID)->where('start_nr', $request->input('start_nr'))->select('stime_ID')->first();
+					$stime_ID = $startNr != null ? $startNr->stime_ID : null;
 				}
-			} else {
-				$runner = Runner::find($request->runner_ID);
-			}
-			$runner->firstname = $request->firstname;
-			$runner->lastname = $request->lastname;
-			$runner->yearofbirth = $request->yearofbirth;
-			$runner->gender = $request->gender;
-			$runner->email = $request->email;
-			$runner->phone = $request->phone;
-			$runner->country = $request->country;
-			$runner->club_ID = $request->club_ID;
-			$runner->save();
 
-			// find or create registration sum
-			if ($registration->regsummary_ID != $request->registrationsum) {
+				// update
+				$registration = Registration::find($registration_ID);
+
+				//update runner data
+				if ($registration->runner_ID == $request->runner_ID
+					&& ($registration->firstname != $request->firstname
+						|| $registration->lastname != $request->lastname)
+					&& $registration->yearofbirth == $request->yearofbirth) {
+					$runner = Runner::where('firstname', $request->firstname)->where('lastname', $request->lastname)->where('yearofbirth', $request->yearofbirth)->first();
+					if ($runner == null) {
+						$runner = new Runner;
+					}
+				} else {
+					$runner = Runner::find($request->runner_ID);
+				}
+				$runner->firstname = $request->firstname;
+				$runner->lastname = $request->lastname;
+				$runner->yearofbirth = $request->yearofbirth;
+				$runner->gender = $request->gender;
+				$runner->email = $request->email;
+				$runner->phone = $request->phone;
+				$runner->country = $request->country;
+				$runner->club_ID = $request->club_ID;
+				$runner->save();
+
 				// find or create registration sum
-				if ($request->registrationsum == "-1" || $request->registrationsum == "") {
-					$registrationsum = new RegistrationSum;
-					$registrationsum->name = mb_convert_case($request->input('lastname'), MB_CASE_UPPER, "UTF-8") . ' ' . mb_convert_case($request->input('firstname'), MB_CASE_UPPER, "UTF-8");
-					$registrationsum->email = $request->input('email');
-					$registrationsum->price = $request->input('entryfee');
-					$registrationsum->discount = '0.00';
-					$registrationsum->totalprice = $request->input('entryfee');
-					$registrationsum->status = 0;
-					$registrationsum->creator_ID = $user->id;
-					$registrationsum->edition_ID = $request->edition_ID;
-					$registrationsum->payref = $this->generateNewPayRef();
+				if ($registration->regsummary_ID != $request->registrationsum) {
+					// find or create registration sum
+					if ($request->registrationsum == "-1" || $request->registrationsum == "") {
+						$registrationsum = new RegistrationSum;
+						$registrationsum->name = mb_convert_case($request->input('lastname'), MB_CASE_UPPER, "UTF-8") . ' ' . mb_convert_case($request->input('firstname'), MB_CASE_UPPER, "UTF-8");
+						$registrationsum->email = $request->input('email');
+						$registrationsum->price = $request->input('entryfee');
+						$registrationsum->discount = '0.00';
+						$registrationsum->totalprice = $request->input('entryfee');
+						$registrationsum->status = 0;
+						$registrationsum->creator_ID = $user->id;
+						$registrationsum->edition_ID = $request->edition_ID;
+						$registrationsum->payref = $this->generateNewPayRef();
+						$registrationsum->save();
+					} else {
+						$registrationsum = RegistrationSum::find($registration->regsummary_ID);
+						$registrationsum->price = $registrationsum->price - $registration->entryfee;
+						$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
+						$registrationsum->save();
+						$registrationsum = RegistrationSum::find($request->registrationsum);
+						$registrationsum->price = $registrationsum->price + $request->entryfee;
+						$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
+						$registrationsum->save();
+					}
+				} elseif ($registration->entryfee != $request->entryfee) {
+					$registrationsum = RegistrationSum::find($request->registrationsum);
+					$registrationsum->price = $registrationsum->price + $request->entryfee - $registration->entryfee;
+					$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
 					$registrationsum->save();
 				} else {
-					$registrationsum = RegistrationSum::find($registration->regsummary_ID);
-					$registrationsum->price = $registrationsum->price - $registration->entryfee;
-					$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
-					$registrationsum->save();
 					$registrationsum = RegistrationSum::find($request->registrationsum);
-					$registrationsum->price = $registrationsum->price + $request->entryfee;
-					$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
-					$registrationsum->save();
 				}
-			} elseif ($registration->entryfee != $request->entryfee) {
-				$registrationsum = RegistrationSum::find($request->registrationsum);
-				$registrationsum->price = $registrationsum->price + $request->entryfee - $registration->entryfee;
-				$registrationsum->totalprice = $registrationsum->price - $registrationsum->discount;
-				$registrationsum->save();
-			} else {
-				$registrationsum = RegistrationSum::find($request->registrationsum);
-			}
 
-			$registration->runner_ID = $runner->runner_ID;
-			$registration->regsummary_ID = $registrationsum->regsummary_ID;
-			$registration->category_ID = $request->input('category');
-			$registration->club_ID = $request->input('club_ID');
-			$registration->firstname = $request->input('firstname');
-			$registration->lastname = $request->input('lastname');
-			$registration->yearofbirth = $request->input('yearofbirth');
-			$registration->gender = $request->input('gender');
-			$registration->entryfee = $request->input('entryfee');
-			$registration->start_nr = $request->input('start_nr');
-			$registration->NC = $request->notcompeting;
-			$registration->paid = $request->paid;
-			$registration->note = $request->input('note');
-			$registration->edition_ID = $request->edition_ID;
-			$registration->version++;
-			$registration->save();
+				$registration->runner_ID = $runner->runner_ID;
+				$registration->regsummary_ID = $registrationsum->regsummary_ID;
+				$registration->category_ID = $request->input('category');
+				$registration->club_ID = $request->input('club_ID');
+				$registration->stime_ID = $stime_ID;
+				$registration->firstname = $request->input('firstname');
+				$registration->lastname = $request->input('lastname');
+				$registration->yearofbirth = $request->input('yearofbirth');
+				$registration->gender = $request->input('gender');
+				$registration->entryfee = $request->input('entryfee');
+				$registration->start_nr = $request->input('start_nr');
+				$registration->NC = $request->notcompeting;
+				$registration->paid = $request->paid;
+				$registration->note = $request->input('note');
+				$registration->edition_ID = $request->edition_ID;
+				$registration->version++;
+				$registration->save();
 
-			$history = new History;
-			$history->edition_ID = $request->edition_ID;
-			$history->registration_ID = $registration->registration_ID;
-			$history->type = 'update';
-			$history->description = 'Registration (' . $registration->registration_ID . ') ' . $registration->lastname . ' ' . $registration->firstname . ' was updated successfully';
-			$history->creator_ID = $user->id;
-			$history->save();
-			// redirect
-			Log::info('New registration was added to DB.', ['name' => $registration->lastname]);
-			alert()->success('Success!', 'Registration ' . $registration->lastname . ' ' . $registration->firstname . ' updated successfully.');
-			return response()->json($registration);
-			/*} catch (\Exception $e) {
+				$history = new History;
+				$history->edition_ID = $request->edition_ID;
+				$history->registration_ID = $registration->registration_ID;
+				$history->type = 'update';
+				$history->description = 'Registration (' . $registration->registration_ID . ') ' . $registration->lastname . ' ' . $registration->firstname . ' was updated successfully';
+				$history->creator_ID = $user->id;
+				$history->save();
+				// redirect
+				Log::info('New registration was added to DB.', ['name' => $registration->lastname]);
+				alert()->success('Success!', 'Registration ' . $registration->lastname . ' ' . $registration->firstname . ' updated successfully.');
+				return response()->json($registration);
+			} catch (\Exception $e) {
 				Log::error('Can not update registration to DB.', ['firstname' => $request->input('firstname'), 'lastname' => $request->input('lastname'), 'message' => $e->getMessage()]);
 				alert()->error('Error!', $e->getMessage());
-				return redirect()->back()->alert()->error('Error!', $e->getMessage());
-			}*/
+				return $e->getMessage();
+			}
 		}
 	}
 
