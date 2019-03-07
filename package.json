@@ -34,7 +34,7 @@
     "npm-install-webpack-plugin": "^4.0.5",
     "popper.js": "^1.14.7",
     "vue": "^2.6.7",
-    "webpack": "^4.29.5",
+    "webpack": "^3.11.0",
     "webpack-command": "^0.4.2"
   },
   "dependencies": {
