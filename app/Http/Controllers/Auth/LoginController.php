@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Alert;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -56,6 +57,16 @@ class LoginController extends Controller {
 	 */
 	function username() {
 		return config('auth.providers.users.field', 'email');
+	}
+
+	protected function authenticated(Request $request, $user) {
+		if ($user->active == 0) {
+
+			$this->guard()->logout();
+			Alert::warning('Warning!', 'User account is locked.');
+			$errors[] = 'User account is locked.';
+			return redirect()->back()->withErrors(['errors', $errors]);
+		}
 	}
 
 	/**
