@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Mail\RunnerFinished;
+use App\Notification;
 use App\RaceEdition;
 use App\Registration;
 use App\RfidReader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ResultListController extends Controller {
 
@@ -28,7 +31,7 @@ class ResultListController extends Controller {
 		$this->authorize('results.view', Registration::class);
 		$race = RaceEdition::where('edition_ID', $edition_ID)->select('date AS eventdate', 'firststart')->first();
 		$categories = Category::where('edition_ID', $edition_ID)->get();
-		$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $edition_ID)->whereNotNull('registration.stime_ID')->get();
+		$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email')->get();
 		$reader = RfidReader::where('edition_ID', $edition_ID)->where('gateway', 'F')->get();
 		foreach ($runners as $key => $runner) {
 			if ($runner->DNS == false) {
@@ -41,10 +44,26 @@ class ResultListController extends Controller {
 				}
 
 				$sort = usort($records, function ($a, $b) {return $a->time > $b->time;});
-
 				foreach ($records as $key => $record) {
 					if ($record->time >= $runner->stime) {
 						$runner->timems = strtotime($record->time) - strtotime($runner->stime);
+						// Save time to DB
+						$runner->save();
+						if ($runner->status < 8) {
+							if ($runner->email != '') {
+								$notification = new Notification;
+								$notification->registration_ID = $runner->registration_ID;
+								$notification->type = 'finish';
+								$notification->kind = 'E';
+								$notification->text = 'Runner: ' . $runner->lastname . ' ' . $runner->firstname . ' in finish ' . date('H:i:s', $runner->timems) . '.';
+								$notification->email = $runner->email;
+								$notification->save();
+
+								Mail::to($runner->email)->send(new RunnerFinished($runner));
+							}
+							$runner->status = 8;
+							$runner->save();
+						}
 						break;
 					}
 				}
@@ -62,42 +81,42 @@ class ResultListController extends Controller {
 
 			$sorted = $filtered->sortBy('timems');
 			foreach ($sorted as $key => $runner) {
-				if ($runner->timems != null && $runner->NC == false && $runner->DNQ == false && $runner->DNS == false && $runner->DNF == false) {
+				if ($runner->timems != null && $runner->NC == false && $runner->DSQ == false && $runner->DNS == false && $runner->DNF == false) {
 					$runner->status = 'OK';
 					$results[] = $runner;
 					$sorted->forget($key);
 				}
 			}
 			foreach ($sorted as $key => $runner) {
-				if ($runner->timems == null && $runner->NC == false && $runner->DNQ == false && $runner->DNS == false && $runner->DNF == false) {
+				if ($runner->timems == null && $runner->NC == false && $runner->DSQ == false && $runner->DNS == false && $runner->DNF == false) {
 					$runner->status = 'RUNNING';
 					$results[] = $runner;
 					$sorted->forget($key);
 				}
 			}
 			foreach ($sorted as $key => $runner) {
-				if ($runner->NC == false && $runner->DNQ == false && $runner->DNS == false && $runner->DNF == true) {
+				if ($runner->NC == false && $runner->DSQ == false && $runner->DNS == false && $runner->DNF == true) {
 					$runner->status = 'DNF';
 					$results[] = $runner;
 					$sorted->forget($key);
 				}
 			}
 			foreach ($sorted as $key => $runner) {
-				if ($runner->NC == true && $runner->DNQ == false && $runner->DNS == false && $runner->DNF == false) {
+				if ($runner->NC == true && $runner->DSQ == false && $runner->DNS == false && $runner->DNF == false) {
 					$runner->status = 'NC';
 					$results[] = $runner;
 					$sorted->forget($key);
 				}
 			}
 			foreach ($sorted as $key => $runner) {
-				if ($runner->DNQ == true && $runner->DNS == false && $runner->DNF == false) {
-					$runner->status = 'DNQ';
+				if ($runner->DSQ == true && $runner->DNS == false && $runner->DNF == false) {
+					$runner->status = 'DSQ';
 					$results[] = $runner;
 					$sorted->forget($key);
 				}
 			}
 			foreach ($sorted as $key => $runner) {
-				if ($runner->DNQ == false && $runner->DNS == true && $runner->DNF == false) {
+				if ($runner->DSQ == false && $runner->DNS == true && $runner->DNF == false) {
 					$runner->status = 'DNS';
 					$results[] = $runner;
 					$sorted->forget($key);

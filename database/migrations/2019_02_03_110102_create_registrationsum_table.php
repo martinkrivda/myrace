@@ -19,7 +19,7 @@ class CreateRegistrationsumTable extends Migration {
 			$table->decimal('price', 8, 2)->default(0.00)->comment('Sum of entry fees');
 			$table->decimal('discount', 8, 2)->default(0.00)->comment('Discount to registration');
 			$table->decimal('totalprice', 8, 2)->default(0.00)->comment('Total price for registrations');
-			$table->char('payref', 13)->comment('Payment reference');
+			$table->char('payref', 10)->comment('Payment reference');
 			$table->smallInteger('status')->default(0);
 			$table->integer('creator_ID')->unsigned()->comment('Autor');
 			$table->timestamps();

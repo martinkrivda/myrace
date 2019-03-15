@@ -33,6 +33,9 @@ $("#assignTags").click(function(e) {
             }
         }).done(function(data){
             toastr.success('RFID tags assigned to start times.', 'Success', {timeOut: 5000});
+            if(data.updates == 'Unsatisfactory number of free tags!'){
+                swal('Warning!','Unsatisfactory number of free tags!', 'warning');
+            }
             var table = $('#dataTableBuilder').DataTable();
             table.ajax.reload();
         });

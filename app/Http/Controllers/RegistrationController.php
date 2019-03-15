@@ -516,7 +516,7 @@ class RegistrationController extends Controller {
 	 * @return int payement reference
 	 */
 	private function generateNewPayRef() {
-		$date = date('Ymd', time());
+		$date = date('ymd', time());
 		$mark = 10 * (date('h', time()) + date('i', time())) + rand(1, 100);
 		return $date . $mark;
 
@@ -527,7 +527,7 @@ class RegistrationController extends Controller {
 	 * @return int specific symbol
 	 */
 	private function generateSpecificSymbol() {
-		$date = date('Y', time());
+		$date = date('y', time());
 		$mark = (date('m', time()) + date('d', time())) + 1000 * (date('h', time()) + date('i', time()));
 		return $date . $mark;
 	}

@@ -18,7 +18,7 @@ class CreateReaderTable extends Migration {
 			$table->ipAddress('rfid_reader')->nullable();
 			$table->bigInteger('EPC')->unsigned();
 			$table->year('year');
-			$table->dateTime('time');
+			$table->dateTime('time', 2);
 			$table->timestamps();
 			$table->foreign('edition_ID')->references('edition_ID')->on('raceedition')->onDelete('restrict');
 			$table->index('EPC');
