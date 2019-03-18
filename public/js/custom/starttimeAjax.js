@@ -1,10 +1,9 @@
-/* Generate start times */
-$("#generateStartTime").click(function(e) {
-    console.log(generateTimeUrl);
-            $.ajax({
+$("#btnGenerate").click(function(e){
+    console.log("Generate start time modal")
+    $.ajax({
             dataType: 'json',
             type:'POST',
-            url: generateTimeUrl,
+            url: categoryListUrl,
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -12,6 +11,40 @@ $("#generateStartTime").click(function(e) {
                 //alert(err.message);
             }
         }).done(function(data){
+console.log(Object.values(data.data)[0]);
+var rows = '';
+$.each( data.data, function( key, value ) {
+        rows = rows + '<div class="form-group"> <label for="'+value.category_ID+'">'+value.categoryname+'</label> <input type="number" step="1" min="0" max="1000" size=1000 class="form-control vacants" placeholder="Number of vacants" name="'+value.category_ID+'" id="'+value.category_ID+'"> </div>';
+    });
+console.log()
+$("#vacants").html(rows);
+        });
+});
+
+/* Generate start times */
+$("#generate-submit").click(function(e) {
+    $('.vacants').each(function() {
+        if ($(this).val() == '') {
+            $(this).val(0);
+        }
+    });
+    var formValues = $('.vacants').serialize();
+    console.log(formValues);
+            $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: generateTimeUrl,
+            data: formValues,
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+                //alert(err.message);
+            }
+        }).done(function(data){
+            $(".modal").modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
             toastr.success('Start times generated.', 'Success', {timeOut: 5000});
             var table = $('#dataTableBuilder').DataTable();
             table.ajax.reload();

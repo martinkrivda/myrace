@@ -98,7 +98,7 @@ class StartTimeController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function generateStartTime($edition_ID) {
+	public function generateStartTime(Request $request, $edition_ID) {
 		$this->authorize('starttime.generate', StartTime::class);
 		$race = RaceEdition::where('edition_ID', $edition_ID)->first();
 		$categories = Category::where('edition_ID', $edition_ID)->where('lock', false)->get();
@@ -114,6 +114,14 @@ class StartTimeController extends Controller {
 				$startTime = date('Y-m-d H:i:s', strtotime("$race->date $race->firststart"));
 			}
 			$interval = $category->sinterval;
+
+			foreach ($request->request as $key => $value) {
+				if ($key == $category->category_ID && $value != 0) {
+					$registrations = $registrations + $value;
+					break;
+				}
+			}
+
 			for ($i = 0; $i < $registrations; $i++) {
 				$time = new StartTime;
 				$time->edition_ID = $edition_ID;

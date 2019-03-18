@@ -16,9 +16,10 @@
         </div>
         <div class="box-body">
           <p></p>
-          <a class="btn btn-app" id="generateStartTime">
+          <!-- Button generate times modal -->
+          <button type="button" id="btnGenerate" class="btn btn-app" data-toggle="modal" data-target="#generate-starttime">
             <i class="fa fa-cogs"></i> {{trans('title.generateStartTime')}}
-          </a>
+          </button>
           <a class="btn btn-app" id="assignTags">
             <i class="fa fa-tags"></i> {{trans('title.assignTags')}}
           </a>
@@ -53,6 +54,9 @@
         <!-- /.box-body -->
       </div>
       <!-- /.box -->
+
+      @include('races.startlist.generatetime_modal')
+
 @endsection
 @section('scripts')
 @parent
@@ -60,6 +64,7 @@
     var generateTimeUrl = "<?php echo route('generatetime', $edition_ID) ?>";
     var assignTagsUrl = "<?php echo route('assigntags', $edition_ID) ?>";
     var drawStartListUrl = "<?php echo route('drawstartlist', $edition_ID) ?>";
+    var categoryListUrl = "<?php echo route('categorylist-data', $edition_ID) ?>";
 </script>
 <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>
 <script src="{{ asset('js/dataTables.buttons.min.js') }}" type="text/javascript"></script>

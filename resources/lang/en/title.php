@@ -179,4 +179,6 @@ return [
 	'history' => 'History',
 	'audit' => 'Audit',
 	'results' => 'Results',
+	'countOfVacants' => 'Number of vacants',
+	'eachCategory' => 'for each category',
 ];

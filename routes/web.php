@@ -41,8 +41,9 @@ Route::get('race/information/{edition_ID}', 'InformationController@information')
 Route::resource('race/{edition_ID}/category', 'CategoryController', ['parameters' => [
 	'edition_ID' => 'edition_ID',
 ]]);
-Route::post('race/category-data', 'CategoryController@getCategory')->name('category.categoryid-data');
-Route::post('race/categoryid-data', 'CategoryController@getCategoryByID')->name('category.category-data');
+Route::post('race/category-data', 'CategoryController@getCategory')->name('category.category-data');
+Route::post('race/categoryid-data', 'CategoryController@getCategoryByID')->name('category.categoryid-data');
+Route::post('race/categorylist-data/{edition_ID}', 'CategoryController@getCategoryList')->name('categorylist-data');
 Route::resource('race/{edition_ID}/registration', 'RegistrationController', ['parameters' => [
 	'edition_ID' => 'edition_ID',
 ]]);

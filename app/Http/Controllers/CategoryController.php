@@ -277,4 +277,18 @@ class CategoryController extends Controller {
 		// redirect
 		return Redirect::to('race/' . $edition_ID . '/category');
 	}
+
+	/** Return list of all categories .
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getCategoryList($edition_ID) {
+		try {
+			$categories = Category::where('edition_ID', $edition_ID)->get();
+			return response()->json(['data' => $categories]);
+		} catch (\Exception $e) {
+			alert()->error('Error!', $e->getMessage());
+			return $e->getMessage();
+		}
+	}
 }
