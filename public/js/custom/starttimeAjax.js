@@ -105,3 +105,46 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
+
+$(function () {
+    $('#datetimepicker1').datetimepicker({
+        defaultDate: new Date(),
+        format: 'YYYY-MM-DD HH:mm:ss',
+        sideBySide: true
+    });
+});
+
+/* Create new Post */
+$(".starttime-submit").click(function(e) {
+    if($(this).closest('form')[0].checkValidity()){
+    e.preventDefault();
+    var form_action = $("#create-starttime").find("form").attr("action");
+    var start_nr = $("#create-starttime").find("input[name='start_nr']").val();
+    var stime = $("#create-starttime").find("input[name='starttime']").val();
+    var category = $("#create-starttime").find("select[name='category']").val();
+    if (start_nr != '' && stime !='' && category != null){
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: form_action,
+            data:{start_nr:start_nr, stime:stime, category_ID:category},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+                //alert(err.message);
+            }
+        }).done(function(data){
+            $(".modal").modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            toastr.success('New start time was created.', 'Success', {timeOut: 5000});
+            var table = $('#dataTableBuilder').DataTable();
+            table.ajax.reload();
+            $(".formstarttime").trigger("reset");
+        });
+    }  else {
+        toastr.warning('Select category.', 'Category field must be chosen!', {timeOut: 5000});
+    }
+}
+});

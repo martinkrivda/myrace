@@ -42,7 +42,20 @@ class StartTimePolicy {
 	 * @return mixed
 	 */
 	public function create(User $user) {
-		//
+		try {
+			$permissionRule = Permission::where('name', 'StartTime-Create')->first();
+			if ($permissionRule == null) {$permissionRule->permission_ID = null;}
+		} catch (\Exception $e) {
+			$permissionRule->permission_ID = null;
+		}
+		foreach ($user->roles as $role) {
+			foreach ($role->permissions as $permission) {
+				if ($permission->permission_ID === $permissionRule->permission_ID) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

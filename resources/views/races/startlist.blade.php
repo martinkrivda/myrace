@@ -17,6 +17,7 @@
         <div class="box-body">
           <p></p>
           <!-- Button generate times modal -->
+           @can('starttime.generate', Auth::user())
           <button type="button" id="btnGenerate" class="btn btn-app" data-toggle="modal" data-target="#generate-starttime">
             <i class="fa fa-cogs"></i> {{trans('title.generateStartTime')}}
           </button>
@@ -29,6 +30,7 @@
           <a class="btn btn-app" id="refresh">
             <i class="fa fa-refresh"></i> {{trans('title.refresh')}}
           </a>
+          @endcan
         </div>
         <!-- /.box-body -->
       </div>
@@ -39,6 +41,7 @@
 
       <div class="box box-success">
         <div class="box-header with-border">
+          <span><i class="fa fa-th-list" aria-hidden="true"></i></span>
           <h3 class="box-title">{{trans('title.startTime')}}</h3>
 
           <div class="box-tools pull-right">
@@ -49,6 +52,19 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
+            <div class="row">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2">
+              @can('starttime.create', Auth::user())
+              <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#create-starttime"><i class="fa fa-edit"></i> {{ trans('title.addStartTime') }}</button>
+              <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              @endcan
+            </div>
+          </div>
           {!! $dataTable->table(['class' => 'table table-striped table-hover'], false) !!}
         </div>
         <!-- /.box-body -->
@@ -56,6 +72,7 @@
       <!-- /.box -->
 
       @include('races.startlist.generatetime_modal')
+      @include('races.startlist.create_modal')
 
 @endsection
 @section('scripts')
@@ -76,6 +93,8 @@
 <script src="{{ asset('js/pdfmake.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/vfs_fonts.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/buttons.html5.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/moment.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/bootstrap-datetimepicker.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/custom/starttimeAjax.js') }}" type="text/javascript"></script>
 {!! $dataTable->scripts() !!}
 {!! Toastr::message() !!}

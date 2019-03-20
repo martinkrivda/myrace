@@ -148,6 +148,17 @@
                   <th>{{ trans('title.jury') }}:</th>
                   <td>{{$raceinfo->jury1}}, {{$raceinfo->jury2}}, {{$raceinfo->jury3}}</td>
                 </tr>
+                 <tr>
+                  <th>{{ trans('title.status') }}:</th>
+                  <td>
+                    @if ($raceinfo->cancelled == false)
+                        <span class="label label-success">{{trans('title.active')}}</span>
+                    @else
+                        <span class="label label-danger">{{trans('title.cancelled')}}</span>
+                    @endif
+
+                  </td>
+                </tr>
               </table>
             </div>
             <!-- /.box-body -->

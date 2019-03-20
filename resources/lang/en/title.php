@@ -181,4 +181,9 @@ return [
 	'results' => 'Results',
 	'countOfVacants' => 'Number of vacants',
 	'eachCategory' => 'for each category',
+	'addStartTime' => 'Add start time',
+	'active' => 'Active',
+	'cancelled' => 'Cancelled',
+	'status' => 'Status',
+	'categoryname' => 'Category name',
 ];

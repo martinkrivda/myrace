@@ -8,7 +8,11 @@ use App\RaceEdition;
 use App\Registration;
 use App\StartTime;
 use App\Tag;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
+use Validator;
 
 class StartTimeController extends Controller {
 	/**
@@ -28,9 +32,10 @@ class StartTimeController extends Controller {
 	 */
 	public function index(StartTimeDataTable $dataTable, $edition_ID) {
 		$this->authorize('starttime.view', StartTime::class);
+		$categories = Category::where('edition_ID', $edition_ID)->orderBy('categoryname')->pluck('categoryname', 'category_ID');
 		$totalRegistrationSum = StartTime::where('edition_ID', $edition_ID)->count();
 		//$totalPrice = StartTime::where('edition_ID', $edition_ID)->sum('totalprice');
-		return $dataTable->forRaceEdition($edition_ID)->render('races.startlist', ['edition_ID' => $edition_ID, 'totalRegistrationSum' => $totalRegistrationSum]);
+		return $dataTable->forRaceEdition($edition_ID)->render('races.startlist', ['edition_ID' => $edition_ID, 'totalRegistrationSum' => $totalRegistrationSum, 'categories' => $categories]);
 	}
 
 	/**
@@ -48,8 +53,34 @@ class StartTimeController extends Controller {
 	 * @param  \Illuminate\Http\Request  $request
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request) {
-		//
+	public function store(Request $request, $edition_ID) {
+
+		$rules = array(
+			'start_nr' => 'numeric|required|max:99999|min:1',
+			'stime' => 'required|date_format:"Y-m-d H:i:s"',
+			'category_ID' => 'numeric|exists:category,category_ID',
+		);
+
+		$validator = Validator::make(Input::all(), $rules);
+
+		if ($validator->fails()) {
+			return response()->json($validator->errors(), 422);
+		} else {
+			try {
+				$startTime = new StartTime;
+				$startTime->edition_ID = $edition_ID;
+				$startTime->category_ID = $request->category_ID;
+				$startTime->start_nr = $request->start_nr;
+				$startTime->stime = date('Y-m-d H:i:s', strtotime($request->stime));
+				$startTime->save();
+				Log::info('New start time was added to DB.', ['start_nr' => $startTime->start_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
+			} catch (\Exception $e) {
+				$startTime = $e->getMessage();
+				alert()->error('Error!', $e->getMessage());
+				Log::error('New start time could not be added to DB.', ['start_nr' => $startTime->start_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
+			}
+			return response()->json($startTime);
+		}
 	}
 
 	/**
