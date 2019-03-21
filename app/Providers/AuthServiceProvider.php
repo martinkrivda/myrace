@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider {
 	/**
@@ -29,5 +30,7 @@ class AuthServiceProvider extends ServiceProvider {
 		Gate::define('registrations.audit', 'App\Policies\RegistrationPolicy@audit');
 		//Result lists
 		Gate::resource('results', 'App\Policies\ResultListPolicy');
+
+		Passport::routes();
 	}
 }

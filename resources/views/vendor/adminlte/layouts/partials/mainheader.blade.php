@@ -127,7 +127,7 @@
                                 <img src="{{ Gravatar::get($user->email) }}" class="img-circle" alt="User Image" />
                                 <p>
                                     <span data-toggle="tooltip" title="{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</span>
-                                    <small>{{ trans('adminlte_lang::message.login') }} Nov. 2012</small>
+                                    <small>{{ trans('adminlte_lang::message.login') }} {{ date('M Y', strtotime(Auth::user()->created_at)) }}</small>
                                 </p>
                             </li>
                             <!-- Menu Body -->
