@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Alert;
 use App\Category;
 use App\Country;
 use App\DataTables\RegistrationDataTable;
@@ -197,12 +198,13 @@ class RegistrationController extends Controller {
 				$history->creator_ID = $user->id;
 				$history->save();
 				// redirect
+				//$registration->url = route('registration.index', ['edition_ID', $edition_ID]);
 				Log::info('New registration was added to DB.', ['name' => $registration->lastname]);
 				alert()->success('Success!', 'Registration ' . $registration->lastname . ' ' . $registration->firstname . ' created successfully.');
 				return response()->json($registration);
 			} catch (\Exception $e) {
 				Log::error('Can not create registration to DB.', ['firstname' => $request->input('firstname'), 'lastname' => $request->input('lastname'), 'message' => $e->getMessage()]);
-				return redirect()->back()->alert()->error('Error!', $e->getMessage());
+				return redirect()->json('Error!', $e->getMessage());
 			}
 		}
 
@@ -318,16 +320,17 @@ class RegistrationController extends Controller {
 				$registration = Registration::find($registration_ID);
 
 				//update runner data
-				if ($registration->runner_ID == $request->runner_ID
-					&& ($registration->firstname != $request->firstname
-						|| $registration->lastname != $request->lastname)
-					&& $registration->yearofbirth == $request->yearofbirth) {
-					$runner = Runner::where('firstname', $request->firstname)->where('lastname', $request->lastname)->where('yearofbirth', $request->yearofbirth)->first();
-					if ($runner == null) {
-						$runner = new Runner;
-					}
-				} else {
+				if (($registration->runner_ID == $request->runner_ID
+					&& $registration->firstname == $request->firstname
+					&& $registration->lastname == $request->lastname
+					&& $registration->yearofbirth == $request->yearofbirth) ||
+					($registration->runner_ID == $request->runner_ID
+						&& ($registration->firstname != $request->firstname
+							|| $registration->lastname != $request->lastname)
+						&& $registration->yearofbirth == $request->yearofbirth)) {
 					$runner = Runner::find($request->runner_ID);
+				} else {
+					$runner = new Runner;
 				}
 				$runner->firstname = $request->firstname;
 				$runner->lastname = $request->lastname;
@@ -458,10 +461,10 @@ class RegistrationController extends Controller {
 			if ($runner != null) {
 				return $runner;
 			}
-			return null;
+			return response()->json('null');
 		} catch (\Exception $e) {
 			Log::error('Can not find any existing runner from DB.', ['runner' => $request->input('lastname'), 'message' => $e->getMessage()]);
-			return redirect()->back()->alert()->error('Error!', $e->getMessage());
+			return redirect()->json('Error!', $e->getMessage());
 		}
 
 	}
@@ -480,10 +483,10 @@ class RegistrationController extends Controller {
 			if ($registration != null) {
 				return $registration;
 			}
-			return null;
+			return response()->json('null');
 		} catch (\Exception $e) {
 			Log::error('Can not find any existing registration in DB.', ['registration' => $request->input('lastname'), 'message' => $e->getMessage()]);
-			return redirect()->back()->alert()->error('Error!', $e->getMessage());
+			return redirect()->json('Error!', $e->getMessage());
 		}
 	}
 

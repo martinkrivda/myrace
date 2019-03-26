@@ -60,7 +60,7 @@ class TagController extends Controller {
 			// validate
 			// read more on validation at http://laravel.com/docs/validation
 			$rules = array(
-				'epc' => 'required',
+				'epc' => 'required|unique:tag',
 
 			);
 			$validator = Validator::make(Input::all(), $rules);

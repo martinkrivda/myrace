@@ -186,6 +186,7 @@ $(".crud-submit").click(function(e) {
       var form_action = $("#create-registration").attr("action");
       var _token = $('meta[name=csrf-token]').attr('content');
       if (firstname != '' && lastname !='' && yearofbirth != '' && category != null && country != null && gender != null){
+        var formData = {edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, notcompeting, paid, note, registrationsum, _token, form_action};
         $.ajax({
             dataType: 'json',
             type:'POST',
@@ -197,7 +198,7 @@ $(".crud-submit").click(function(e) {
                 swal(err.message,JSON.stringify(err.errors),'error');
             }
         }).done(function(data){
-          if (data != null){
+          if (data != 'null'){
             toastr.warning('The same registration already exists.', 'Warning', {timeOut: 5000});
             const swalWithBootstrapButtons = Swal.mixin({
               confirmButtonClass: 'btn btn-success',
@@ -214,7 +215,7 @@ $(".crud-submit").click(function(e) {
               reverseButtons: true
             }).then((result) => {
               if (result.value) {
-
+                storeToDatabase(formData);
               } else if (
                 // Read more about handling dismissals
                 result.dismiss === Swal.DismissReason.cancel
@@ -227,48 +228,11 @@ $(".crud-submit").click(function(e) {
                 return;
               }
             });
+          } else {
+            storeToDatabase(formData);
           }
         });
-      if(runner_ID == '-1' || runner_ID == ''){
-        $.ajax({
-            dataType: 'json',
-            type:'POST',
-            url: '/runners/searchsimilar',
-            data:{firstname, lastname, yearofbirth, _token:_token},
-            error: function(xhr, status, error) {
-                console.log("error", xhr.responseText);
-                var err = JSON.parse(xhr.responseText);
-                swal(err.message,JSON.stringify(err.errors),'error');
-                //alert(err.message);
-            }
-        }).done(function(data){
-          if (data != null){
-            toastr.warning('Found existing runner.', 'Warning', {timeOut: 5000});
-            runner_ID = data.runner_ID;
-            if(email == ''){mail = data.email}
-          }
-        });
-      }
-        $.ajax({
-            dataType: 'json',
-            type:'POST',
-            url: form_action,
-            data:{edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, registrationsum, notcompeting, paid, note, _token:_token},
-            error: function(xhr, status, error) {
-                console.log("error", xhr.responseText);
-                var err = JSON.parse(xhr.responseText);
-                var message = "";
-                Object.keys(err).forEach(function(k){
-                  message += err[k];
-                });
-                swal('Ooops, something went wrong!',message,'error');
-            }
-        }).done(function(data){
-            $(".formregistration").trigger("reset");
-            toastr.success('New registration was created.', 'Success', {timeOut: 5000});
-            //setTimeout(function(){}, 5000);
-            //window.location.replace('/race/'+edition_ID+'/registration');
-        });
+
     }  else {
         toastr.warning('Select gender, category and country.', 'Gender, category and country fields must be chosen!', {timeOut: 5000});
     }
@@ -300,6 +264,7 @@ $(".crud-edit").click(function(e) {
       var form_action = $("#create-registration").attr("action");
       var _token = $('meta[name=csrf-token]').attr('content');
       if (firstname != '' && lastname !='' && yearofbirth != '' && category != null && country != null && gender != null){
+        var formData = {edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, notcompeting, paid, note, registrationsum, _token, form_action};
         $.ajax({
             dataType: 'json',
             type:'POST',
@@ -328,7 +293,7 @@ $(".crud-edit").click(function(e) {
               reverseButtons: true
             }).then((result) => {
               if (result.value) {
-
+                updateToDatabase(formData);
               } else if (
                 // Read more about handling dismissals
                 result.dismiss === Swal.DismissReason.cancel
@@ -341,14 +306,24 @@ $(".crud-edit").click(function(e) {
                 return;
               }
             });
+          } else {
+            updateToDatabase(formData);
           }
         });
-      if(runner_ID == '-1' || runner_ID == ''){
+    }  else {
+        toastr.warning('Select gender, category and country.', 'Gender, category and country fields must be chosen!', {timeOut: 5000});
+    }
+  }
+});
+
+function storeToDatabase (formData) {
+  console.log(formData.runner_ID);
+  if(formData.runner_ID == '-1' || formData.runner_ID == ''){
         $.ajax({
             dataType: 'json',
             type:'POST',
             url: '/runners/searchsimilar',
-            data:{firstname, lastname, yearofbirth, _token:_token},
+            data:{firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, _token:formData._token},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -356,18 +331,61 @@ $(".crud-edit").click(function(e) {
                 //alert(err.message);
             }
         }).done(function(data){
-          if (data != null){
+          console.log(data);
+          if (data != 'null'){
             toastr.warning('Found existing runner.', 'Warning', {timeOut: 5000});
-            runner_ID = data.runner_ID;
-            if(email == ''){mail = data.email}
+            formData.runner_ID = data.runner_ID;
+            if(formData.email == ''){formData.email = data.email}
+          }
+        });
+      }
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: formData.form_action,
+            data:{edition_ID:formData.edition_ID, runner_ID:formData.runner_ID, firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, gender:formData.gender, club:formData.club, club_ID:formData.club_ID, email:formData.email, phone:formData.phone, country:formData.country, entryfee:formData.entryfee, start_nr:formData.start_nr, category:formData.category, registrationsum:formData.registrationsum, notcompeting:formData.notcompeting, paid:formData.paid, note:formData.note, _token:formData._token},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                var message = "";
+                Object.keys(err).forEach(function(k){
+                  message += err[k];
+                });
+                swal('Ooops, something went wrong!',message,'error');
+            }
+        }).done(function(data){
+            toastr.success('Registration was updated successfully.', 'Success', {timeOut: 5000});
+            $("#create-registration").find("input[name='club_ID']").val(null);
+            $("#create-registration").find("input[name='runner_ID']").val(null);
+        });
+}
+
+function updateToDatabase (formData) {
+  if(formData.runner_ID == '-1' || formData.runner_ID == ''){
+        $.ajax({
+            dataType: 'json',
+            type:'POST',
+            url: '/runners/searchsimilar',
+            data:{firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, _token:formData._token},
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+                //alert(err.message);
+            }
+        }).done(function(data){
+          if (data != 'null'){
+            toastr.warning('Found existing runner.', 'Warning', {timeOut: 5000});
+            formData.runner_ID = data.runner_ID;
+            if(formData.email == ''){formData.email = data.email}
           }
         });
       }
         $.ajax({
             dataType: 'json',
             type:'PUT',
-            url: form_action,
-            data:{edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, start_nr, category, registrationsum, notcompeting, paid, note, _token:_token},
+            url: formData.form_action,
+            data:{edition_ID:formData.edition_ID, runner_ID:formData.runner_ID, firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, gender:formData.gender, club:formData.club, club_ID:formData.club_ID, email:formData.email, phone:formData.phone, country:formData.country, entryfee:formData.entryfee, start_nr:formData.start_nr, category:formData.category, registrationsum:formData.registrationsum, notcompeting:formData.notcompeting, paid:formData.paid, note:formData.note, _token:formData._token},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -380,11 +398,7 @@ $(".crud-edit").click(function(e) {
         }).done(function(data){
             toastr.success('Registration was updated successfully.', 'Success', {timeOut: 5000});
         });
-    }  else {
-        toastr.warning('Select gender, category and country.', 'Gender, category and country fields must be chosen!', {timeOut: 5000});
-    }
-  }
-});
+}
 
 $.ajaxSetup({
     headers: {
