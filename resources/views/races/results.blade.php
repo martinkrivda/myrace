@@ -30,14 +30,24 @@
                   <th>{{ trans('title.club') }}</th>
                   <th>{{ trans('title.start_nr') }}</th>
                   <th>{{ trans('title.time') }}</th>
+                  <th>{{ trans('title.loss') }}</th>
+                   <th>{{ trans('title.kmtime') }}</th>
                 </tr>
             </thead>
-                @forelse ($category->results as $result)
+            <tbody>
+                @forelse ($category->results as $index => $result)
                     <tr>
                         <td>
                             @switch($result->status)
                                 @case('OK')
+                                    @if($index > 0 && $result->timems == $category->results[$index - 1]->timems)
+                                    {{$position}}.
+                                    @else
                                     {{$loop->iteration}}.
+                                    @php
+                                    $position = $loop->iteration;
+                                    @endphp
+                                    @endif
                                     @break
 
                                 @case('RUNNING')
@@ -69,10 +79,32 @@
                         <td>{{$result->clubname}}</td>
                         <td>{{$result->start_nr}}</td>
                         <td>{{ $result->timems ? date('H:i:s', $result->timems) : ''}}</td>
+                        <td>
+                            @if ($index >= 0 && $result->timems != '')
+                                @php
+                                    $seconds = ($result->timems - $category->results[$loop->first]->timems);
+                                    $minutes = floor($seconds / 60);
+                                    $seconds -= $minutes * 60;
+                                    $loss = "$minutes:".date('s', $seconds);
+                                @endphp
+                                + {{ $loss }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($index >= 0 && $result->timems != '')
+                                @php
+                                    $seconds = ($result->timems / ($category->length / 1000));
+                                    $minutes = floor($seconds / 60);
+                                    $seconds -= $minutes * 60;
+                                    $timeKm = "$minutes:".date('s', $seconds);
+                                @endphp
+                                {{$timeKm}}
+                            @endif
+                        </td>
                     </tr>
                 @empty
                 <tr>
-                    <td colspan="6"><center>No results</center></td>
+                    <td colspan="8"><center>No results</center></td>
                 </tr>
                 @endforelse
                 </tbody>

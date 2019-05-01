@@ -66,6 +66,10 @@ class StartTimeController extends Controller {
 		if ($validator->fails()) {
 			return response()->json($validator->errors(), 422);
 		} else {
+			$existingNr = StartTime::where('edition_ID', $edition_ID)->where('start_nr', $request->start_nr)->first();
+			if ($existingNr != null) {
+				return response()->json('Start number already exist in the database.', 422);
+			}
 			try {
 				$startTime = new StartTime;
 				$startTime->edition_ID = $edition_ID;
@@ -216,10 +220,15 @@ class StartTimeController extends Controller {
 		$updates = 0;
 
 		foreach ($categories as $key => $category) {
-			$startTimes = StartTime::where('edition_ID', $edition_ID)->whereNotNull('tag_ID')->where('category_ID', $category->category_ID)->get();
+			$regsWithStartTime = Registration::where('edition_ID', $edition_ID)->whereNotNull('stime_ID')->get();
+			$drawExcept = array();
+			foreach ($regsWithStartTime as $key => $regWithStartTime) {
+				$drawExcept[] = $regWithStartTime->stime_ID;
+			}
+			$startTimes = StartTime::where('edition_ID', $edition_ID)->whereNotNull('tag_ID')->where('category_ID', $category->category_ID)->whereNotIn('stime_ID', $drawExcept)->get();
 			$startTimes = $startTimes->shuffle();
 			$startTimes->all();
-			$registrations = Registration::where('edition_ID', $edition_ID)->where('category_ID', $category->category_ID)->get();
+			$registrations = Registration::where('edition_ID', $edition_ID)->where('category_ID', $category->category_ID)->where('stime_ID', null)->get();
 			for ($i = 0; $i < count($startTimes); $i++) {
 				$registration = $registrations[$i];
 				$startTime = $startTimes[$i];

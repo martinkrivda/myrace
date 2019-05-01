@@ -10,32 +10,7 @@
         <!-- Home tab content -->
         <div class="tab-pane active" id="control-sidebar-home-tab">
             <h3 class="control-sidebar-heading">{{ trans('adminlte_lang::message.recentactivity') }}</h3>
-            <ul class='control-sidebar-menu'>
-                <li>
-                    <a href='javascript::;'>
-                        <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-                        <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">{{ trans('adminlte_lang::message.birthday') }}</h4>
-                            <p>{{ trans('adminlte_lang::message.birthdaydate') }}</p>
-                        </div>
-                    </a>
-                </li>
-            </ul><!-- /.control-sidebar-menu -->
-
-            <h3 class="control-sidebar-heading">{{ trans('adminlte_lang::message.progress') }}</h3>
-            <ul class='control-sidebar-menu'>
-                <li>
-                    <a href='javascript::;'>
-                        <h4 class="control-sidebar-subheading">
-                            {{ trans('adminlte_lang::message.customtemplate') }}
-                            <span class="label label-danger pull-right">70%</span>
-                        </h4>
-                        <div class="progress progress-xxs">
-                            <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                        </div>
-                    </a>
-                </li>
-            </ul><!-- /.control-sidebar-menu -->
+<!-- /.control-sidebar-menu -->
 
         </div><!-- /.tab-pane -->
         <!-- Stats tab content -->

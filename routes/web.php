@@ -55,6 +55,8 @@ Route::get('race/{edition_ID}/history', 'HistoryController@history', ['parameter
 
 Route::get('/auth/google', 'Auth\LoginController@redirectToProvider');
 Route::get('/auth/google/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('/auth/facebook', 'Auth\LoginController@redirectToFacebookProvider');
+Route::get('/auth/facebook/callback', 'Auth\LoginController@handleFacebookProviderCallback');
 
 Route::group(['middleware' => 'auth'], function () {
 	//    Route::get('/link1', function ()    {

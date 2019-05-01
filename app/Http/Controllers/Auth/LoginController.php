@@ -103,6 +103,16 @@ class LoginController extends Controller {
 	public function redirectToProvider() {
 		return Socialite::driver('google')->redirect();
 	}
+
+	/**
+	 * Redirect the user to the Facebook authentication page.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function redirectToFacebookProvider() {
+		return Socialite::driver('facebook')->redirect();
+	}
+
 	/**
 	 * Obtain the user information from Google.
 	 *
@@ -116,6 +126,26 @@ class LoginController extends Controller {
 		}
 		// check if they're an existing user
 		$existingUser = User::where('google_ID', $user->id)->first();
+		if ($existingUser) {
+			// log them in
+			auth()->login($existingUser, true);
+		}
+		return redirect()->to('/home');
+	}
+
+	/**
+	 * Obtain the user information from Google.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function handleFacebookProviderCallback() {
+		try {
+			$user = Socialite::driver('facebook')->user();
+		} catch (\Exception $e) {
+			return redirect('/login');
+		}
+		// check if they're an existing user
+		$existingUser = User::where('facebook_ID', $user->id)->first();
 		if ($existingUser) {
 			// log them in
 			auth()->login($existingUser, true);

@@ -70,7 +70,12 @@ $(".crud-edition-submit").click(function(e) {
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
-                swal(err.message,JSON.stringify(err.errors),'error');
+                var errors = '';
+                $.each( err, function( key, value ) {
+                    toastr.error(value, key, {timeOut: 5000});
+                    errors = errors + value + '<br>';
+                });
+                swal('Error!',errors, 'error');
                 //alert(err.message);
             }
         }).done(function(data){

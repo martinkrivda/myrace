@@ -29,7 +29,7 @@ return [
 	'signGithub' => 'Sign in using Github',
 	'signFacebook' => 'Sign in using Facebook',
 	'signTwitter' => 'Sign in using Twitter',
-	'signGoogle+' => 'Sign in using Google+',
+	'signGoogle' => 'Sign in using Google',
 	'signLinkedin' => 'Sign in using Linkedin',
 	'sendpassword' => 'Send Password Reset Link',
 	'passwordreset' => 'Reset password',

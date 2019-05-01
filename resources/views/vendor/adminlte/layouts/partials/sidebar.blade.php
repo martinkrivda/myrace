@@ -46,14 +46,12 @@
                         <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/registration') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
                         @endcan
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/payment') }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
-                        <li><a href="{{ URL::to('race/aservices/' . $nav->edition_ID) }}"><i class="fa fa-share-square-o" aria-hidden="true"></i> {{ trans('menu.additionalserv') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/rfidreader') }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startlist') }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
                         @can('results.view', Auth::user())
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/resultlist') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>
                         @endcan
                         <li><a href="{{ URL::to('race/speaker/' . $nav->edition_ID) }}"><i class="fa fa-microphone" aria-hidden="true"></i> {{ trans('menu.speaker') }}</a></li>
-                        <li><a href="{{ URL::to('race/statistics/' . $nav->edition_ID) }}"><i class="fa fa-bar-chart-o" aria-hidden="true"></i> {{ trans('menu.statistics') }}</a></li>
                         @can('registrations.audit', Auth::user())
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/history') }}"><i class="fa fa-history" aria-hidden="true"></i> {{ trans('menu.history') }}</a></li>
                         @endcan
@@ -70,7 +68,6 @@
                     <li><a href="{{ url('clubs') }}"><i class='fa fa-home'></i>{{ trans('adminlte_lang::message.clubs') }}</a></li>
                 </ul>
             </li>
-			<li><a href="{{ url('email') }}"><i class='fa fa-envelope'></i> <span>{{ trans('adminlte_lang::message.email') }}</span></a></li>
 			<li class="header">{{ trans('adminlte_lang::message.settings') }}</li>
 			 <li class="treeview">
                 <a href="#"><i class='fa fa-gears'></i> <span>{{ trans('adminlte_lang::message.preferences') }}</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -78,11 +75,9 @@
                     <li><a href="{{ url('users') }}"><i class='fa fa-users'></i>{{ trans('adminlte_lang::message.users') }}</a></li>
                     <li><a href="{{ url('races') }}"><i class='fa fa-trophy'></i>{{ trans('adminlte_lang::message.races_sml') }}</a></li>
 					<li><a href="{{ url('tags') }}"><i class='fa fa-tags'></i>{{ trans('adminlte_lang::message.tags') }}</a></li>
-					<li><a href="{{ url('advancedsetting') }}"><i class='fa fa-wrench'></i>{{ trans('adminlte_lang::message.advanced') }}</a></li>
                 </ul>
             </li>
 			<li><a href="{{ url('organiser') }}"><i class='fa fa-briefcase'></i> <span>{{ trans('adminlte_lang::message.organiser') }}</span></a></li>
-			<li><a href="{{ url('newsletter') }}"><i class='fa fa-bullhorn'></i> <span>{{ trans('adminlte_lang::message.newsletters') }}</span></a></li>
             <li><a href="{{ url('releasenotes') }}"><i class='fa fa-refresh'></i> <span>{{ trans('menu.releasenotes') }}</span></a></li>
         </ul><!-- /.sidebar-menu -->
     </section>

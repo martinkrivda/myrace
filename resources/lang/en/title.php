@@ -74,6 +74,8 @@ return [
 	'active' => 'Active',
 	'lastlogin' => 'Last Login',
 	'countofusers' => 'Count of Users',
+	'countOfRoles' => 'Count of Roles',
+	'countOfPermission' => 'Count of Permission',
 	'abbreviation' => 'Abbreviation',
 	'fillabbreviation' => 'Fill abbreviation',
 	'information' => 'Race Information',
@@ -186,4 +188,7 @@ return [
 	'cancelled' => 'Cancelled',
 	'status' => 'Status',
 	'categoryname' => 'Category name',
+	'loss' => 'Loss',
+	'kmtime' => 'Time / Km',
+	'updateUser' => 'Update user',
 ];

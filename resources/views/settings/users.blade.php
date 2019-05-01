@@ -14,15 +14,11 @@
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3>{{ $totalusers }}</h3>
-
               <p>{{trans('title.countofusers')}}</p>
             </div>
             <div class="icon">
               <i class="fa fa-users" aria-hidden="true"></i>
             </div>
-            <a href="#" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
           </div>
         </div>
         <!-- ./col -->
@@ -30,16 +26,12 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-              <p>Bounce Rate</p>
+             <h3>{{ $totalroles }}</h3>
+              <p>{{trans('title.countOfRoles')}}</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
           </div>
         </div>
         <!-- ./col -->
@@ -47,16 +39,12 @@
           <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
-              <h3>44</h3>
-
-              <p>User Registrations</p>
+              <h3>{{ $totalpermission }}</h3>
+              <p>{{trans('title.countOfPermission')}}</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer">
-              More info <i class="fa fa-arrow-circle-right"></i>
-            </a>
           </div>
         </div>
         <!-- ./col -->
@@ -114,7 +102,7 @@
                 </div>
         </div>
     </div>
-    @include('settings.edituser_modal')
+    @include('settings.user.edit_modal')
 
 @endsection
 

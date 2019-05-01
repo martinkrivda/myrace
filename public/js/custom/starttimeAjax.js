@@ -8,6 +8,7 @@ $("#btnGenerate").click(function(e){
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
                 swal(err.message,JSON.stringify(err.errors),'error');
+                toastr.error(err, 'Error!', {timeOut: 5000});
                 //alert(err.message);
             }
         }).done(function(data){
@@ -39,13 +40,18 @@ $("#generate-submit").click(function(e) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
                 swal(err.message,JSON.stringify(err.errors),'error');
+                toastr.error(err, 'Error!', {timeOut: 5000});
                 //alert(err.message);
             }
         }).done(function(data){
             $(".modal").modal('hide');
             $('body').removeClass('modal-open');
             $('.modal-backdrop').remove();
-            toastr.success('Start times generated.', 'Success', {timeOut: 5000});
+            if (data.updates == 0){
+                toastr.warning('Times have been already generated.', 'Nothing to generate.', {timeOut: 5000});
+            } else {
+                toastr.success('Start times generated.', 'Success', {timeOut: 5000});
+            }
             var table = $('#dataTableBuilder').DataTable();
             table.ajax.reload();
         });
@@ -67,7 +73,7 @@ $("#assignTags").click(function(e) {
         }).done(function(data){
             toastr.success('RFID tags assigned to start times.', 'Success', {timeOut: 5000});
             if(data.updates == 'Unsatisfactory number of free tags!'){
-                swal('Warning!','Unsatisfactory number of free tags!', 'warning');
+                swal('Warning!','Unsatisfactory number of free tags! <br /> Please add tags to database.', 'warning');
             }
             var table = $('#dataTableBuilder').DataTable();
             table.ajax.reload();
@@ -84,10 +90,15 @@ $("#drawStartList").click(function(e) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
                 swal(err.message,JSON.stringify(err.errors),'error');
+                toastr.error(err, 'Error!', {timeOut: 5000});
                 //alert(err.message);
             }
         }).done(function(data){
-            toastr.success('Draw start list successfull.', 'Success', {timeOut: 5000});
+            if (data.updates == 0){
+                toastr.warning('Nothing to draw.', 'No times for drawing', {timeOut: 5000});
+            } else {
+                toastr.success('Draw start list successfull.', 'Success', {timeOut: 5000});
+            }
             var table = $('#dataTableBuilder').DataTable();
             table.ajax.reload();
         });
@@ -132,6 +143,7 @@ $(".starttime-submit").click(function(e) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
                 swal(err.message,JSON.stringify(err.errors),'error');
+                toastr.error(err, 'Error!', {timeOut: 5000});
                 //alert(err.message);
             }
         }).done(function(data){

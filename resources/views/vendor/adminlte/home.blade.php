@@ -24,7 +24,7 @@
 						</div>
 					</div>
 					<div class="box-body">
-						{{ trans('adminlte_lang::message.logged') }}. Start creating your amazing application!
+						{{ trans('adminlte_lang::message.logged') }}. Page for amazing dashboard! Soon available.
 					</div>
 					<!-- /.box-body -->
 				</div>

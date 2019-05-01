@@ -163,6 +163,7 @@ class RunnersController extends Controller {
 		} catch (\Exception $e) {
 			alert()->error('Error!', $e->getMessage());
 			Log::error('Runner wasn`t deleted from DB.', ['runner_ID' => $runner_ID]);
+			return response()->json($e->getMessage(), 422);
 		}
 		return response()->json(['message' => 'Runner deleted successfully', 'status' => 'success', 'done']);
 	}
