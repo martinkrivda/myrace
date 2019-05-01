@@ -106,7 +106,7 @@
         <div class="col-xs-6">
             <div class="form-group">
             {{ Form::label('currency', trans('title.currency')) }}
-            {{Form::select('currency', array(), null, array(
+            {{Form::select('currency', $currencies, 'CZK', array(
             'id' => 'currency',
             'class'=>'form-control',
             ))}}
