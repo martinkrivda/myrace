@@ -28,7 +28,7 @@ INSERT INTO currency (name, code, symbol) VALUES ('Pesos', 'COP', '$');
 INSERT INTO currency (name, code, symbol) VALUES ('Colón', 'CRC', '₡');
 INSERT INTO currency (name, code, symbol) VALUES ('Kuna', 'HRK', 'kn');
 INSERT INTO currency (name, code, symbol) VALUES ('Pesos', 'CUP', '₱');
-INSERT INTO currency (name, code, symbol) VALUES ('Koruny', 'CZK', 'Kč');
+INSERT INTO currency (name, code, symbol) VALUES ('Česká koruna', 'CZK', 'Kč');
 INSERT INTO currency (name, code, symbol) VALUES ('Kroner', 'DKK', 'kr');
 INSERT INTO currency (name, code, symbol) VALUES ('Pesos', 'DOP ', 'RD$');
 INSERT INTO currency (name, code, symbol) VALUES ('Dollars', 'XCD', '$');
