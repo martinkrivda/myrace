@@ -43,13 +43,25 @@
         {{ Form::text('categoryname', null,
       array(
         'class'=>'form-control',
-        'placeholder'=>trans('title.fillname'),
+        'placeholder'=>trans('title.fillCatName'),
         'id' => 'categoryname',
         'maxlength' => '30',
         'pattern' => '[a-zA-Z0-9 \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉĚÚŮ\.]{1,30}',
         'required' => 'required',
       ))}}
     </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+            {{ Form::label('course', trans('title.course')) }}
+            {{Form::select('course', $courses, '', array(
+            'id' => 'courses',
+            'class'=>'form-control',
+            'required' => 'required',
+            ))}}
+            </div>
+        </div>
+    <div class="col-xs-6">
     <div class="form-group">
         {{ Form::label('gender', trans('title.gender')) }}
         {{Form::select('gender', array('male' => trans('title.male'), 'female' => trans('title.female')), null, array(
@@ -57,6 +69,8 @@
         'id' => 'gender',
         'class'=>'form-control',
         ))}}
+    </div>
+</div>
     </div>
     <div class="row">
         <div class="col-xs-6">

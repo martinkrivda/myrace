@@ -65,6 +65,19 @@
 
 .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 
+.tag-number {   
+  -webkit-transform: rotate(270deg);
+  transform: rotate(270deg);
+  color: #333;
+  position: relative;
+  top: 40%;
+  font-size: 4.5rem;
+  text-decoration: blink;
+  font-weight: bold;
+ }
+
+ .light {color: gray;}
+
 .flex-equal > * {
   -ms-flex: 1;
   -webkit-box-flex: 1;

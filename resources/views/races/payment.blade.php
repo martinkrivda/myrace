@@ -40,7 +40,7 @@
 
             <div class="info-box-content">
               <span class="info-box-text">{{trans('title.paid')}}</span>
-              <span class="info-box-number">13,648</span>
+              <span class="info-box-number">{{$totalPaid}}</span>
             </div>
             <!-- /.info-box-content -->
           </div>

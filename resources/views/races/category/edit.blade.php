@@ -50,6 +50,18 @@
         'required' => 'required',
       ))}}
     </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="form-group">
+            {{ Form::label('course', trans('title.course')) }}
+            {{Form::select('course', $courses, $category->course_ID, array(
+            'id' => 'courses',
+            'class'=>'form-control',
+            'required' => 'required',
+            ))}}
+            </div>
+        </div>
+    <div class="col-xs-6">
     <div class="form-group">
         {{ Form::label('gender', trans('title.gender')) }}
         {{Form::select('gender', array('male' => trans('title.male'), 'female' => trans('title.female')), $category->gender, array(
@@ -57,6 +69,8 @@
         'id' => 'gender',
         'class'=>'form-control',
         ))}}
+    </div>
+</div>
     </div>
     <div class="row">
         <div class="col-xs-6">

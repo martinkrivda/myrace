@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Alert;
 use App\Category;
+use App\Course;
 use App\Currency;
 use DB;
 use Exception;
@@ -103,8 +104,9 @@ class CategoryController extends Controller
     public function create($edition_ID)
     {
         $currencies = Currency::pluck('name', 'code');
+        $courses = Course::where('edition_ID', $edition_ID)->pluck('coursename', 'course_ID');
         // load the create form (app/views/races/category/create.blade.php)
-        return view('races.category.create', ['edition_ID' => $edition_ID], compact('currencies'));
+        return view('races.category.create', ['edition_ID' => $edition_ID], compact('currencies'))->with('courses', $courses);
     }
 
     /**
@@ -121,6 +123,7 @@ class CategoryController extends Controller
             $rules = array(
                 'categoryname' => 'required|string',
                 'gender' => 'required|max:6|string',
+                'course_ID' => 'numeric',
                 'length' => 'numeric|nullable',
                 'climb' => 'numeric|nullable',
                 'entryfee' => 'numeric|nullable',
@@ -145,6 +148,7 @@ class CategoryController extends Controller
                 // store
                 $category = new Category;
                 $category->categoryname = mb_convert_case($request->input('categoryname'), MB_CASE_UPPER, "UTF-8");
+                $category->course_ID = Input::get('course');
                 $category->gender = Input::get('gender');
                 $category->edition_ID = $edition_ID;
                 if (Input::get('length')) {$category->length = $request->input('length');}
@@ -184,7 +188,9 @@ class CategoryController extends Controller
     {
         try {
             // get the nerd
-            $category = Category::find($category_ID);
+            $category = Category::query()
+                ->leftJoin('course', 'category.course_ID', '=', 'course.course_ID')
+                ->find($category_ID);
 
             // show the edit form and pass the nerd
             return view('races.category.show', ['edition_ID' => $edition_ID])->with('category', $category);
@@ -206,9 +212,10 @@ class CategoryController extends Controller
         // get the nerd
         $category = Category::find($category_ID);
         $currencies = Currency::pluck('name', 'code');
+        $courses = Course::where('edition_ID', $edition_ID)->pluck('coursename', 'course_ID');
         // show the edit form and pass the nerd
         return view('races.category.edit', ['edition_ID' => $edition_ID], compact('currencies'))
-            ->with('category', $category);
+            ->with('category', $category)->with('courses', $courses);
     }
 
     /**
@@ -226,6 +233,7 @@ class CategoryController extends Controller
             // read more on validation at http://laravel.com/docs/validation
             $rules = array(
                 'categoryname' => 'required|string',
+                'course_ID' => 'numeric',
                 'gender' => 'required|max:6|string',
                 'length' => 'numeric|nullable',
                 'climb' => 'numeric|nullable',
@@ -251,6 +259,7 @@ class CategoryController extends Controller
                 // store
                 $category = Category::find($category_ID);
                 $category->categoryname = mb_convert_case($request->input('categoryname'), MB_CASE_UPPER, "UTF-8");
+                $category->course_ID = Input::get('course');
                 $category->gender = Input::get('gender');
                 if (Input::get('length')) {$category->length = $request->input('length');}
                 if (Input::get('climb')) {$category->climb = $request->input('climb');}

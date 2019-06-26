@@ -39,15 +39,15 @@
         <p class="lead font-weight-normal">App for organizing and timing running races.<br />Make your race smartly simple with our low-cost solution.</p>
         <a class="btn btn-outline-secondary" href="{{url('login')}}">Coming soon</a>
       </div>
-      <div class="product-device box-shadow d-none d-md-block"></div>
-      <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+      <div class="product-device box-shadow d-none d-md-block"><p class="tag-number">6578923</p></div>
+      <div class="product-device product-device-2 box-shadow d-none d-md-block"><p class="tag-number light">1359785</p></div>
     </div>
 
  <div class="container marketing">
      <div class="row featurette">
           <div class="col-md-7">
-            <h2 class="featurette-heading"><a name="features">Organize races without worries.<span class="text-muted">Simply, smartly and automatically.</span></a></h2>
-            <p class="lead">With our app, organizers don't have to be worried about it. You have always everything at hand and readily available. In addition, with chips you measure the race with your feet on the table.</p>
+            <h2 class="featurette-heading"><a name="features">Organize races without worries. <span class="text-muted">Simply, smartly and automatically.</span></a></h2>
+            <p class="lead">With our app, organizers don't have to be worried about it. You have always everything at hand and readily available. In&nbsp;addition, with chips you measure the race with your feet on the table.</p>
           </div>
           <div class="col-md-5">
             <img class="featurette-image img-fluid mx-auto" src="{{ asset('img/myrace_registration.png') }}" alt="Generic placeholder image">
@@ -72,6 +72,7 @@
               <li>5 users included</li>
               <li>up to 200 registrations</li>
               <li>Email support</li>
+              <li>&nbsp;</li>
             </ul>
             <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
           </div>
@@ -101,7 +102,7 @@
               <li>20 users included</li>
               <li>registrations not limited</li>
               <li>Phone and email support</li>
-              <li>specilist in the place</li>
+              <li>specialist in the place</li>
             </ul>
             <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
           </div>
@@ -165,5 +166,3 @@
     </script>
   </body>
 </html>
-
-

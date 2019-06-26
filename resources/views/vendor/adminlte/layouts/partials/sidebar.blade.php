@@ -41,12 +41,15 @@
                     <a href="#"><i class='fa fa-rocket'></i> <span>{{$nav->edition_nr}}. {{trans('menu.editionof')}} {{$nav->race_abbr}}</span> <i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
                         <li><a href="{{ URL::to('race/information/' . $nav->edition_ID) }}"><i class="fa fa-puzzle-piece" aria-hidden="true"></i> {{ trans('menu.information') }}</a></li>
+                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/course') }}"><i class="fa fa-road" aria-hidden="true"></i>
+                        {{ trans('menu.course') }}</a></li>
                         <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/category') }}"><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ trans('menu.category') }}</a></li>
                         @can('registrations.view', Auth::user())
-                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/registration') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.registrations') }}</a></li>
+                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/registration') }}"><i class="fa fa-address-card-o" aria-hidden="true"></i> {{ trans('menu.entry') }}</a></li>
                         @endcan
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/payment') }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/rfidreader') }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
+                        <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startnumber') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>{{ trans('menu.startnumber') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startlist') }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
                         @can('results.view', Auth::user())
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/resultlist') }}"><i class="fa fa-list-alt" aria-hidden="true"></i> {{ trans('menu.resultlist') }}</a></li>

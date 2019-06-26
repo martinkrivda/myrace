@@ -35,6 +35,10 @@
               <td>{{$category->categoryname}}</td>
             </tr>
             <tr>
+              <th>{{ trans('title.course') }}:</th>
+              <td>{{$category->coursename}}</td>
+            </tr>
+            <tr>
               <th>{{ trans('title.gender') }}:</th>
               <td>{{$category->gender}}</td>
             </tr>
