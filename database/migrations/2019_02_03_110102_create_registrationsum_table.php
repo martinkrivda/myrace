@@ -27,19 +27,19 @@ class CreateRegistrationsumTable extends Migration {
 			$table->foreign('edition_ID')->references('edition_ID')->on('raceedition')->onDelete('restrict');
 		});
 		DB::statement("ALTER TABLE registrationsum comment 'Table records registrations summary.'");
-		DB::table('registrationsum')->insert(
-			array(
-				'regsummary_ID' => '0',
-				'edition_ID' => '1',
-				'name' => 'Not grouped',
-				'email' => 'martin.krivda@kobchocen.cz',
-				'payref' => '1902041703',
-				'creator_ID' => '1',
-				'created_at' => date("Y-m-d H:i:s"),
-				'updated_at' => date("Y-m-d H:i:s"),
-			)
-		);
-		DB::statement("UPDATE registrationsum SET regsummary_ID = 0 WHERE regsummary_ID = 1");
+		/*DB::table('registrationsum')->insert(
+				array(
+					'regsummary_ID' => '0',
+					'edition_ID' => '1',
+					'name' => 'Not grouped',
+					'email' => 'martin.krivda@kobchocen.cz',
+					'payref' => '1902041703',
+					'creator_ID' => '1',
+					'created_at' => date("Y-m-d H:i:s"),
+					'updated_at' => date("Y-m-d H:i:s"),
+				)
+			);
+		*/
 	}
 
 	/**
