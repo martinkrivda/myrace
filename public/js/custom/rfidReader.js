@@ -22,7 +22,7 @@ function selectLastFinish() {
 			  	rows = rows + '<td>'+value.read_ID+'</td>';
 			  	rows = rows + '<td>'+value.EPC+'</td>';
 		        rows = rows + '<td>'+value.gateway+'</td>';
-		        rows = rows + '<td>'+value.rfid_adress+'</td>';
+		        rows = rows + '<td>'+value.rfid_reader+'</td>';
 		        rows = rows + '<td>'+value.time+'</td>';
 			  	rows = rows + '</tr>';
 			});

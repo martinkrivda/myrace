@@ -52,7 +52,7 @@ class RfidReaderController extends Controller {
 		$rules = array(
 			'gateway' => 'required|string|max:1',
 			'edition_ID' => 'numeric|exists:raceedition,edition_ID',
-			'rfidtag' => 'required',
+			'rfidtag' => 'required|max:25',
 		);
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -64,7 +64,7 @@ class RfidReaderController extends Controller {
 			$rfidRead->EPC = $request->rfidtag;
 			$rfidRead->gateway = $request->gateway;
 			$rfidRead->edition_ID = $request->edition_ID;
-			$rfidRead->rfid_adress = request()->ip();
+			$rfidRead->rfid_reader = request()->ip();
 			$rfidRead->year = date('Y', time());
 			$rfidRead->time = date('Y-m-d H:i:s.u', strtotime($request->time));
 			$rfidRead->save();
