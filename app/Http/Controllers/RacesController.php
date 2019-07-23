@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Country;
 use App\Organiser;
+use App\ProposalLists;
 use App\Race;
 use DB;
 use Exception;
@@ -33,13 +34,14 @@ class RacesController extends Controller {
 			$countries = Country::all('country_code', 'name');
 			$organisers = Organiser::all('organiser_ID', 'orgname');
 			$races = Race::all('race_ID', 'racename');
+			$competitions = ProposalLists::where('module', 'myrace')->where('listname', 'competition')->select('list_ID', 'field1')->get();
 			$user = Auth::user();
 			Javascript::put(['userID' => $user->id]);
 		} catch (\Exception $e) {
 			alert()->error('Error!', $e->getMessage());
 			Log::error('Can not read races from DB.', ['message' => $e->getMessage()]);
 		}
-		return view('settings.races', compact('countries', 'organisers', 'races'));
+		return view('settings.races', compact('countries', 'organisers', 'races', 'competitions'));
 	}
 
 	/**

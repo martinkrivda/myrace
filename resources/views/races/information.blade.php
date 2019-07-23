@@ -118,7 +118,11 @@
                 </tr>
                 <tr>
                   <th>{{ trans('title.competition') }}:</th>
-                  <td>{{$raceinfo->competition}}</td>
+                  <td>
+                  @foreach($competitions as $competition)
+                    {{$competition->field1}} <br /> 
+                  @endforeach
+                  </td>
                 </tr>
                 <tr>
                   <th>{{ trans('title.gps') }}:</th>

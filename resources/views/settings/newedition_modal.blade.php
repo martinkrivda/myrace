@@ -105,12 +105,13 @@
 
                     <div class="col-xs-7">
                         <div class="form-group">
-                            <label for="competition" class=" form-control-label">{{ trans('title.competition') }}</label><input
-                                type="text" id="competition" name="competition"
-                                placeholder="{{ trans('title.fillcompetition') }}"
-                                pattern="[a-zA-Z \-ěščřžýáíéóúůďťňĎŇŤŠČŘŽÝÁÍÉÚŮ\.]{1,155}"
-                                class="form-control" maxlength="155" />
-                        </div>
+							{{ Form::label('competition', trans('title.competition')) }}
+							<select multiple id="competition" class="form-control select2 select2-hidden-accessible populate" name="competition">
+                                @foreach($competitions as $competition)
+                                <option value="{{$competition->list_ID}}">{{$competition->field1}}</option>
+                                @endforeach
+							</select>
+						</div>
                     </div>
                 </div>
                 <div class="row">

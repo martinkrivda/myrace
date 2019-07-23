@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\RaceEdition;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +27,7 @@ class EditionController extends Controller {
 	 */
 	public function index() {
 		try {
-			$raceeditions = DB::table('raceedition')
-				->leftJoin('race', 'raceedition.race_ID', '=', 'race.race_ID')
+			$raceeditions = RaceEdition::leftJoin('race', 'raceedition.race_ID', '=', 'race.race_ID')
 				->leftJoin('organiser', 'race.organiser_ID', '=', 'organiser.organiser_ID')
 				->get();
 		} catch (\Exception $e) {
@@ -69,7 +67,7 @@ class EditionController extends Controller {
 				'eventoffice' => 'date|required',
 				'web' => 'url|nullable|max:50',
 				'entrydate1' => 'date|before:eventoffice|nullable',
-				'competition' => 'string|nullable|max:155',
+				'competitions' => 'array|nullable',
 				'eventdirector' => 'nullable|string|max:50',
 				'mainreferee' => 'nullable|string|max:50',
 				'entriesmanager' => 'nullable|string|max:50',
@@ -84,6 +82,7 @@ class EditionController extends Controller {
 			} else {
 				$user = Auth::user();
 				$create = RaceEdition::create($request->all());
+				$create->competitions()->sync($request->competitions);
 				Log::info('New race edition was added to DB.', ['editionname' => $create->editionname, 'date' => $create->date, 'edition_ID' => $create->edition_ID]);
 			}
 		} catch (\Exception $e) {
@@ -103,6 +102,7 @@ class EditionController extends Controller {
 	 */
 	public function show($edition_ID) {
 		$show = RaceEdition::find($edition_ID);
+		$show->competitions = RaceEdition::find($edition_ID)->competitions;
 		return response()->json($show);
 	}
 
@@ -135,7 +135,7 @@ class EditionController extends Controller {
 			'eventoffice' => 'date|required',
 			'web' => 'url|nullable|max:50',
 			'entrydate1' => 'date|before:eventoffice|nullable',
-			'competition' => 'string|nullable|max:155',
+			'competitions' => 'array|nullable',
 			'eventdirector' => 'nullable|string|max:50',
 			'mainreferee' => 'nullable|string|max:50',
 			'entriesmanager' => 'nullable|string|max:50',
@@ -150,6 +150,7 @@ class EditionController extends Controller {
 		} else {
 			try {
 				$edit = RaceEdition::find($edition_ID)->update($request->all());
+				$edit->competitions()->sync($request->competitions);
 				$user = Auth::user();
 				Log::info('Edition was updated from DB.', ['edition_ID' => $edition_ID, 'user' => [$user->lastname, $user->lastname], 'user_ID' => $user->id]);
 			} catch (\Exception $e) {

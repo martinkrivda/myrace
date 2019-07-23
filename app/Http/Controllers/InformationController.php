@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\RaceEdition;
 use DB;
 use Illuminate\Http\Request;
 
@@ -22,16 +23,16 @@ class InformationController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function information($edition_ID) {
-		$raceinfo = DB::table('raceedition')
-			->select('raceedition.edition_ID', 'raceedition.editionname', 'race.race_abbr', 'raceedition.edition_nr', 'raceedition.date', 'raceedition.location', 'raceedition.firststart', 'eventoffice', 'organiser.orgname', 'competition', 'gps', 'raceedition.web', 'race.email', 'eventdirector', 'mainreferee', 'entriesmanager', 'jury1', 'jury2', 'jury3', 'cancelled', 'cancelreason')
+		$raceinfo = RaceEdition::select('raceedition.edition_ID', 'raceedition.editionname', 'race.race_abbr', 'raceedition.edition_nr', 'raceedition.date', 'raceedition.location', 'raceedition.firststart', 'eventoffice', 'organiser.orgname', 'competition', 'gps', 'raceedition.web', 'race.email', 'eventdirector', 'mainreferee', 'entriesmanager', 'jury1', 'jury2', 'jury3', 'cancelled', 'cancelreason')
 			->leftJoin('race', 'raceedition.race_ID', '=', 'race.race_ID')
 			->leftJoin('organiser', 'race.organiser_ID', '=', 'organiser.organiser_ID')
 			->where('raceedition.edition_ID', $edition_ID)->first();
+		$competitions = $raceinfo->competitions;
 		$categories = DB::table('category')
 			->select('categoryname', 'length', 'climb', 'entryfee', 'currency', 'birthfrom', 'birthto')
 			->where('category.edition_ID', $edition_ID)
 			->get();
-		return view('races.information')->with('raceinfo', $raceinfo)->with('categories', $categories);
+		return view('races.information')->with('raceinfo', $raceinfo)->with('categories', $categories)->with('competitions', $competitions);
 	}
 
 	/**

@@ -54,7 +54,7 @@ $(".crud-edition-submit").click(function(e) {
     var eventoffice = $("#create-edition").find("input[name='eventoffice']").val();
     var web = $("#create-edition").find("input[name='web']").val();
     var entrydate1 = $("#create-edition").find("input[name='entrydate1']").val();
-    var competition = $("#create-edition").find("input[name='competition']").val();
+    var competitions = $("#create-edition").find("select[name='competition']").val();
     var eventdirector = $("#create-edition").find("input[name='eventdirector']").val();
     var mainreferee = $("#create-edition").find("input[name='mainreferee']").val();
     var entriesmanager = $("#create-edition").find("input[name='entriesmanager']").val();
@@ -66,7 +66,7 @@ $(".crud-edition-submit").click(function(e) {
             dataType: 'json',
             type:'POST',
             url: form_action,
-            data:{editionname:editionname, edition_nr:edition_nr, race_ID:race, date:date, firststart:firststart, location:location, gps:gps, eventoffice:eventoffice, web:web, entrydate1:entrydate1, competition:competition, eventdirector:eventdirector, mainreferee:mainreferee, entriesmanager:entriesmanager, jury1:jury1, jury2:jury2, jury3:jury3},
+            data:{editionname:editionname, edition_nr:edition_nr, race_ID:race, date:date, firststart:firststart, location:location, gps:gps, eventoffice:eventoffice, web:web, entrydate1:entrydate1, competitions:competitions, eventdirector:eventdirector, mainreferee:mainreferee, entriesmanager:entriesmanager, jury1:jury1, jury2:jury2, jury3:jury3},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);
@@ -158,7 +158,7 @@ $("body").on("click",".edit-edition",function() {
         var eventoffice = data.eventoffice.replace(" ", "T");
         var web = data.web;
         var entrydate1 = data.entrydate1.replace(" ", "T");
-        var competition = data.competition;
+		let competitions = data.competitions.map(a => a.list_ID);
         var eventdirector = data.eventdirector;
         var mainreferee = data.mainreferee;
         var entriesmanager = data.entriesmanager;
@@ -185,7 +185,8 @@ $("body").on("click",".edit-edition",function() {
         $("#edit-edition").find("input[name='eventoffice']").val(eventoffice);
         $("#edit-edition").find("input[name='web']").val(web);
         $("#edit-edition").find("input[name='entrydate1']").val(entrydate1);
-        $("#edit-edition").find("input[name='competition']").val(competition);
+		$("#edit-edition").find("select[name='competition']").val(competitions);
+		$("#edit-edition").find("#competition_update").select2({ width: '100%' });
         $("#edit-edition").find("input[name='eventdirector']").val(eventdirector);
         $("#edit-edition").find("input[name='mainreferee']").val(mainreferee);
         $("#edit-edition").find("input[name='entriesmanager']").val(entriesmanager);
@@ -211,7 +212,7 @@ $(".crud-edition-submit-edit").click(function(e) {
     var eventoffice = $("#edit-edition").find("input[name='eventoffice']").val();
     var web = $("#edit-edition").find("input[name='web']").val();
     var entrydate1 = $("#edit-edition").find("input[name='entrydate1']").val();
-    var competition = $("#edit-edition").find("input[name='competition']").val();
+    var competitions = $("#create-edition").find("select[name='competition']").val();
     var eventdirector = $("#edit-edition").find("input[name='eventdirector']").val();
     var mainreferee = $("#edit-edition").find("input[name='mainreferee']").val();
     var entriesmanager = $("#edit-edition").find("input[name='entriesmanager']").val();
@@ -223,7 +224,7 @@ $(".crud-edition-submit-edit").click(function(e) {
         dataType: 'json',
         type:'PUT',
         url: form_action,
-        data:{editionname:editionname, edition_nr:edition_nr, race_ID:race, date:date, firststart:firststart, location:location, gps:gps, eventoffice:eventoffice, web:web, entrydate1:entrydate1, competition:competition, eventdirector:eventdirector, mainreferee:mainreferee, entriesmanager:entriesmanager, jury1:jury1, jury2:jury2, jury3:jury3},
+        data:{editionname:editionname, edition_nr:edition_nr, race_ID:race, date:date, firststart:firststart, location:location, gps:gps, eventoffice:eventoffice, web:web, entrydate1:entrydate1, competitions:competitions, eventdirector:eventdirector, mainreferee:mainreferee, entriesmanager:entriesmanager, jury1:jury1, jury2:jury2, jury3:jury3},
     }).done(function(data){
         manageEditionData();
         $(".modal").modal('hide');
@@ -235,4 +236,9 @@ $(".crud-edition-submit-edit").click(function(e) {
         toastr.warning('Select race.', 'Race field must be chosen!', {timeOut: 5000});
     }
 }
+});
+
+$(document).ready(function() {
+	$("#competition").select2({ width: '100%' });
+	$("#edit-edition").find("#competition_update").select2({ width: '100%' });
 });
