@@ -20,3 +20,14 @@
 
         <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet">
         <script src="{{ asset('js/select2.min.js') }}"></script>
+        <script type = "text/javascript">
+          var url = window.location;
+          // for sidebar menu entirely but not cover treeview
+          $('ul.sidebar-menu a').filter(function() {
+          return this.href == url;
+          }).parent().addClass('active');
+          // for treeview
+          $('ul.treeview-menu a').filter(function() {
+          return this.href == url;
+          }).closest('.treeview').addClass('active');
+        </script>
