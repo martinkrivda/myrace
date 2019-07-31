@@ -12,9 +12,9 @@
             <div class="row">
             <div class='col-sm-6'>
                 <div class="form-group">
-                  <label for="starttime">{{trans('title.start_nr')}}</label>
+                  <label for="starttime">{{trans('title.bib_nr')}}</label>
                     <div class="input-group">
-                        <input type="number" min="1" max="99999" step="1" class="form-control" name="start_nr" id="start_nr" title="Start number" required />
+                        <input type="number" min="1" max="99999" step="1" class="form-control" name="bib_nr" id="bib_nr" title="Start number" required />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-tag"></span>
                             </span>

@@ -43,7 +43,7 @@ class StartTimeDataTable extends DataTable {
 			->select([
 				'starttime.stime_ID',
 				'category.categoryname',
-				'starttime.start_nr',
+				'starttime.bib_nr',
 				'tag.EPC',
 				'registration.lastname',
 				'registration.firstname',
@@ -113,10 +113,10 @@ class StartTimeDataTable extends DataTable {
 				'visible' => false,
 				'searchable' => false,
 			],
-			'start_nr' => [
-				'name' => 'starttime.start_nr',
-				'data' => 'start_nr',
-				'title' => 'Start. Nr.',
+			'bib_nr' => [
+				'name' => 'starttime.bib_nr',
+				'data' => 'bib_nr',
+				'title' => 'Bib. Nr.',
 				'visible' => true,
 			],
 			'category' => [

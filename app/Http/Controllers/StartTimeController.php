@@ -56,7 +56,7 @@ class StartTimeController extends Controller {
 	public function store(Request $request, $edition_ID) {
 
 		$rules = array(
-			'start_nr' => 'numeric|required|max:99999|min:1',
+			'bib_nr' => 'numeric|required|max:99999|min:1',
 			'stime' => 'required|date_format:"Y-m-d H:i:s"',
 			'category_ID' => 'numeric|exists:category,category_ID',
 		);
@@ -66,7 +66,7 @@ class StartTimeController extends Controller {
 		if ($validator->fails()) {
 			return response()->json($validator->errors(), 422);
 		} else {
-			$existingNr = StartTime::where('edition_ID', $edition_ID)->where('start_nr', $request->start_nr)->first();
+			$existingNr = StartTime::where('edition_ID', $edition_ID)->where('bib_nr', $request->bib_nr)->first();
 			if ($existingNr != null) {
 				return response()->json('Start number already exist in the database.', 422);
 			}
@@ -74,14 +74,14 @@ class StartTimeController extends Controller {
 				$startTime = new StartTime;
 				$startTime->edition_ID = $edition_ID;
 				$startTime->category_ID = $request->category_ID;
-				$startTime->start_nr = $request->start_nr;
+				$startTime->bib_nr = $request->bib_nr;
 				$startTime->stime = date('Y-m-d H:i:s', strtotime($request->stime));
 				$startTime->save();
-				Log::info('New start time was added to DB.', ['start_nr' => $startTime->start_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
+				Log::info('New start time was added to DB.', ['bib_nr' => $startTime->bib_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
 			} catch (\Exception $e) {
 				$startTime = $e->getMessage();
 				alert()->error('Error!', $e->getMessage());
-				Log::error('New start time could not be added to DB.', ['start_nr' => $startTime->start_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
+				Log::error('New start time could not be added to DB.', ['bib_nr' => $startTime->bib_nr, 'stime' => $startTime->stime, 'category_ID' => $startTime->category_ID]);
 			}
 			return response()->json($startTime);
 		}
@@ -138,7 +138,7 @@ class StartTimeController extends Controller {
 		$race = RaceEdition::where('edition_ID', $edition_ID)->first();
 		$categories = Category::where('edition_ID', $edition_ID)->where('lock', false)->get();
 
-		$start_nr = 1;
+		$bib_nr = 1;
 		$updates = 0;
 
 		foreach ($categories as $key => $category) {
@@ -161,11 +161,11 @@ class StartTimeController extends Controller {
 				$time = new StartTime;
 				$time->edition_ID = $edition_ID;
 				$time->category_ID = $category->category_ID;
-				$time->start_nr = $start_nr;
+				$time->bib_nr = $bib_nr;
 				$time->stime = date('Y-m-d H:i:s', strtotime($startTime));
 				$time->save();
 				$startTime = date('Y-m-d H:i:s', strtotime($startTime) + $interval);
-				$start_nr++;
+				$bib_nr++;
 				$updates++;
 			}
 			$category->lock = true;

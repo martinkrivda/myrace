@@ -186,11 +186,11 @@
     </div>
     <div class="col-xs-4">
         <div class="form-group">
-            {{ Form::label('start_nr', trans('title.start_nr')) }}
-            <input list="start_nr" name="start_nr" placeholder="{{ trans('title.fillstart_nr') }}" pattern="\d{1,10}" class="form-control" value="{{$registration->start_number}}"/>
-                <datalist id="start_nr">
+            {{ Form::label('bib_nr', trans('title.bib_nr')) }}
+            <input list="bib_nr" name="bib_nr" placeholder="{{ trans('title.fillbib_nr') }}" pattern="\d{1,10}" class="form-control" value="{{$registration->start_number}}"/>
+                <datalist id="bib_nr">
                     @foreach($freeStartNr as $number)
-                        <option value="{{$number->stime_ID}}">{{$number->start_nr}}</option>
+                        <option value="{{$number->stime_ID}}">{{$number->bib_nr}}</option>
                     @endforeach
                 </datalist>
         </div>

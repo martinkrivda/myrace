@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\RaceEdition;
+use App\Category;
+use App\Course;
 use DB;
 use Illuminate\Http\Request;
 
@@ -28,8 +30,8 @@ class InformationController extends Controller {
 			->leftJoin('organiser', 'race.organiser_ID', '=', 'organiser.organiser_ID')
 			->where('raceedition.edition_ID', $edition_ID)->first();
 		$competitions = $raceinfo->competitions;
-		$categories = DB::table('category')
-			->select('categoryname', 'length', 'climb', 'entryfee', 'currency', 'birthfrom', 'birthto')
+		$categories = Category::select('category.categoryname', 'course.length', 'course.climb', 'category.entryfee', 'category.currency', 'category.birthfrom', 'category.birthto')
+			->leftJoin('course', 'category.course_ID', '=', 'course.course_ID')
 			->where('category.edition_ID', $edition_ID)
 			->get();
 		return view('races.information')->with('raceinfo', $raceinfo)->with('categories', $categories)->with('competitions', $competitions);

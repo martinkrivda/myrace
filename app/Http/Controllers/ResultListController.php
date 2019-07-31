@@ -30,7 +30,10 @@ class ResultListController extends Controller {
 	public function index($edition_ID) {
 		$this->authorize('results.view', Registration::class);
 		$race = RaceEdition::where('edition_ID', $edition_ID)->select('date AS eventdate', 'firststart')->first();
-		$categories = Category::where('edition_ID', $edition_ID)->get();
+		$categories = Category::leftJoin('course', 'category.course_ID', '=', 'course.course_ID')
+		->where('category.edition_ID', $edition_ID)
+		->select('category.*', 'course.length', 'course.climb')
+		->get();
 		$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email')->get();
 		$reader = RfidReader::where('edition_ID', $edition_ID)->where('gateway', 'F')->get();
 		foreach ($runners as $key => $runner) {

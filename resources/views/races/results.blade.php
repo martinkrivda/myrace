@@ -28,13 +28,14 @@
                   <th>{{ trans('title.name') }}</th>
                   <th>{{ trans('title.yearofbirth') }}</th>
                   <th>{{ trans('title.club') }}</th>
-                  <th>{{ trans('title.start_nr') }}</th>
+                  <th>{{ trans('title.bib_nr') }}</th>
                   <th>{{ trans('title.time') }}</th>
                   <th>{{ trans('title.loss') }}</th>
                    <th>{{ trans('title.kmtime') }}</th>
                 </tr>
             </thead>
             <tbody>
+            @if (is_array($category->results) || is_object($category->results))
                 @forelse ($category->results as $index => $result)
                     <tr>
                         <td>
@@ -77,7 +78,7 @@
                         <td>{{$result->lastname}} {{$result->firstname}}</td>
                         <td>{{$result->yearofbirth}}</td>
                         <td>{{$result->clubname}}</td>
-                        <td>{{$result->start_nr}}</td>
+                        <td>{{$result->bib_nr}}</td>
                         <td>{{ $result->timems ? date('H:i:s', $result->timems) : ''}}</td>
                         <td>
                             @if ($index >= 0 && $result->timems != '')
@@ -107,6 +108,11 @@
                     <td colspan="8"><center>No results</center></td>
                 </tr>
                 @endforelse
+                @else
+                <tr>
+                    <td colspan="8"><center>Start time is in the future yet</center></td>
+                </tr>
+                @endif
                 </tbody>
               </table>
         </div>

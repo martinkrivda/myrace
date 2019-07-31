@@ -6,7 +6,6 @@ use App\Club;
 use App\Country;
 use App\Http\Controllers\Controller;
 use App\Services\PayUService\Exception;
-use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
@@ -82,6 +81,8 @@ class ClubsController extends Controller {
 				'web' => 'url|nullable|max:50',
 			));
 			$create = Club::create($request->all());
+			$create->source = "origin";
+			$create->save();
 			Log::info('New club was added to DB.', ['name' => $create->clubname, 'club_ID' => $create->club_ID]);
 		} catch (\Exception $e) {
 			alert()->error('Error!', $e->getMessage());
@@ -167,8 +168,7 @@ class ClubsController extends Controller {
 	public function searchclub(Request $request) {
 		if ($request->get('query')) {
 			$query = $request->get('query');
-			$data = DB::table('club')
-				->where('clubname', 'LIKE', "%{$query}%")
+			$data = Club::where('clubname', 'LIKE', "%{$query}%")
 				->orWhere('clubabbr', 'LIKE', "%{$query}%")
 				->orWhere('club_ID', 'LIKE', "%{$query}%")
 				->get();

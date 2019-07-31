@@ -130,15 +130,15 @@ $(".starttime-submit").click(function(e) {
     if($(this).closest('form')[0].checkValidity()){
     e.preventDefault();
     var form_action = $("#create-starttime").find("form").attr("action");
-    var start_nr = $("#create-starttime").find("input[name='start_nr']").val();
+    var bib_nr = $("#create-starttime").find("input[name='bib_nr']").val();
     var stime = $("#create-starttime").find("input[name='starttime']").val();
     var category = $("#create-starttime").find("select[name='category']").val();
-    if (start_nr != '' && stime !='' && category != null){
+    if (bib_nr != '' && stime !='' && category != null){
         $.ajax({
             dataType: 'json',
             type:'POST',
             url: form_action,
-            data:{start_nr:start_nr, stime:stime, category_ID:category},
+            data:{bib_nr:bib_nr, stime:stime, category_ID:category},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);

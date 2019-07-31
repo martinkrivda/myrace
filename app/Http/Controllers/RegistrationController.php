@@ -94,7 +94,7 @@ class RegistrationController extends Controller {
 			'gender' => ['required', 'regex:/^(male|female)$/'],
 			'club' => 'string|nullable|max:70',
 			'entryfee' => 'numeric',
-			'start_nr' => 'numeric|nullable',
+			'bib_nr' => 'numeric|nullable',
 			'note' => 'string|nullable',
 			'paid' => 'boolean',
 			'notcompeting' => 'boolean',
@@ -114,9 +114,9 @@ class RegistrationController extends Controller {
 		} else {
 			try {
 				$stime_ID = null;
-				if ($request->input('start_nr') != null) {
-					$startNr = StartTime::where('edition_ID', $edition_ID)->where('start_nr', $request->input('start_nr'))->select('stime_ID')->first();
-					$stime_ID = $start_nr != null ? $start_nr : null;
+				if ($request->input('bib_nr') != null) {
+					$startNr = StartTime::where('edition_ID', $edition_ID)->where('bib_nr', $request->input('bib_nr'))->select('stime_ID')->first();
+					$stime_ID = $bib_nr != null ? $bib_nr : null;
 				}
 
 				// store
@@ -165,7 +165,7 @@ class RegistrationController extends Controller {
 				$registration->yearofbirth = $request->input('yearofbirth');
 				$registration->gender = $request->input('gender');
 				$registration->entryfee = $request->input('entryfee');
-				$registration->start_nr = $request->input('start_nr');
+				$registration->bib_nr = $request->input('bib_nr');
 				$registration->NC = $request->notcompeting;
 				$registration->note = $request->input('note');
 				$registration->payref = $this->generateSpecificSymbol();
@@ -173,6 +173,7 @@ class RegistrationController extends Controller {
 				$registration->DNS = false;
 				$registration->DNF = false;
 				$registration->DSQ = false;
+				$registration->source = "origin";
 				$registration->creator_ID = $user->id;
 				$registration->edition_ID = $request->edition_ID;
 				$registration->save();
@@ -222,6 +223,7 @@ class RegistrationController extends Controller {
 			// get the nerd
 			$registration = Registration::query()
 				->leftJoin('category', 'registration.category_ID', '=', 'category.category_ID')
+				->leftJoin('course', 'category.course_ID', '=', 'course.course_ID')
 				->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')
 				->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')
 				->leftJoin('country', 'runner.country', '=', 'country.country_code')
@@ -232,7 +234,7 @@ class RegistrationController extends Controller {
 				->leftJoin('raceedition', 'registration.edition_ID', '=', 'raceedition.edition_ID')
 				->where('registration_ID', $registration_ID)
 				->where('registration.edition_ID', $edition_ID)
-				->select('category.*', 'club.clubname', 'runner.email', 'runner.phone', 'country.name AS country', 'registrationsum.name AS registrationsum', 'registrationsum.email AS summaryemail', 'users.firstname AS userfirstname', 'users.lastname AS userlastname', 'tag.EPC', 'starttime.stime', 'raceedition.firststart', 'raceedition.date', 'registration.*')
+				->select('category.*', 'course.length', 'course.climb', 'club.clubname', 'runner.email', 'runner.phone', 'country.name AS country', 'registrationsum.name AS registrationsum', 'registrationsum.email AS summaryemail', 'users.firstname AS userfirstname', 'users.lastname AS userlastname', 'tag.EPC', 'starttime.stime', 'raceedition.firststart', 'raceedition.date', 'registration.*')
 				->first();
 			$combinedDT = date('Y-m-d H:i:s', strtotime("$registration->date $registration->firststart"));
 			$time = date('H:i:s', strtotime($registration->stime) - strtotime($combinedDT));
@@ -261,7 +263,7 @@ class RegistrationController extends Controller {
 			->leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')
 			->where('registration_ID', $registration_ID)
 			->where('registration.edition_ID', $edition_ID)
-			->select('club.clubname', 'runner.email', 'runner.phone', 'runner.country AS country', 'starttime.start_nr AS start_number', 'registration.*')
+			->select('club.clubname', 'runner.email', 'runner.phone', 'runner.country AS country', 'starttime.bib_nr AS start_number', 'registration.*')
 			->first();
 		$categories = Category::where('edition_ID', $edition_ID)->orderBy('categoryname')->pluck('categoryname', 'category_ID');
 		$countries = Country::pluck('name', 'country_code');
@@ -291,7 +293,7 @@ class RegistrationController extends Controller {
 			'gender' => ['required', 'regex:/^(male|female)$/'],
 			'club' => 'string|nullable|max:70',
 			'entryfee' => 'numeric',
-			'start_nr' => 'numeric|nullable',
+			'bib_nr' => 'numeric|nullable',
 			'note' => 'string|nullable',
 			'paid' => 'boolean',
 			'notcompeting' => 'boolean',
@@ -311,8 +313,8 @@ class RegistrationController extends Controller {
 			try {
 
 				$stime_ID = null;
-				if ($request->input('start_nr') != null) {
-					$startNr = StartTime::where('edition_ID', $request->edition_ID)->where('start_nr', $request->input('start_nr'))->select('stime_ID')->first();
+				if ($request->input('bib_nr') != null) {
+					$startNr = StartTime::where('edition_ID', $request->edition_ID)->where('bib_nr', $request->input('bib_nr'))->select('stime_ID')->first();
 					$stime_ID = $startNr != null ? $startNr->stime_ID : null;
 				}
 
@@ -386,7 +388,7 @@ class RegistrationController extends Controller {
 				$registration->yearofbirth = $request->input('yearofbirth');
 				$registration->gender = $request->input('gender');
 				$registration->entryfee = $request->input('entryfee');
-				$registration->start_nr = $request->input('start_nr');
+				$registration->bib_nr = $request->input('bib_nr');
 				$registration->NC = $request->notcompeting;
 				$registration->paid = $request->paid;
 				$registration->note = $request->input('note');

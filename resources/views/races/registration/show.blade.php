@@ -55,8 +55,8 @@
               <td>{{$registration->categoryname}}  <small>({{$registration->length}}m / {{$registration->climb}}m)</small></td>
             </tr>
             <tr>
-              <th>{{ trans('title.start_nr') }}:</th>
-              <td>{{$registration->start_nr}}</td>
+              <th>{{ trans('title.bib_nr') }}:</th>
+              <td>{{$registration->bib_nr}}</td>
             </tr>
             <tr>
               <th>{{ trans('title.epc') }}:</th>

@@ -45,8 +45,16 @@ function manageRow(data) {
         }
         rows = rows + '<td>'+value.gender+'</td>';
         rows = rows + '<td>'+value.country+'</td>';
-        rows = rows + '<td>'+value.email+'</td>';
-        rows = rows + '<td>'+value.phone+'</td>';
+        if (value.email !== null){
+            rows = rows + '<td>'+value.email+'</td>'; 
+        } else {
+            rows = rows + '<td></td>';
+        } 
+        if (value.phone !== null){
+            rows = rows + '<td>'+value.phone+'</td>';  
+        } else {
+            rows = rows + '<td></td>';
+        }  
 	  	rows = rows + '<td data-id="'+value.runner_ID+'">';
         rows = rows + '<button data-toggle="modal" data-target="#edit-runner" class="btn btn-small btn-info edit-runner"><i class="fa fa-pencil"></i></button> ';
         rows = rows + '<button class="btn btn-danger remove-runner"><i class="fa fa-trash-o"></i></button>';

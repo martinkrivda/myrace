@@ -6,7 +6,6 @@ use App\Country;
 use App\Http\Controllers\Controller;
 use App\Runner;
 use App\Services\PayUService\Exception;
-use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -39,8 +38,7 @@ class RunnersController extends Controller {
 	public function index() {
 		//$runners = Runner::all();
 		try {
-			$runners = DB::table('runner')
-				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
+			$runners = Runner::select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
 				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
 				->get();
 		} catch (\Exception $e) {
@@ -81,6 +79,8 @@ class RunnersController extends Controller {
 				$request['club'] = null;
 			}
 			$create = Runner::create($request->all());
+			$create->source = "origin";
+			$create->save();
 			Log::info('New runner was added to DB.', ['firstname' => $create->firstname, 'lastname' => $create->lastname, 'runner_ID' => $create->runner_ID]);
 		} catch (\Exception $e) {
 			alert()->error('Error!', $e->getMessage());
@@ -171,8 +171,7 @@ class RunnersController extends Controller {
 	public function searchrunner(Request $request) {
 		if ($request->get('query')) {
 			$query = $request->get('query');
-			$data = DB::table('runner')
-				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
+			$data = Runner::leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
 				->where('runner.firstname', 'LIKE', "%{$query}%")
 				->orWhere('runner.lastname', 'LIKE', "%{$query}%")
 				->orWhere('runner.yearofbirth', 'LIKE', "%{$query}%")
@@ -199,9 +198,8 @@ class RunnersController extends Controller {
 	public function getRunnerByID(Request $request) {
 		try {
 			$runner_ID = $request->get('runner_ID');
-			$runnerList = DB::table('runner')
-				->leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
-				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
+			$runnerList = Runner::leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
+				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
 				->where('runner_ID', '=', $runner_ID)
 				->get();
 			return response()->json(['data' => $runnerList]);

@@ -34,12 +34,13 @@ class CategoryController extends Controller
     public function index($edition_ID)
     {
         try {
-            $categories = DB::table('category')
-                ->where('edition_ID', $edition_ID)
+            $categories = Category::where('category.edition_ID', $edition_ID)
+                ->leftJoin('course', 'category.course_ID', '=', 'course.course_ID')
+                ->select('category.*', 'course.length', 'course.climb')
                 ->get();
-            $totalcategories = DB::table('category')->where('edition_ID', $edition_ID)->count();
-            $totalmencategories = DB::table('category')->where([['edition_ID', '=', $edition_ID], ['gender', '=', 'male']])->count();
-            $totalwomencategories = DB::table('category')->where([['edition_ID', '=', $edition_ID], ['gender', '=', 'female']])->count();
+            $totalcategories = Category::where('edition_ID', $edition_ID)->count();
+            $totalmencategories = Category::where([['edition_ID', '=', $edition_ID], ['gender', '=', 'male']])->count();
+            $totalwomencategories = Category::where([['edition_ID', '=', $edition_ID], ['gender', '=', 'female']])->count();
             return view('races.category', ['edition_ID' => $edition_ID])->with('categories', $categories)->with('totalcategories', $totalcategories)->with('totalmencategories', $totalmencategories)->with('totalwomencategories', $totalwomencategories);
         } catch (\Exception $e) {
             return new $e->getMessage();
@@ -57,8 +58,7 @@ class CategoryController extends Controller
             $edition_ID = $request->get('edition_ID');
             $year = $request->get('year');
             $gender = $request->get('gender');
-            $categoryList = DB::table('category')
-                ->where('edition_ID', '=', $edition_ID)
+            $categoryList = Category::where('edition_ID', '=', $edition_ID)
                 ->where('gender', $gender)
                 ->where(function ($query) use ($year) {
                     $query->where('birthfrom', '>=', $year)
@@ -85,8 +85,7 @@ class CategoryController extends Controller
         try {
             $edition_ID = $request->get('edition_ID');
             $category_ID = $request->get('category_ID');
-            $categoryList = DB::table('category')
-                ->where('edition_ID', '=', $edition_ID)
+            $categoryList = Category::where('edition_ID', '=', $edition_ID)
                 ->where('category_ID', $category_ID)
                 ->get();
             return response()->json(['data' => $categoryList]);
@@ -124,8 +123,6 @@ class CategoryController extends Controller
                 'categoryname' => 'required|string',
                 'gender' => 'required|max:6|string',
                 'course_ID' => 'numeric',
-                'length' => 'numeric|nullable',
-                'climb' => 'numeric|nullable',
                 'entryfee' => 'numeric|nullable',
                 'currency' => 'string|nullable|max:3|min:3',
                 'starttime' => 'date|nullable',
@@ -151,8 +148,6 @@ class CategoryController extends Controller
                 $category->course_ID = Input::get('course');
                 $category->gender = Input::get('gender');
                 $category->edition_ID = $edition_ID;
-                if (Input::get('length')) {$category->length = $request->input('length');}
-                if (Input::get('climb')) {$category->climb = $request->input('climb');}
                 if (Input::get('entryfee')) {$category->entryfee = $request->input('entryfee');}
                 $category->currency = Input::get('currency');
                 if (Input::get('starttime')) {$category->starttime = $request->input('starttime');}
@@ -163,6 +158,7 @@ class CategoryController extends Controller
                 if (Input::get('birthfrom')) {$category->birthfrom = $request->input('birthfrom');}
                 if (Input::get('birthto')) {$category->birthto = $request->input('birthto');}
                 $category->lock = false;
+                $category->source = 'origin';
                 $category->save();
                 // redirect
                 Log::info('New category was added to DB.', ['name' => $category->categoryname]);
@@ -235,8 +231,6 @@ class CategoryController extends Controller
                 'categoryname' => 'required|string',
                 'course_ID' => 'numeric',
                 'gender' => 'required|max:6|string',
-                'length' => 'numeric|nullable',
-                'climb' => 'numeric|nullable',
                 'entryfee' => 'numeric|nullable',
                 'currency' => 'string|nullable|max:3|min:3',
                 'starttime' => 'date|nullable',
@@ -261,8 +255,6 @@ class CategoryController extends Controller
                 $category->categoryname = mb_convert_case($request->input('categoryname'), MB_CASE_UPPER, "UTF-8");
                 $category->course_ID = Input::get('course');
                 $category->gender = Input::get('gender');
-                if (Input::get('length')) {$category->length = $request->input('length');}
-                if (Input::get('climb')) {$category->climb = $request->input('climb');}
                 if (Input::get('entryfee')) {$category->entryfee = $request->input('entryfee');}
                 $category->currency = Input::get('currency');
                 if (Input::get('starttime')) {$category->starttime = $request->input('starttime');}
