@@ -168,7 +168,6 @@ $("body").on("click",".edit-edition",function() {
         if (eventoffice == 'null'){eventoffice = ''};
         if (web == 'null'){web = ''};
         if (entrydate1 == 'null'){entrydate1 = ''};
-        if (competition == 'null'){competition = ''};
         if (eventdirector == 'null'){eventdirector = ''};
         if (mainreferee == 'null'){mainreferee = ''};
         if (entriesmanager == 'null'){entriesmanager = ''};
@@ -212,7 +211,7 @@ $(".crud-edition-submit-edit").click(function(e) {
     var eventoffice = $("#edit-edition").find("input[name='eventoffice']").val();
     var web = $("#edit-edition").find("input[name='web']").val();
     var entrydate1 = $("#edit-edition").find("input[name='entrydate1']").val();
-    var competitions = $("#create-edition").find("select[name='competition']").val();
+    var competitions = $("#edit-edition").find("select[name='competition']").val();
     var eventdirector = $("#edit-edition").find("input[name='eventdirector']").val();
     var mainreferee = $("#edit-edition").find("input[name='mainreferee']").val();
     var entriesmanager = $("#edit-edition").find("input[name='entriesmanager']").val();
@@ -225,17 +224,28 @@ $(".crud-edition-submit-edit").click(function(e) {
         type:'PUT',
         url: form_action,
         data:{editionname:editionname, edition_nr:edition_nr, race_ID:race, date:date, firststart:firststart, location:location, gps:gps, eventoffice:eventoffice, web:web, entrydate1:entrydate1, competitions:competitions, eventdirector:eventdirector, mainreferee:mainreferee, entriesmanager:entriesmanager, jury1:jury1, jury2:jury2, jury3:jury3},
-    }).done(function(data){
-        manageEditionData();
-        $(".modal").modal('hide');
-        $('body').removeClass('modal-open');
-        $('.modal-backdrop').remove();
-        toastr.success('Race Edition updated successfully.', 'Success', {timeOut: 5000});
-    });
-    }  else {
-        toastr.warning('Select race.', 'Race field must be chosen!', {timeOut: 5000});
+        error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                var errors = '';
+                $.each( err, function( key, value ) {
+                    toastr.error(value, key, {timeOut: 5000});
+                    errors = errors + value + '<br>';
+                });
+                swal('Error!',errors, 'error');
+                //alert(err.message);
+            }
+        }).done(function(data){
+            manageEditionData();
+            $(".modal").modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+            toastr.success('Race Edition updated successfully.', 'Success', {timeOut: 5000});
+        });
+        }  else {
+            toastr.warning('Select race.', 'Race field must be chosen!', {timeOut: 5000});
+        }
     }
-}
 });
 
 $(document).ready(function() {

@@ -149,7 +149,8 @@ class EditionController extends Controller {
 			return response()->json($validator->errors(), 422);
 		} else {
 			try {
-				$edit = RaceEdition::find($edition_ID)->update($request->all());
+				$edit = RaceEdition::find($edition_ID);
+				$edit->update($request->all());
 				$edit->competitions()->sync($request->competitions);
 				$user = Auth::user();
 				Log::info('Edition was updated from DB.', ['edition_ID' => $edition_ID, 'user' => [$user->lastname, $user->lastname], 'user_ID' => $user->id]);
