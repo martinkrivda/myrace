@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2acafa3b2cc2a867f7978db2a3839b77",
+    "content-hash": "04f6b425b4a006c2040a769ae52e37dd",
     "packages": [
         {
             "name": "acacha/admin-lte-template-laravel",
@@ -2357,6 +2357,46 @@
                 "laravel"
             ],
             "time": "2018-09-04T19:00:09+00:00"
+        },
+        {
+            "name": "milankyncl/ares-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/milankyncl/php-ares-api.git",
+                "reference": "9dcbeb584fa44040b93490b6fc1185a9d728abf1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/milankyncl/php-ares-api/zipball/9dcbeb584fa44040b93490b6fc1185a9d728abf1",
+                "reference": "9dcbeb584fa44040b93490b6fc1185a9d728abf1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-simplexml": ">=0.1.0",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/AresAPI.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Milan Kyncl",
+                    "email": "kontakt@milankyncl.cz",
+                    "homepage": "https://milankyncl.cz",
+                    "role": "Developer"
+                }
+            ],
+            "description": "ARES Api package",
+            "homepage": "https://milankyncl.cz/phalcon-debugbar",
+            "time": "2019-06-16T12:19:24+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6832,7 +6872,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "milankyncl/ares-api": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

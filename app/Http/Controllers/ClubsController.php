@@ -9,6 +9,7 @@ use App\Services\PayUService\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use MilanKyncl\AresAPI;
 
 class ClubsController extends Controller {
 	/**
@@ -181,5 +182,43 @@ class ClubsController extends Controller {
 			$output .= '</ul>';
 			echo $output;
 		}
+	}
+
+	/**
+	 * ARES API.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function getAresData() {
+		$clubs = Club::all();
+		$ares = new AresAPI();
+		foreach ($clubs as $club) {
+			$subject = array();
+			if($club->taxid != null || $club->taxid != '') {
+				try {
+					$subject = $ares->findByIN($club->taxid);
+					$name = explode(", ", $subject['name']);
+					$club->clubname = trim($name[0]);
+					$club->clubname2 = trim($name[1]);
+					$club->vatid = ($subject['tin'] != null) ? $subject['tin'] : null;
+					$club->city = $subject['city'];
+					$club->street = $subject['street'];
+					$club->postalcode = $subject['zip'];
+				} catch (\Exception $e){
+					$subject = null;
+				}
+			} else {
+				try {
+					$subject = $ares->findByName($club->clubname);
+					$club->taxid = $subject['in'];
+				} catch (\Exception $e){
+					$subject = null;
+				}
+			}
+			if ($subject != null) {
+				$club->save();
+			}
+		}
+		return response()->json(['message' => 'Successfull ARES update', 'status' => 'success', 'done']);
 	}
 }

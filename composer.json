@@ -18,6 +18,7 @@
         "laravel/socialite": "^3.2.0",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
+        "milankyncl/ares-api": "dev-master",
         "realrashid/sweet-alert": "^1.1",
         "select2/select2": "^4.0",
         "yajra/laravel-datatables-buttons": "^3.0",

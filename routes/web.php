@@ -36,6 +36,8 @@ Route::post('runners/searchsimilar', 'RegistrationController@getSimilarRunnerWit
 Route::post('registrations/searchexisting', 'RegistrationController@isTooSimilarWith')->name('registrations.getsimilarregistration');
 Route::post('registrations/ischangedname', 'RegistrationController@isChangedName')->name('registrations.isechangedname');
 
+Route::get('aresapi', 'ClubsController@getAresData')->name('aresapi');
+
 Route::get('race/information/{edition_ID}', 'InformationController@information');
 //Route::pattern('edition_ID', '{0-9}+');
 Route::resource('race/{edition_ID}/category', 'CategoryController', ['parameters' => [

@@ -223,3 +223,23 @@ $(".crud-submit-edit").click(function(e) {
     }
 }
 });	
+
+/* ARES UPDATE */
+$("#aresupdate").click(function(e) {
+            $.ajax({
+            dataType: 'json',
+            type:'GET',
+            url: aresUpdateUrl,
+            error: function(xhr, status, error) {
+                console.log("error", xhr.responseText);
+                var err = JSON.parse(xhr.responseText);
+                swal(err.message,JSON.stringify(err.errors),'error');
+                toastr.error(err, 'Error!', {timeOut: 5000});
+            }
+        }).done(function(data){
+            if (data.status == 'success'){
+                toastr.success('Clubs data updated', 'Ares update', {timeOut: 5000});
+                manageData();
+            }
+        });
+});

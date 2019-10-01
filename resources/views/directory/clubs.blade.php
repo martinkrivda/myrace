@@ -21,6 +21,7 @@
                         <div class="col-xs-2"></div>
                         <div class="col-xs-2"></div>
                         <div class="col-xs-2">
+                          <button type="button" id="aresupdate" class="btn btn-default pull-left"><i class="fa fa-refresh"></i> {{ trans('title.aresupdate') }}</button>
                             <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#create-club"><i class="fa fa-edit"></i> {{ trans('adminlte_lang::message.addclub') }}</button>
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         </div>
@@ -76,6 +77,7 @@
     @parent
     <script type="text/javascript">
         var url = "<?php echo route('clubs-data.index') ?>";
+        var aresUpdateUrl = "<?php echo route('aresapi') ?>";
     </script>
     <script src="/js/custom/clubsAjax.js"></script>
 @endsection

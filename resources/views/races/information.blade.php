@@ -36,6 +36,7 @@
             <div class="info-box-content">
               <span class="info-box-text">{{ trans('title.date') }}</span>
               <span class="info-box-number">{{$raceinfo->date}}</span>
+              <p><small>{{date('l', strtotime($raceinfo->date))}}</small></p>
             </div>
             <!-- /.info-box-content -->
           </div>
