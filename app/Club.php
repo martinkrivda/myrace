@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 class Club extends Model {
-	public $fillable = ['clubabbr', 'clubname', 'clubname2', 'taxid', 'vatid', 'street', 'city', 'postalcode', 'web', 'email', 'phone', 'country', 'source', 'orisid', 'deleted'];
+	public $fillable = ['clubabbr', 'clubname', 'clubname2', 'taxid', 'vatid', 'street', 'city', 'postalcode', 'web', 'email', 'phone', 'country', 'source', 'importid', 'deleted'];
 	protected $table = 'club';
 	protected $primaryKey = 'club_ID';
 	protected $rules = [

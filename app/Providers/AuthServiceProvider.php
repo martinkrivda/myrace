@@ -24,6 +24,7 @@ class AuthServiceProvider extends ServiceProvider {
 	public function boot() {
 		$this->registerPolicies();
 
+		Gate::resource('clubs', 'App\Policies\ClubPolicy');
 		Gate::resource('registrations', 'App\Policies\RegistrationPolicy');
 		Gate::resource('starttime', 'App\Policies\StartTimePolicy');
 		Gate::define('starttime.generate', 'App\Policies\StartTimePolicy@generate');

@@ -42,5 +42,21 @@ class PermissionSeeder extends Seeder {
 			'name' => 'ResultList-View',
 			'for' => 'results',
 		]);
+		$clubs = Permission::create([
+			'name' => 'Club-View',
+			'for' => 'clubs',
+		]);
+		$clubs = Permission::create([
+			'name' => 'Club-Create',
+			'for' => 'clubs',
+		]);
+		$clubs = Permission::create([
+			'name' => 'Club-Update',
+			'for' => 'clubs',
+		]);
+		$clubs = Permission::create([
+			'name' => 'Club-Delete',
+			'for' => 'clubs',
+		]);
 	}
 }
