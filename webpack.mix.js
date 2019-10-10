@@ -21,7 +21,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
        'node_modules/admin-lte/dist/css/AdminLTE.min.css',
        'node_modules/admin-lte/dist/css/skins/_all-skins.css',
        'node_modules/icheck/skins/square/blue.css',
-       'node_modules/bootstrap-datetimepicker-npm/build/css/bootstrap-datetimepicker.min.css'
+       'node_modules/bootstrap-datetimepicker-npm/build/css/bootstrap-datetimepicker.min.css',
+       'resources/assets/css/custom/vue-advanced-cropper.css',
    ], 'public/css/all.css')
    .combine([
        'resources/assets/css/bootstrap.min.css',

@@ -207,4 +207,5 @@ return [
     'viewallcourses' => 'View all courses',
     'createCourse' => 'Create course',
     'aresupdate'    => 'ARES update',
+    'userProfile'   => 'User Profile',
 ];

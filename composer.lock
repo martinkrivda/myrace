@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "04f6b425b4a006c2040a769ae52e37dd",
+    "content-hash": "26d36b0031390ec35a3971f6558f423d",
     "packages": [
         {
             "name": "acacha/admin-lte-template-laravel",
@@ -4685,6 +4685,57 @@
                 "dump"
             ],
             "time": "2019-04-17T14:57:01+00:00"
+        },
+        {
+            "name": "tightenco/ziggy",
+            "version": "v0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tightenco/ziggy.git",
+                "reference": "f169e46073a478170d3f687d644bea5f316dfb5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tightenco/ziggy/zipball/f169e46073a478170d3f687d644bea5f316dfb5d",
+                "reference": "f169e46073a478170d3f687d644bea5f316dfb5d",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=5.4@dev"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.6",
+                "orchestra/testbench": "~3.6"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tightenco\\Ziggy\\ZiggyServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tightenco\\Ziggy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Coulbourne",
+                    "email": "daniel@tighten.co"
+                },
+                {
+                    "name": "Matt Stauffer",
+                    "email": "matt@tighten.co"
+                }
+            ],
+            "description": "Generates a Blade directive exporting all of your named Laravel routes. Also provides a nice route() helper function in JavaScript.",
+            "time": "2019-09-03T14:43:23+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

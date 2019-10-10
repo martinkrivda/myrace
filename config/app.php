@@ -153,6 +153,7 @@ return [
 		Brian2694\Toastr\ToastrServiceProvider::class,
 		Collective\Html\HtmlServiceProvider::class,
 		Laravel\Socialite\SocialiteServiceProvider::class,
+		Tightenco\Ziggy\ZiggyServiceProvider::class,
 
 		/*
 			         * Package Service Providers...

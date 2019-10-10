@@ -1,0 +1,9 @@
+/*
+	Maybe you need to set the limits for the cropper sizes or its container sizes
+	otherwise a cropping image will try to fill all available space
+*/
+.cropper {
+	height: 250px;
+	margin-top: 5px;
+}
+

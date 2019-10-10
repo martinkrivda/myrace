@@ -21,6 +21,7 @@
         "milankyncl/ares-api": "dev-master",
         "realrashid/sweet-alert": "^1.1",
         "select2/select2": "^4.0",
+        "tightenco/ziggy": "^0.8.0",
         "yajra/laravel-datatables-buttons": "^3.0",
         "yajra/laravel-datatables-oracle": "^8.7"
     },

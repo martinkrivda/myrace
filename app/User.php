@@ -36,4 +36,11 @@ class User extends Authenticatable {
 	public function roles() {
 		return $this->belongsToMany('App\Role', 'user_role', 'user_ID', 'role_ID');
 	}
+
+	/**
+	 * The organiser that belong to the user.
+	 */
+	public function organisers() {
+		return $this->belongsToMany('App\Organiser', 'user_organiser', 'user_ID', 'organiser_ID');
+	}
 }

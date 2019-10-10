@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller {
 	/**
@@ -112,5 +113,37 @@ class UsersController extends Controller {
 	 */
 	public function destroy($id) {
 		//
+	}
+
+	/**
+	 * Return lcurrent user.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function profile() {
+		$user = Auth::user();
+		$roles = Auth::user()->roles()->get();
+		$organisers = Auth::user()->organisers()->get();
+		return view('settings.profile')->with('user', $user)->with('roles', $roles)->with('organisers', $organisers);
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function profileUpdate(Request $request, $id) {
+		try {
+			$user = User::find($id);
+			$user->lastname = $request->lastName;
+			$user->firstname = $request->firstName;
+			$user->email = $request->email;
+			$user->save();
+			return response()->json($user);
+		} catch (\Exception $e) {
+			return response()->json($e->getMessage(), 422);
+		}
 	}
 }
