@@ -30,6 +30,10 @@ Vue.component(
     'user-organiser',
     require('./components/ProfileOrganiser.vue').default
 );
+Vue.component(
+    'battery-level',
+    require('./components/util/BatteryLevel.vue').default
+);
 
 const app = new Vue({
     el: '#app'
