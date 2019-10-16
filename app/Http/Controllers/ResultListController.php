@@ -10,6 +10,8 @@ use App\Registration;
 use App\RfidReader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Helpers;
 
 class ResultListController extends Controller {
 
@@ -35,39 +37,41 @@ class ResultListController extends Controller {
 		->select('category.*', 'course.length', 'course.climb')
 		->get();
 		$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email')->get();
-		$reader = RfidReader::where('edition_ID', $edition_ID)->where('gateway', 'F')->get();
-		foreach ($runners as $key => $runner) {
-			if ($runner->DNS == false) {
-				$tag = $runner->EPC;
-				$records = array();
-				foreach ($reader as $key => $read) {
-					if ($tag === $read->EPC) {
-						$records[] = $read;
-					}
-				}
-
-				$sort = usort($records, function ($a, $b) {return $a->time > $b->time;});
-				foreach ($records as $key => $record) {
-					if ($record->time >= $runner->stime) {
-						$runner->timems = strtotime($record->time) - strtotime($runner->stime);
-						// Save time to DB
-						$runner->save();
-						if ($runner->status < 8) {
-							if ($runner->email != '') {
-								$notification = new Notification;
-								$notification->registration_ID = $runner->registration_ID;
-								$notification->type = 'finish';
-								$notification->kind = 'E';
-								$notification->text = 'Runner: ' . $runner->lastname . ' ' . $runner->firstname . ' in finish ' . date('H:i:s', $runner->timems) . '.';
-								$notification->email = $runner->email;
-								$notification->save();
-
-								Mail::to($runner->email)->send(new RunnerFinished($runner));
-							}
-							$runner->status = 8;
-							$runner->save();
+		if (Helpers::settings('resultsByService') === 'No'){
+			$reader = RfidReader::where('edition_ID', $edition_ID)->where('gateway', 'F')->get();
+			foreach ($runners as $key => $runner) {
+				if ($runner->DNS == false) {
+					$tag = $runner->EPC;
+					$records = array();
+					foreach ($reader as $key => $read) {
+						if ($tag === $read->EPC) {
+							$records[] = $read;
 						}
-						break;
+					}
+
+					$sort = usort($records, function ($a, $b) {return $a->time > $b->time;});
+					foreach ($records as $key => $record) {
+						if ($record->time >= $runner->stime) {
+							$runner->timems = strtotime($record->time) - strtotime($runner->stime);
+							// Save time to DB
+							$runner->save();
+								if ($runner->status < 8) {
+									if ($runner->email != '') {
+										$notification = new Notification;
+										$notification->registration_ID = $runner->registration_ID;
+										$notification->type = 'finish';
+										$notification->kind = 'E';
+										$notification->text = 'Runner: ' . $runner->lastname . ' ' . $runner->firstname . ' in finish ' . date('H:i:s', $runner->timems) . '.';
+										$notification->email = $runner->email;
+										$notification->save();
+
+										Mail::to($runner->email)->send(new RunnerFinished($runner));
+									}
+									$runner->status = 8;
+									$runner->save();
+								}
+							break;
+						}
 					}
 				}
 			}

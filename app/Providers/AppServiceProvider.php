@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
+use Cache;
 
 class AppServiceProvider extends ServiceProvider {
 	/**
@@ -13,6 +14,7 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
+		Cache::forever('settings', \App\Setting::all());
 		if (env('APP_ENV') === 'remote') {
 			URL::forceScheme('https');
 		}
