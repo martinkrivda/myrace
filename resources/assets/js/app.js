@@ -34,6 +34,10 @@ Vue.component(
     'battery-level',
     require('./components/util/BatteryLevel.vue').default
 );
+Vue.component(
+    'clock',
+    require('./components/util/Clock.vue').default
+);
 
 const app = new Vue({
     el: '#app'

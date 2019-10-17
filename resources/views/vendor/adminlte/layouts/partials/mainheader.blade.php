@@ -19,6 +19,9 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <li class="dropdown messages-menu">
+                    <clock></clock>
+                </li>
+                <li class="dropdown messages-menu">
                     <battery-level></battery-level>
                 </li>
 

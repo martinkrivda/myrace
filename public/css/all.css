@@ -1885,13 +1885,13 @@
 	margin-top: 5px;
 }
 
-.battery{
+.battery {
 	flex-shrink: 0;
 	-webkit-flex-shrink: 0;
 	width: 10px;
 	height: 15px;
 	position: relative;
-	margin-right: 30px;
+	margin-right: 50px;
 	vertical-align: center;
 	margin-top: 4px;
 	background-color: #fff;
@@ -1900,7 +1900,7 @@
 	transform: rotate(180deg);
 }
 
-.battery:before{
+.battery:before {
 	content: "";
 	position: absolute;
 	background: #fff;
@@ -1911,17 +1911,17 @@
 	left: 2px;
 }
 
-.battery .charge{
+.battery .charge {
 	width: 100%;
 	height: 100%;
 	background-color: #9eea47;
 }
 
-.battery .charge.low{
-	background-color: #FF1744;
+.battery .charge.low {
+	background-color: #ff1744;
 }
 
-.battery span{
+.battery span {
 	position: absolute;
 	transform: rotate(180deg);
 	top: -2px;
@@ -1932,3 +1932,11 @@
 	text-align: center;
 }
 
+.highlight {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.shadow {
+	text-shadow: 0 0 15px rgba(100, 100, 100, 0.35);
+}

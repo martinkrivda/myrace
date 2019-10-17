@@ -1,10 +1,14 @@
 <template>
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-		<!-- Receives value from the global Vue instance. Turns red when low. -->         
-            <div class="battery" >
-                <div class="charge" v-bind:class="{ 'low': batteryLevel <= 30 }" :style="{ height: dynamicHeight + '%'}"></div>
-                <span>{{batteryLevel}}%</span>
-            </div>
+		<!-- Receives value from the global Vue instance. Turns red when low. -->
+		<div class="battery">
+			<div
+				class="charge"
+				v-bind:class="{ low: batteryLevel <= 30 }"
+				:style="{ height: dynamicHeight + '%' }"
+			></div>
+			<span class="highlight shadow">{{ batteryLevel }}%</span>
+		</div>
 	</a>
 </template>
 <script>
@@ -68,10 +72,10 @@ export default {
 		}
 	},
 	computed: {
-    dynamicHeight () {
-		return this.batteryLevel;
-    }
-  },
+		dynamicHeight() {
+			return this.batteryLevel;
+		}
+	},
 
 	ready: function() {}
 };
