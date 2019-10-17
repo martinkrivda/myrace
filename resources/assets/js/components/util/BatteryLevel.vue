@@ -1,7 +1,7 @@
 <template>
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 		<!-- Receives value from the global Vue instance. Turns red when low. -->
-		<div class="battery">
+		<div class="battery hidden-xs">
 			<div
 				class="charge"
 				v-bind:class="{ low: batteryLevel <= 30 }"

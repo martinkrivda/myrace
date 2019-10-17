@@ -208,4 +208,5 @@ return [
     'createCourse' => 'Create course',
     'aresupdate'    => 'ARES update',
     'userProfile'   => 'User Profile',
+    'aboutOrg' => 'About My Organizations',
 ];

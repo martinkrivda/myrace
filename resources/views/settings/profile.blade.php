@@ -16,7 +16,7 @@
           <!-- About Me Box -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
+              <h3 class="box-title">{{trans('title.aboutOrg')}}</h3>
             </div>
             <!-- /.box-header -->
             <user-organiser :auth-user="{{ Auth::user() }}" :user-organisers="{{ $organisers->toJson() }}"></user-organiser>

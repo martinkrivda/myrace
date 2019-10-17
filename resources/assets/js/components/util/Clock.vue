@@ -2,7 +2,10 @@
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 		<!-- Receives value from the global Vue instance. Turns red when low. -->
 		<div class="clock">
-			<span class="highlight shadow" v-text="currentTime"></span>
+			<span
+				class="hidden-xs highlight shadow"
+				v-text="currentTime"
+			></span>
 		</div>
 	</a>
 </template>
