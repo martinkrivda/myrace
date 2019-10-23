@@ -11,6 +11,7 @@ use App\RfidReader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\ResultCalculation;
 use App\Helpers;
 
 class ResultListController extends Controller {
@@ -75,7 +76,9 @@ class ResultListController extends Controller {
 					}
 				}
 			}
-		}
+		} else {
+				ResultCalculation::dispatch();
+			}
 
 		foreach ($categories as $category) {
 			$results = array();
