@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helpers;
 use App\Mail\RunnerFinished;
 use App\Notification;
 use App\RaceEdition;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ResultCalculation implements ShouldQueue {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -100,7 +102,13 @@ class ResultCalculation implements ShouldQueue {
 										$notification->email = $runner->email;
 										$notification->save();
 
-										Mail::to($runner->email)->send(new RunnerFinished($runner));
+										if (Helpers::settings('emailQueueing') === 'Yes') {
+											$message = (new RunnerFinished($runner))->onQueue('emails');
+											Mail::to($runner->email)->queue($message);
+										} else {
+											Mail::to($runner->email)->send(new RunnerFinished($runner));
+										}
+
 									}
 									$runner->status = 8;
 									$runner->save();
@@ -110,11 +118,11 @@ class ResultCalculation implements ShouldQueue {
 						}
 					}
 				}
+				if ($reader->isNotEmpty()) {
+					$lastRead = $reader->last()->read_ID;
+				}
+				Log::info('Result times calculated.', ['last_id:' => $lastRead]);
 			}
-			if ($reader->isNotEmpty()) {
-				$lastRead = $reader->last()->read_ID;
-			}
-			Log::info('Result times calculated.', ['last_id:' => $lastRead]);
 			sleep(4);
 		}
 	}
