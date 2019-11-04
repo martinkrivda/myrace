@@ -2,22 +2,27 @@
 
 namespace App\DataTables;
 
+use App\Payment;
 use App\RegistrationSum;
 use Yajra\DataTables\Services\DataTable;
 
 class RegistrationSumDataTable extends DataTable {
 	public function ajax() {
-
+		$payments = Payment::all();
 		return datatables()->eloquent($this->query())
-			->editColumn('status', function ($regsummary) {
-				switch ($regsummary->status) {
-				case 0:
+			->addColumn('paid', function ($regsummary) use ($payments) {
+				$paid = $payments->where('vs', $regsummary->payref)->sum('amount');
+				return number_format((float) $paid, 2, '.', '');
+			})
+			->editColumn('status', function ($regsummary) use ($payments) {
+				$paid = $payments->where('vs', $regsummary->payref)->sum('amount');
+				if ($regsummary->totalprice > $paid) {
 					$label = '<span class="label label-danger">Neuhrazeno</span>';
-					break;
-				case 3:
+				} else if ($regsummary->totalprice == $paid) {
 					$label = '<span class="label label-success">Uhrazeno</span>';
-					break;
-				default:
+				} else if ($regsummary->totalprice < $paid) {
+					$label = '<span class="label label-warning">Přeplatek</span>';
+				} else {
 					$label = '<span class="label label-warning">Neznámý</span>';
 				}
 				return $label;
@@ -32,7 +37,8 @@ class RegistrationSumDataTable extends DataTable {
 	 * @return \Yajra\DataTables\DataTableAbstract
 	 */
 	public function dataTable($query) {
-		return datatables($query);
+		return datatables($query)
+			->addColumn('paid', 'registrationsumdatatable.paid');
 	}
 
 	/**
@@ -148,6 +154,7 @@ class RegistrationSumDataTable extends DataTable {
 				'title' => 'Total Price',
 				'visible' => true,
 			],
+			'paid',
 			'payref' => [
 				'name' => 'registrationsum.payref',
 				'data' => 'payref',

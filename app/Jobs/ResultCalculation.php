@@ -101,17 +101,18 @@ class ResultCalculation implements ShouldQueue {
 										$notification->text = 'Runner: ' . $runner->lastname . ' ' . $runner->firstname . ' in finish ' . date('H:i:s', $runner->timems) . '.';
 										$notification->email = $runner->email;
 										$notification->save();
+										if (Helpers::settings('sendFinishEmail') === 'Yes') {
+											if (Helpers::settings('emailQueueing') === 'Yes') {
+												$message = (new RunnerFinished($runner))->onQueue('emails');
+												Mail::to($runner->email)->queue($message);
+											} else {
+												Mail::to($runner->email)->send(new RunnerFinished($runner));
+											}
 
-										if (Helpers::settings('emailQueueing') === 'Yes') {
-											$message = (new RunnerFinished($runner))->onQueue('emails');
-											Mail::to($runner->email)->queue($message);
-										} else {
-											Mail::to($runner->email)->send(new RunnerFinished($runner));
 										}
-
+										$runner->status = 8;
+										$runner->save();
 									}
-									$runner->status = 8;
-									$runner->save();
 								}
 								break;
 							}
