@@ -68,6 +68,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body no-padding">
+              <div class="table-responsive">
               <table class="table">
                 <thead>
                 <tr>
@@ -134,6 +135,7 @@
                 @endforelse
                 </tbody>
               </table>
+            </div>
             </div>
             <!-- /.box-body -->
           </div>
