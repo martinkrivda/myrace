@@ -1,7 +1,7 @@
 <template>
   <div class="tab-content">
     <div class="active tab-pane" id="settings">
-      <form @submit.prevent="update" class="form-horizontal">
+      <form @submit.prevent="submit" class="form-horizontal">
         <div class="form-group">
           <label for="inputFirstName" class="col-sm-2 control-label">First name</label>
 

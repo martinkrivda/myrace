@@ -97,6 +97,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::resource('resultlist', 'ResultListController');
 			// Course
 			Route::resource('course', 'CourseController');
+			// Assign Tag
+			Route::get('assigntag', 'AssignTagController@index');
+			Route::get('fetchrunner', 'AssignTagController@fetchRunner');
+			Route::put('updaterunner', 'AssignTagController@updateRunner');
 
 		});
 	});

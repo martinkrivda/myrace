@@ -49,6 +49,9 @@
                         @endcan
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/payment') }}"><i class="fa fa-money" aria-hidden="true"></i> {{ trans('menu.payments') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/rfidreader') }}"><i class="fa fa-rss" aria-hidden="true"></i> {{ trans('menu.rfidreader') }}</a></li>
+                        @can('registrations.view', Auth::user())
+                        <li><a href="{{ URL::to('race/'.$nav->edition_ID.'/assigntag') }}"><i class="fa fa-tag" aria-hidden="true"></i> {{ trans('title.assignTag') }}</a></li>
+                        @endcan
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startnumber') }}"><i class="fa fa-file-text-o" aria-hidden="true"></i>{{ trans('menu.startnumber') }}</a></li>
                         <li><a href="{{ URL::to('race/'. $nav->edition_ID .'/startlist') }}"><i class="fa fa-list" aria-hidden="true"></i> {{ trans('menu.startlist') }}</a></li>
                         @can('results.view', Auth::user())

@@ -19,6 +19,10 @@ Vue.component(
     require('./components/ExampleComponent.vue').default
 );
 Vue.component(
+    'assign-tag',
+    require('./components/assignTag/assignTag.vue').default
+);
+Vue.component(
     'user-profile',
     require('./components/Profile.vue').default
 );

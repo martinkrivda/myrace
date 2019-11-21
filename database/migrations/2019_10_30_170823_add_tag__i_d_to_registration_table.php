@@ -14,7 +14,8 @@ class AddTagIDToRegistrationTable extends Migration
     public function up()
     {
         Schema::table('registration', function (Blueprint $table) {
-            //
+            $table->integer('tag_ID')->unsigned()->nullable()->after('stime_ID')->comment('Tag ID');
+            $table->foreign('tag_ID')->references('tag_ID')->on('tag')->onDelete('restrict');
         });
     }
 
@@ -26,7 +27,7 @@ class AddTagIDToRegistrationTable extends Migration
     public function down()
     {
         Schema::table('registration', function (Blueprint $table) {
-            //
+            $table->dropColumn('tag_ID');
         });
     }
 }
