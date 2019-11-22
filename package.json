@@ -48,6 +48,7 @@
     "vue-advanced-cropper": "^0.12.5",
     "vue-loader": "^15.7.1",
     "vue-spinner": "^1.0.3",
+    "vue-sweetalert2": "^2.1.5",
     "ziggy": "^2.4.0"
   }
 }
