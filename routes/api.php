@@ -31,4 +31,5 @@ Route::middleware('auth:api')->group(function () {
 	});
 	Route::resource('livesplit', 'API\LiveSplitController');
 	Route::resource('clubs', 'API\ClubController');
+	Route::resource('split', 'API\SplitController');
 });
