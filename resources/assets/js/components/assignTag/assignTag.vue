@@ -96,6 +96,8 @@
 
 <script>
 import BounceLoader from "vue-spinner/src/BounceLoader.vue";
+import VueSweetalert2 from "vue-sweetalert2";
+Vue.use(VueSweetalert2);
 export default {
     name: "assign-tag",
     props: ["edition"],
@@ -131,10 +133,14 @@ export default {
                 })
                 .catch(error => {
                     this.reading = false;
-                    if (error.response.status === 422) {
+                    if (
+                        error.response.status &&
+                        error.response.status === 422
+                    ) {
                         this.errors = error.response.data;
                         console.log(this.errors);
                     }
+                    console.log(error);
                 });
         },
         readTag() {
@@ -168,6 +174,13 @@ export default {
                 .then(updateResponse => {
                     this.success = true;
                     this.rfidTag.tagId = updateResponse.data.tagId;
+                    this.$swal({
+                        position: "top-end",
+                        type: "success",
+                        title: updateResponse.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 })
                 .catch(error => {
                     this.reading = false;
@@ -177,7 +190,8 @@ export default {
         }
     },
     components: {
-        BounceLoader
+        BounceLoader,
+        VueSweetalert2
     }
 };
 </script>

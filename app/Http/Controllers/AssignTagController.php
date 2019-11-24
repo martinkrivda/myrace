@@ -88,6 +88,7 @@ class AssignTagController extends Controller {
 			$registration->tag = $tag->EPC;
 			$registration->tag_ID = $tag->tag_ID;
 			$registration->is_running = true;
+			$registration->checktimems = time();
 			$registration->save();
 			Log::info('Rfid tag assigned to runner.', ['Registration ID' => $registration->registration_ID, 'tag' => $tag->EPC, 'tagId' => $tag->tag_ID]);
 		} catch (\Exception $e) {
