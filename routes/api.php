@@ -23,6 +23,8 @@ Route::group(['prefix' => 'v1', 'middleware' => 'auth:api'], function () {
 	//Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
 	#adminlte_api_routes
 });
+
+//Secure routes
 Route::middleware('auth:api')->group(function () {
 	Route::group(['prefix' => 'race'], function () {
 		Route::group(['prefix' => '{edition_ID}'], function ($edition_ID) {
@@ -32,4 +34,14 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('livesplit', 'API\LiveSplitController');
 	Route::resource('clubs', 'API\ClubController');
 	Route::resource('split', 'API\SplitController');
+});
+
+//Unsecure routes
+Route::resource('competition', 'API\CompetitionController');
+Route::group(['prefix' => 'competition'], function () {
+	Route::group(['prefix' => '{edition_ID}'], function ($edition_ID) {
+		Route::get('entry', 'API\CompetitionInfoController@fetchEntry');
+		Route::get('fullstate', 'API\CompetitionInfoController@fullState');
+
+	});
 });
