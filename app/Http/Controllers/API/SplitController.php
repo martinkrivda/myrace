@@ -39,6 +39,7 @@ class SplitController extends BaseController {
 		if ($validator->fails()) {
 			return $this->sendError('Validation Error.', $validator->errors());
 		}
+
 		try {
 			$runner = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->where('registration.edition_ID', $request->competition)->where('registration.bib_nr', $request->bibNumber)->select('registration_ID', 'starttimems', 'registration.bib_nr', 'stime', 'registration.category_ID')->first();
 		} catch (\Exception $e) {
@@ -57,6 +58,10 @@ class SplitController extends BaseController {
 				$race = RaceEdition::find($request->competition);
 				$runner->stime = date('Y-m-d H:i:s', strtotime("$race->date $race->firststart"));
 			}
+		}
+		if ($request->time < $runner->stime) {
+			Log::warning('Split time is before start.', ['runner' => $runner->registration_ID, 'time' => $request->time]);
+			return $this->sendError('Split time is before the start');
 		}
 		try {
 			$split = new Split;
