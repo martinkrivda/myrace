@@ -8,6 +8,7 @@ use App\Notification;
 use App\RaceEdition;
 use App\Registration;
 use App\RfidReader;
+use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -73,7 +74,7 @@ class ResultCalculation implements ShouldQueue {
 			// Your Database Logic
 			Log::info('Service is available');
 			foreach ($races as $race) {
-				$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $race->edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email')->get();
+				$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'starttime.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $race->edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email', 'runner.phone')->get();
 				$reader = RfidReader::where('edition_ID', $race->edition_ID)->where('gateway', 'F')->where('read_ID', '>', $lastRead)->select('read_ID', 'EPC', 'time')->get();
 				foreach ($runners as $key => $runner) {
 					if ($runner->DNS == false) {
@@ -107,6 +108,18 @@ class ResultCalculation implements ShouldQueue {
 												Mail::to($runner->email)->queue($message);
 											} else {
 												Mail::to($runner->email)->send(new RunnerFinished($runner));
+											}
+
+											if ($runner->phone != null) {
+												try {
+													Nexmo::message()->send([
+												    	'to'   => $runner->phone,
+												    	'from' => '+420774177641',
+												    	'text' => 'Skvělé. Jsi v cíli letošní MCVV s časem ' . date('i:s', $runner->timems) . '.'
+													]);
+												} catch (\Exception $e) {
+													Log::error('Can not send SMS.', ['phone:' => $runner->phone]);
+												}
 											}
 
 										}

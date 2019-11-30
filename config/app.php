@@ -159,6 +159,7 @@ return [
 			         * Package Service Providers...
 		*/
 		Rebing\GraphQL\GraphQLServiceProvider::class,
+		Nexmo\Laravel\NexmoServiceProvider::class,
 
 		/*
 			         * Application Service Providers...
@@ -226,6 +227,7 @@ return [
 		'Html' => Collective\Html\HtmlFacade::class,
 		'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 		'GraphQL' => Rebing\GraphQL\Support\Facades\GraphQL::class,
+		'Nexmo' => Nexmo\Laravel\Facade\Nexmo::class,
 
 	],
 

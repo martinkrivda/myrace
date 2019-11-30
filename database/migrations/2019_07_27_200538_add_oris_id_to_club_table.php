@@ -13,7 +13,7 @@ class AddOrisIdToClubTable extends Migration {
 	public function up() {
 		Schema::table('club', function (Blueprint $table) {
 			$table->string('source', 15)->nullable()->after('phone')->comment('Source system');
-			$table->integer('importid')->unsigned()->nullable()->after('source')->comment('Source ID');
+			$table->char('importid', 10)->nullable()->after('source')->comment('Source ID');
 		});
 	}
 

@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\RaceEdition;
 use App\Registration;
+use App\StartTime;
 use App\Tag;
 use Exception;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class AssignTagController extends Controller {
 		if ($validator->fails()) {
 			return response()->json(['message' => $validator->errors()], 422);
 		}
-		$runner = Registration::leftjoin('category', 'registration.category_ID', '=', 'category.category_ID')->where('registration.edition_ID', $edition_ID)->where('bib_nr', $request->bibNumber)->select('registration_ID', 'firstname', 'lastname', 'bib_nr', 'categoryname')->first();
+		$runner = Registration::leftjoin('category', 'registration.category_ID', '=', 'category.category_ID')->leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->where('registration.edition_ID', $edition_ID)->where('registration.bib_nr', $request->bibNumber)->select('registration_ID', 'firstname', 'lastname', 'registration.bib_nr', 'categoryname', 'registration.stime_ID', 'stime')->first();
 		if (!$runner) {
 			return response()->json(['bibNumber' => 'No runner with this bib number!'], 422);
 		}
@@ -99,5 +101,55 @@ class AssignTagController extends Controller {
 		}
 
 		return response()->json(['message' => 'Tag assigned successfully', 'tagId' => $tag->tag_ID]);
+	}
+
+	/**
+	 * Set start time.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function setStartTime($edition_ID, Request $request) {
+		$rules = array(
+			'time' => 'required|date_format:H:i:s',
+			'edition_ID' => 'numeric|exists:raceedition,edition_ID',
+			'registrationId' => 'numeric|exists:registration,registration_ID',
+		);
+
+		$validator = Validator::make(Input::all(), $rules);
+
+		if ($validator->fails()) {
+			return response()->json(['message' => $validator->errors()], 422);
+		}
+
+		try {
+			$registration = Registration::find($request->registrationId);
+		} catch (\Exception $e) {
+			Log::error('Problem with reading the registration.', ['registration' => $request->registrationId, 'error' => $e->getMessage()]);
+			return response()->json(['error' => 'Problem with database'], 503);
+		}
+		if (!$registration) {
+			return response()->json(['message' => 'No runner with this ID!'], 422);
+		}
+		$event = RaceEdition::where('edition_ID', $edition_ID)->first();
+
+		if ($registration->stime_ID == null) {
+			try {
+				$startTime = new StartTime;
+				$startTime->edition_ID = $edition_ID;
+				$startTime->category_ID = $registration->category_ID;
+				$startTime->bib_nr = $registration->bib_nr;
+				$startTime->stime = date('Y-m-d H:i:s', strtotime($event->date . $request->time));
+				$startTime->save();
+				$registration->stime_ID = $startTime->stime_ID;
+				$registration->starttimems = strtotime($startTime->stime) - strtotime($event->date . $event->firststart);
+				$registration->save();
+
+			} catch (\Exception $e) {
+				Log::error('Problem with writing startime to the registration.', ['registration' => $request->time, 'error' => $e->getMessage()]);
+				return response()->json(['error' => 'Problem with database'], 503);
+			}
+
+		}
+		return response()->json(['message' => 'Start time set successfully', 'time' => $startTime->stime]);
 	}
 }

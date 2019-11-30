@@ -30,6 +30,7 @@ Route::get('user/profile', 'UsersController@profile');
 Route::put('user/profile/{id}', 'UsersController@profileUpdate');
 Route::resource('users-data', 'UsersController');
 Route::resource('tags', 'TagController');
+Route::post('storetag', 'TagController@storetag');
 
 Route::post('clubs/searchclub', 'ClubsController@searchclub')->name('clubs.searchclub');
 Route::post('runners/searchrunner', 'RunnersController@searchrunner')->name('runners.searchrunner');
@@ -101,6 +102,14 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('assigntag', 'AssignTagController@index');
 			Route::get('fetchrunner', 'AssignTagController@fetchRunner');
 			Route::put('updaterunner', 'AssignTagController@updateRunner');
+			Route::post('setstart', 'AssignTagController@setStartTime');
+			// Fetch MCVV Data
+			Route::get('mcvvclub', 'McvvFetchDataController@fetchClub');
+			Route::get('mcvvrunner', 'McvvFetchDataController@fetchRunner');
+			Route::get('mcvventry', 'McvvFetchDataController@fetchEntry');
+			Route::get('mcvvpayment', 'McvvFetchDataController@fetchPayment');
+			Route::get('mcvvpaid', 'McvvFetchDataController@setPaid');
+			Route::get('mcvvstart', 'McvvFetchDataController@fetchStartList');
 
 		});
 	});

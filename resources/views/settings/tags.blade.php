@@ -87,6 +87,8 @@
 </div>
 <!-- /.row -->
 
+<store-tag></store-tag>
+
 @endsection
 @section('scripts')
 @parent

@@ -23,6 +23,10 @@ Vue.component(
     require('./components/assignTag/assignTag.vue').default
 );
 Vue.component(
+    'store-tag',
+    require('./components/assignTag/storeTag.vue').default
+);
+Vue.component(
     'user-profile',
     require('./components/Profile.vue').default
 );

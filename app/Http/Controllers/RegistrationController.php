@@ -49,10 +49,11 @@ class RegistrationController extends Controller {
 				->where('edition_ID', $edition_ID)
 				->get();
 			$totalregistrations = DB::table('registration')->where('edition_ID', $edition_ID)->count();
+			$paidRegistrations = Registration::where('edition_ID', $edition_ID)->where('paid', true)->count();
 			$countofclub = DB::table('registration')->distinct('club_ID')->where('edition_ID', $edition_ID)->count('club_ID');
 			$totalmenregistered = DB::table('registration')->select(['registration_ID', 'gender'])->where([['edition_ID', '=', $edition_ID], ['gender', '=', 'male']])->count();
 			$totalwomenregistered = DB::table('registration')->select(['registration_ID', 'gender'])->where([['edition_ID', '=', $edition_ID], ['gender', '=', 'female']])->count();
-			return $dataTable->forRaceEdition($edition_ID)->render('races.registration', ['edition_ID' => $edition_ID, 'totalregistrations' => $totalregistrations, 'countofclub' => $countofclub, 'totalmenregistered' => $totalmenregistered, 'totalwomenregistered' => $totalwomenregistered]);
+			return $dataTable->forRaceEdition($edition_ID)->render('races.registration', ['edition_ID' => $edition_ID, 'totalregistrations' => $totalregistrations, 'paidRegistrations' => $paidRegistrations, 'countofclub' => $countofclub, 'totalmenregistered' => $totalmenregistered, 'totalwomenregistered' => $totalwomenregistered]);
 		} catch (\Exception $e) {
 			return $e->getMessage();
 		}

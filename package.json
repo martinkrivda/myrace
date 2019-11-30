@@ -49,6 +49,7 @@
     "vue-loader": "^15.7.1",
     "vue-spinner": "^1.0.3",
     "vue-sweetalert2": "^2.1.5",
+    "vue2-timepicker": "^1.0.4",
     "ziggy": "^2.4.0"
   }
 }

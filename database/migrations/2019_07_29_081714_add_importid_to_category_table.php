@@ -13,7 +13,7 @@ class AddImportidToCategoryTable extends Migration {
 	public function up() {
 		Schema::table('category', function (Blueprint $table) {
 			$table->string('source', 15)->nullable()->after('lock')->comment('Source system');
-			$table->integer('importid')->unsigned()->nullable()->after('source')->comment('Import ID');
+			$table->char('importid', 5)->nullable()->after('source')->comment('Import ID');
 		});
 	}
 

@@ -15,8 +15,7 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>{{$totalregistrations}}</h3>
-
+              <h3>{{$totalregistrations}} / <small class="text-muted" style="color: white; font-weight: bold;">{{$paidRegistrations}} paid</small></h3>
               <p>{{ trans('title.totalregistrations') }}</p>
             </div>
             <div class="icon">

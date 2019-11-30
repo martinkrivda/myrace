@@ -128,4 +128,34 @@ class TagController extends Controller {
 	public function destroy($id) {
 		//
 	}
+
+	/**
+	 * Update runner with rfid tag.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function storeTag(Request $request) {
+		$rules = array(
+			'epc' => 'required|string|unique:tag',
+		);
+
+		$validator = Validator::make(Input::all(), $rules);
+
+		if ($validator->fails()) {
+			return response()->json(['message' => $validator->errors()], 422);
+		}
+		try {
+			$tag = new Tag;
+				$tag->EPC = $request->input('epc');
+				$tag->active = true;
+				$tag->save();
+				// redirect
+				Log::info('New tag was added to DB.', ['epc' => $tag->EPC]);
+		} catch (\Exception $e) {
+			Log::error('Problem with storing tag to the table.', ['tag' => $request->epc, 'error' => $e->getMessage()]);
+			return response()->json(['error' => 'Problem with database'], 503);
+		}
+
+		return response()->json(['message' => 'Tag stored successfully', 'tagId' => $tag->tag_ID, 'epc' => $tag->EPC]);
+	}
 }

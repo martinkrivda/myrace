@@ -75,6 +75,8 @@
                             <dd>{{ runner.categoryname }}</dd>
                             <dt>Bib. Nr.:</dt>
                             <dd>{{ runner.bib_nr }}</dd>
+                            <dt>Start time:</dt>
+                            <dd>{{ runner.stime }}</dd>
                         </dl>
                     </div>
                     <center>
@@ -83,6 +85,29 @@
                             <h4>
                                 <strong>EPC: {{ rfidTag.epc }}</strong>
                             </h4>
+                        </div>
+                        <div v-if="runner.stime_ID === null" class="form-group">
+                            <label class="control-label">Start time:</label>
+                            <vue-timepicker
+                                :second-interval="15"
+                                format="HH:mm:ss"
+                                :hour-range="[[7, 8], [10, 13]]"
+                                v-model="timeValue"
+                                close-on-complete
+                                @keyup.enter="setStartTime"
+                                id="timeValue"
+                            ></vue-timepicker>
+                            <span id="helpAccountId" class="help-block"
+                                >Insert start time of the current runner.</span
+                            >
+                            <button
+                                type="submit"
+                                v-on:click="setStartTime(timeValue)"
+                                class="btn btn-warning btn-block"
+                                :disabled="reading"
+                            >
+                                Set time
+                            </button>
                         </div>
                     </center>
                 </div>
@@ -97,6 +122,8 @@
 <script>
 import BounceLoader from "vue-spinner/src/BounceLoader.vue";
 import VueSweetalert2 from "vue-sweetalert2";
+import VueTimepicker from "vue2-timepicker";
+import "vue2-timepicker/dist/VueTimepicker.css";
 Vue.use(VueSweetalert2);
 export default {
     name: "assign-tag",
@@ -112,7 +139,12 @@ export default {
             rfidTag: {},
             loaded: false,
             success: false,
-            reading: false
+            reading: false,
+            timeValue: {
+                HH: "10",
+                mm: "15",
+                ss: "00"
+            }
         };
     },
     methods: {
@@ -129,6 +161,7 @@ export default {
                     this.reading = true;
                     this.success = true;
                     this.runner = response.data;
+                    console.log(this.runner.stime_ID);
                     this.readTag();
                 })
                 .catch(error => {
@@ -187,11 +220,41 @@ export default {
                     this.errors = error.response.data;
                     console.log(this.errors);
                 });
+        },
+        setStartTime(startTimeData) {
+            this.errors = {};
+            const time = startTimeData.HH+':'+startTimeData.mm+':'+startTimeData.ss;
+            axios
+                .post(
+                    "./setstart",
+                    {
+                        registrationId: this.runner.registration_ID,
+                        time: time
+                    },
+                    { timeout: 5000 }
+                )
+                .then(response => {
+                    this.success = true;
+                    this.$swal({
+                        position: "top-end",
+                        type: "success",
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    this.runner = {};
+                })
+                .catch(error => {
+                    this.reading = false;
+                    this.errors = error.response.data;
+                    console.log(this.errors);
+                });
         }
     },
     components: {
         BounceLoader,
-        VueSweetalert2
+        VueSweetalert2,
+        VueTimepicker
     }
 };
 </script>

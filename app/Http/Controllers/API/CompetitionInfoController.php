@@ -80,7 +80,7 @@ class CompetitionInfoController extends BaseController {
 		$startList->map(function ($item, $key) use ($race, $classes) {
 			if ($item->stime === null) {
 				$filtered = $classes->where('category_ID', $item->category_ID);
-				if ($filtered[0]->starttime != null) {
+				if (isset($filtered[0]) && $filtered[0]->starttime != null) {
 					$item->stime = $filtered[0]->starttime;
 				} else {
 					$item->stime = date('Y-m-d H:i:s', strtotime("$race->date $race->firststart"));
@@ -92,7 +92,7 @@ class CompetitionInfoController extends BaseController {
 			return [
 				'entryId' => $item->registration_ID,
 				'time' => $item->stime,
-				'timeMs' => $item->timeMs,
+				'timeS' => $item->timeMs,
 			];
 		});
 
@@ -113,7 +113,7 @@ class CompetitionInfoController extends BaseController {
 					'id' => $item->split_ID,
 					'entryId' => $item->registration_ID,
 					'gateway' => $item->gateway,
-					'time' => $item->splittimems,
+					'timeS' => $item->splittimems,
 				];
 			});
 		});
@@ -129,7 +129,7 @@ class CompetitionInfoController extends BaseController {
 			return [
 				'entryId' => $item->registration_ID,
 				'timeMs' => $item->timems,
-				'finishTimeMs' => $item->finishtimems,
+				'finishTimeS' => $item->finishtimems,
 				'notCompeting' => $item->NC,
 				'DNS' => $item->DNS,
 				'DNF' => $item->DNF,
