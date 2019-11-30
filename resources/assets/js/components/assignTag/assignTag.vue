@@ -181,7 +181,7 @@ export default {
             this.reading = true;
             axios.defaults.timeout = 10000;
             axios
-                .get("http://localhost:3001/readtag", { timeout: 5000 })
+                .get("http://192.168.0.100:3001/readtag", { timeout: 5000 })
                 .then(rfidResponse => {
                     this.reading = false;
                     this.rfidTag = rfidResponse.data;
