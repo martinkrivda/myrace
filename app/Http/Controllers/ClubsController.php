@@ -194,7 +194,7 @@ class ClubsController extends Controller {
 		$ares = new AresAPI();
 		foreach ($clubs as $club) {
 			$subject = array();
-			if($club->taxid != null || $club->taxid != '') {
+			if ($club->taxid != null || $club->taxid != '') {
 				try {
 					$subject = $ares->findByIN($club->taxid);
 					$name = explode(", ", $subject['name']);
@@ -204,17 +204,18 @@ class ClubsController extends Controller {
 					$club->city = $subject['city'];
 					$club->street = $subject['street'];
 					$club->postalcode = $subject['zip'];
-				} catch (\Exception $e){
+				} catch (\Exception $e) {
 					$subject = null;
 				}
-			} else {
+			}
+			/* else {
 				try {
 					$subject = $ares->findByName($club->clubname);
 					$club->taxid = $subject['in'];
 				} catch (\Exception $e){
 					$subject = null;
 				}
-			}
+			}*/
 			if ($subject != null) {
 				$club->save();
 			}

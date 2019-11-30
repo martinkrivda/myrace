@@ -98,6 +98,7 @@ class CompetitionController extends BaseController {
 				'length' => $item->length,
 				'climb' => $item->climb,
 				'description' => $item->description,
+				'splitGate' => ['S1', 'S2'],
 			];
 		});
 		try {

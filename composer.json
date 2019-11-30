@@ -19,6 +19,7 @@
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.4.0",
         "milankyncl/ares-api": "dev-master",
+        "nexmo/laravel": "^2.1",
         "realrashid/sweet-alert": "^1.1",
         "rebing/graphql-laravel": "^3.1",
         "select2/select2": "^4.0",
