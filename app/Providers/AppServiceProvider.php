@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		Cache::forever('settings', \App\Setting::all());
+		//Cache::forever('settings', \App\Setting::all());
 		if (env('APP_ENV') === 'remote') {
 			URL::forceScheme('https');
 		}
