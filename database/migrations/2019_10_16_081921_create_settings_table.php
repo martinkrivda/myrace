@@ -13,6 +13,7 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('settings');
         Schema::create('settings', function (Blueprint $table) {
             $table->increments('config_ID');
             $table->char('module', 8)->comment('Application');
