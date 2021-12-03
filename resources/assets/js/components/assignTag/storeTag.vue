@@ -8,30 +8,34 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <button
-                                type="submit"
-                                v-on:click="readTag()"
-                                class="btn btn-warning btn-block"
-                                :disabled="reading"
-                            >
-                                Read tag
-                            </button>
-                                                    <div v-if="rfidTag.epc">
-                            <h4>
-                                <strong>EPC: {{ rfidTag.epc }}</strong>
-                                <strong>ID: {{ rfidTag.tagId }}</strong>
-                            </h4>
-                        </div>
-                    <center>
-                        <bounce-loader :loading="reading"></bounce-loader>
-                    </center>
+                    <tag-reader
+                        :tag="rfidTag"
+                        @tag:changed="setTag"
+                    ></tag-reader>
 
                     <div
-                            v-if="errors && errors.message"
-                            class="alert alert-danger mt-3"
-                        >
-                            {{ errors.message }}
-                        </div>
+                        v-if="errors && errors.message"
+                        class="alert alert-danger mt-3"
+                    >
+                        {{ errors.message }}
+                    </div>
+
+                    <button
+                        :disabled="!hasTag"
+                        type="button"
+                        class="btn btn-success"
+                        @click="storeTag"
+                    >
+                        Store
+                    </button>
+                    <button
+                        :disabled="!hasTag"
+                        type="button"
+                        class="btn btn-warning"
+                        @click="clear"
+                    >
+                        Clear
+                    </button>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -42,40 +46,43 @@
 </template>
 
 <script>
-import BounceLoader from "vue-spinner/src/BounceLoader.vue";
+// Original imports
 import VueSweetalert2 from "vue-sweetalert2";
 Vue.use(VueSweetalert2);
+
+// Added imports
+import TagReader from "./TagReader.vue";
+
 export default {
-    name: "store-tag",
-    mounted() {
-        console.log("Component mounted.");
+    name: "StoreTag",
+    components: {
+        TagReader,
+        // eslint-disable-next-line vue/no-unused-components
+        VueSweetalert2
     },
     data() {
         return {
             errors: {},
-            rfidTag: {},
+            rfidTag: null,
             loaded: false,
             success: false,
-            reading: false,
+            reading: false
         };
     },
+    computed: {
+        hasTag() {
+            return !!this.rfidTag;
+        }
+    },
+    mounted() {
+        console.log("Component mounted.");
+    },
     methods: {
-        readTag() {
-            this.errors = {};
-            this.reading = true;
-            axios.defaults.timeout = 10000;
-            axios
-                .get("http://localhost:3001/readtag", { timeout: 5000 })
-                .then(rfidResponse => {
-                    this.reading = false;
-                    this.rfidTag = rfidResponse.data;
-                    this.storeTag();
-                })
-                .catch(error => {
-                    this.reading = false;
-                    this.errors = error;
-                    console.log(this.errors);
-                });
+        setTag(tag) {
+            this.rfidTag = tag;
+        },
+        clear() {
+            this.rfidTag = null;
         },
         storeTag() {
             this.errors = {};
@@ -83,13 +90,14 @@ export default {
                 .post(
                     "./storetag",
                     {
-                        epc: this.rfidTag.epc
+                        epc: this.rfidTag
                     },
                     { timeout: 5000 }
                 )
                 .then(storeResponse => {
                     this.success = true;
-                    this.rfidTag = storeResponse.data;
+                    console.log(storeResponse.data.epc);
+                    console.log(storeResponse.data.tagId);
                     this.$swal({
                         position: "top-end",
                         type: "success",
@@ -97,17 +105,15 @@ export default {
                         showConfirmButton: false,
                         timer: 1500
                     });
+                    this.clear();
                 })
                 .catch(error => {
                     this.reading = false;
                     this.errors = error.response.data;
+                    this.clear();
                     console.log(this.errors);
                 });
-        },
-    },
-    components: {
-        BounceLoader,
-        VueSweetalert2,
+        }
     }
 };
 </script>
