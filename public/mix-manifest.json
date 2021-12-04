@@ -1,6 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
+    "/js/app.js.map": "/js/app.js.map",
     "/js/app-landing.js": "/js/app-landing.js",
+    "/js/app-landing.js.map": "/js/app-landing.js.map",
     "/css/all.css": "/css/all.css",
     "/css/all-landing.css": "/css/all-landing.css",
     "/img/app-bg.png": "/img/app-bg.png",

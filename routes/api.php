@@ -42,6 +42,7 @@ Route::group(['prefix' => 'competition'], function () {
 	Route::group(['prefix' => '{edition_ID}'], function ($edition_ID) {
 		Route::get('entry', 'API\CompetitionInfoController@fetchEntry');
 		Route::get('fullstate', 'API\CompetitionInfoController@fullState');
+		Route::get('startlist', 'API\CompetitionInfoController@fetchStartList');
 
 	});
 });

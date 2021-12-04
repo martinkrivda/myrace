@@ -100,6 +100,7 @@ $(document).ready(function(){
             $('#country').val(data.data[0].country);
             $('#club').val(data.data[0].clubname);
             $('#club_ID').val(data.data[0].club_ID);
+            $('#importid').val(data.data[0].importid);
             var year = $("#yearofbirth").val();
             var gender = $( "#gender" ).val();
             selectCategory(edition_ID, year, gender);
@@ -179,6 +180,7 @@ $(".crud-submit").click(function(e) {
       var entryfee = $("#create-registration").find("input[name='entryfee']").val();
       var bib_nr = $("#create-registration").find("input[name='bib_nr']").val();
       var category = $("#create-registration").find("select[name='category']").val();
+      var importid = $("#create-registration").find("input[name='importid']").val();
       var notcompeting = $('#notcompeting:checked').val()?1:0;
       var paid = $('#paid:checked').val()?1:0;
       var note = $("#create-registration").find("textarea[name='note']").val();
@@ -186,7 +188,7 @@ $(".crud-submit").click(function(e) {
       var form_action = $("#create-registration").attr("action");
       var _token = $('meta[name=csrf-token]').attr('content');
       if (firstname != '' && lastname !='' && yearofbirth != '' && category != null && country != null && gender != null){
-        var formData = {edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, bib_nr, category, notcompeting, paid, note, registrationsum, _token, form_action};
+        var formData = {edition_ID, runner_ID, firstname, lastname, yearofbirth, gender, club, club_ID, email, phone, country, entryfee, bib_nr, category, notcompeting, paid, importid, note, registrationsum, _token, form_action};
         $.ajax({
             dataType: 'json',
             type:'POST',
@@ -343,7 +345,7 @@ function storeToDatabase (formData) {
             dataType: 'json',
             type:'POST',
             url: formData.form_action,
-            data:{edition_ID:formData.edition_ID, runner_ID:formData.runner_ID, firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, gender:formData.gender, club:formData.club, club_ID:formData.club_ID, email:formData.email, phone:formData.phone, country:formData.country, entryfee:formData.entryfee, bib_nr:formData.bib_nr, category:formData.category, registrationsum:formData.registrationsum, notcompeting:formData.notcompeting, paid:formData.paid, note:formData.note, _token:formData._token},
+            data:{edition_ID:formData.edition_ID, runner_ID:formData.runner_ID, firstname:formData.firstname, lastname:formData.lastname, yearofbirth:formData.yearofbirth, gender:formData.gender, club:formData.club, club_ID:formData.club_ID, email:formData.email, phone:formData.phone, country:formData.country, entryfee:formData.entryfee, bib_nr:formData.bib_nr, category:formData.category, registrationsum:formData.registrationsum, notcompeting:formData.notcompeting, paid:formData.paid, importid:formData.importid, note:formData.note, _token:formData._token},
             error: function(xhr, status, error) {
                 console.log("error", xhr.responseText);
                 var err = JSON.parse(xhr.responseText);

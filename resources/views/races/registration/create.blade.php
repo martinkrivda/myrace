@@ -200,6 +200,22 @@
         'class'=>'form-control',
     ))}}
 </div>
+<div class="row">
+    <div class="col-xs-4">
+        <div class="form-group">
+            {{ Form::label('importid', trans('title.importid')) }}
+            {{ Form::number('importid', null,
+                array(
+                    'class'=>'form-control',
+                    'placeholder'=>trans('title.fillimportid'),
+                    'id' => 'importid',
+                    'min' => 0,
+                    'step'=>'1',
+                ))
+            }}
+        </div>
+    </div>
+</div>
 <div class="form-group">
     {{ Form::label('note', trans('title.note')) }}
     {{ Form::textarea('note', null, ['id' => 'note', 'rows' => 4, 'class'=>'form-control']) }}

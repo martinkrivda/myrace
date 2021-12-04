@@ -6,10 +6,12 @@
 </head>
 <body>
 	<header>
-		<h1>Hi {{$registration->firstname}},</h1><br />
-		<h2>you are now registered for the race.</h2>
+		<h1>Ahoj {{$registration->firstname}},</h1><br />
+		<h2>nyní jsi přihlášen na závod Malá cena Velké Verandy.</h2>
 	</header>
 	<section>
+		<p>Startovní číslo: {{$registration->bib_nr}}</p>
+		<p>Přejeme hodně zdaru.</p>
 	</section>
 
 	<aside>

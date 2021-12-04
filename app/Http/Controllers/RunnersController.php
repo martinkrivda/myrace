@@ -199,7 +199,7 @@ class RunnersController extends Controller {
 		try {
 			$runner_ID = $request->get('runner_ID');
 			$runnerList = Runner::leftJoin('club', 'runner.club_ID', '=', 'club.club_ID')
-				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club_ID', 'club.clubname', 'club.clubabbr')
+				->select('runner.runner_ID', 'runner.firstname', 'runner.lastname', 'yearofbirth', 'runner.gender', 'runner.email', 'runner.phone', 'runner.country', 'runner.club_ID', 'club.clubname', 'club.clubabbr', 'runner.importid')
 				->where('runner_ID', '=', $runner_ID)
 				->get();
 			return response()->json(['data' => $runnerList]);

@@ -211,4 +211,6 @@ return [
 	'aboutOrg' => 'About My Organizations',
 	'assignTag' => 'Assign tag',
 	'assignTagRunner' => 'Assign tag to the runner',
+	'importid' => 'External ID',
+	'fillimportid' => 'Fill source ID (optional)',
 ];

@@ -73,7 +73,7 @@ class TagController extends Controller {
 			} else {
 				// store
 				$tag = new Tag;
-				$tag->EPC = $request->input('epc');
+				$tag->EPC = strtoupper($request->input('epc'));
 				$tag->active = true;
 				$tag->save();
 				// redirect
@@ -146,11 +146,11 @@ class TagController extends Controller {
 		}
 		try {
 			$tag = new Tag;
-				$tag->EPC = $request->input('epc');
-				$tag->active = true;
-				$tag->save();
-				// redirect
-				Log::info('New tag was added to DB.', ['epc' => $tag->EPC]);
+			$tag->EPC = strtoupper($request->input('epc'));
+			$tag->active = true;
+			$tag->save();
+			// redirect
+			Log::info('New tag was added to DB.', ['epc' => $tag->EPC]);
 		} catch (\Exception $e) {
 			Log::error('Problem with storing tag to the table.', ['tag' => $request->epc, 'error' => $e->getMessage()]);
 			return response()->json(['error' => 'Problem with database'], 503);

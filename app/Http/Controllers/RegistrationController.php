@@ -106,6 +106,7 @@ class RegistrationController extends Controller {
 			'country' => 'string|exists:country,country_code|max:2',
 			'email' => 'email|nullable|max:255',
 			'phone' => 'regex:/^[\+]?[()\/0-9\. \-]{9,}$/|nullable|max:13',
+			'importid' => 'numeric|nullable',
 		);
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -116,8 +117,23 @@ class RegistrationController extends Controller {
 			try {
 				$stime_ID = null;
 				if ($request->input('bib_nr') != null) {
-					$startNr = StartTime::where('edition_ID', $edition_ID)->where('bib_nr', $request->input('bib_nr'))->select('stime_ID')->first();
-					$stime_ID = $bib_nr != null ? $bib_nr : null;
+					$startNr = StartTime::where('edition_ID', $request->edition_ID)->where('bib_nr', $request->input('bib_nr'))->select('stime_ID')->first();
+					if ($startNr == null) {
+						$startTime = self::TimeFromBib($request->input('bib_nr'));
+						try {
+							$race = RaceEdition::find($request->edition_ID);
+						} catch (\Exception $e) {
+							Log::error('Can not find race in the database.', ['error' => $e->getMessage()]);
+						}
+						$startDateTime = strtotime("$race->date $race->firststart") + $startTime;
+						$startNr = new StartTime;
+						$startNr->edition_ID = $request->edition_ID;
+						$startNr->category_ID = $request->input('category');
+						$startNr->bib_nr = $request->input('bib_nr');
+						$startNr->stime = date('Y-m-d H:i:s', $startDateTime);
+						$startNr->save();
+					}
+					$stime_ID = $startNr != null ? $startNr->stime_ID : null;
 				}
 
 				// store
@@ -132,6 +148,7 @@ class RegistrationController extends Controller {
 					$runner->phone = $request->phone;
 					$runner->country = $request->country;
 					$runner->club_ID = $request->club_ID;
+					$runner->importid = $request->input('importid');
 					$runner->save();
 				} else {
 					$runner = Runner::find($request->runner_ID);
@@ -175,6 +192,7 @@ class RegistrationController extends Controller {
 				$registration->DNF = false;
 				$registration->DSQ = false;
 				$registration->source = "origin";
+				$registration->importid = $request->input('importid');
 				$registration->creator_ID = $user->id;
 				$registration->edition_ID = $request->edition_ID;
 				$registration->save();
@@ -536,5 +554,13 @@ class RegistrationController extends Controller {
 		$date = date('y', time());
 		$mark = (date('m', time()) + date('d', time())) + 1000 * (date('h', time()) + date('i', time()));
 		return $date . $mark;
+	}
+
+	private function TimeFromBib($bibNr) {
+		$womanBib = 600;
+		if ($bibNr > $womanBib) {
+			$bibNr = $bibNr - $womanBib;
+		}
+		return (15 * $bibNr) - 15;
 	}
 }
