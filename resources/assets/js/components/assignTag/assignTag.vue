@@ -7,57 +7,18 @@
 
                     <h3 class="box-title"></h3>
                 </div>
+                <span>{{ timeFormatter.format(time) }}</span>
                 <!-- /.box-header -->
+                <tag-reader :tag="rfidTag" @tag:changed="setTag"></tag-reader>
                 <div class="box-body">
-                    <form @submit.prevent="submit" class="form-horizontal">
-                        <div class="form-group">
-                            <div class="row">
-                                <label
-                                    for="inputBibNumber"
-                                    class="col-sm-2 control-label"
-                                    >Bib. Number</label
-                                >
-                            </div>
-                            <div class="col-sm-12">
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    id="inputBibNumber"
-                                    placeholder="Bib number"
-                                    v-model="bibNumber"
-                                    required
-                                />
-                                <div
-                                    v-if="errors && errors.bibNumber"
-                                    class="text-danger"
-                                >
-                                    {{ errors.bibNumber }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger btn-block"
-                                    :disabled="reading"
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            v-if="errors && errors.message"
-                            class="alert alert-danger mt-3"
-                        >
+                    <form class="form-horizontal" @submit.prevent>
+                        <runner-select
+                            :selected-runner="runner.bib_nr"
+                            :runner-suggestions="runnerSuggestions"
+                            @bib:changed="fetchRunner"
+                        ></runner-select>
+                        <div v-if="errors.message" class="text-danger">
                             {{ errors.message }}
-                            <button
-                                v-on:click="readTag()"
-                                class="pull-right btn btn-warning col-sm-2 "
-                                type="button"
-                            >
-                                Retry
-                            </button>
                         </div>
                     </form>
                     <div
@@ -76,40 +37,63 @@
                             <dt>Bib. Nr.:</dt>
                             <dd>{{ runner.bib_nr }}</dd>
                             <dt>Start time:</dt>
+                            <!-- <dd>{{ timeFormatter.format(new Date(runner.time)) }}</dd> -->
                             <dd>{{ runner.stime }}</dd>
                         </dl>
                     </div>
-                    <center>
-                        <bounce-loader :loading="reading"></bounce-loader>
-                        <div v-if="rfidTag.epc">
-                            <h4>
-                                <strong>EPC: {{ rfidTag.epc }}</strong>
-                            </h4>
-                        </div>
-                        <div v-if="runner.stime_ID === null" class="form-group">
-                            <label class="control-label">Start time:</label>
-                            <vue-timepicker
-                                :second-interval="15"
-                                format="HH:mm:ss"
-                                :hour-range="[[7, 8], [10, 13]]"
-                                v-model="timeValue"
-                                close-on-complete
-                                @keyup.enter="setStartTime"
-                                id="timeValue"
-                            ></vue-timepicker>
-                            <span id="helpAccountId" class="help-block"
-                                >Insert start time of the current runner.</span
-                            >
-                            <button
-                                type="submit"
-                                v-on:click="setStartTime(timeValue)"
-                                class="btn btn-warning btn-block"
-                                :disabled="reading"
-                            >
-                                Set time
-                            </button>
-                        </div>
-                    </center>
+                    <div
+                        class="btn-group btn-group-lg"
+                        role="group"
+                        aria-label="Tag assign toolbar"
+                    >
+                        <button
+                            :disabled="!hasTag"
+                            type="button"
+                            class="btn btn-success"
+                            @click="assignTag"
+                        >
+                            Assign
+                        </button>
+                        <button
+                            :disabled="!hasRunner"
+                            type="button"
+                            class="btn btn-secondary"
+                            @click="displayTimeSet"
+                        >
+                            Set Runner Time
+                        </button>
+                        <button
+                            :disabled="!hasTag && !hasRunner"
+                            type="button"
+                            class="btn btn-warning"
+                            @click="cancelAssignment"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                    <div v-if="showTimeSet" class="form-group my-3">
+                        <label class="control-label">Start time:</label>
+                        <vue-timepicker
+                            id="timeValue"
+                            v-model="timeValue"
+                            :second-interval="15"
+                            format="HH:mm:ss"
+                            :hour-range="[[7, 8], [10, 13]]"
+                            close-on-complete
+                            drop-direction="up"
+                            @keyup.enter="setStartTime"
+                        ></vue-timepicker>
+                        <span id="helpAccountId" class="help-block"
+                            >Insert start time of the current runner.</span
+                        >
+                        <button
+                            type="submit"
+                            class="btn btn-warning btn-block"
+                            @click="setStartTime(timeValue)"
+                        >
+                            Set time
+                        </button>
+                    </div>
                 </div>
                 <!-- /.box-body -->
             </div>
@@ -120,52 +104,146 @@
 </template>
 
 <script>
-import BounceLoader from "vue-spinner/src/BounceLoader.vue";
+// Original imports
 import VueSweetalert2 from "vue-sweetalert2";
 import VueTimepicker from "vue2-timepicker";
 import "vue2-timepicker/dist/VueTimepicker.css";
 Vue.use(VueSweetalert2);
+
+// Added imports
+import TagReader from "./TagReader.vue";
+import RunnerSelect from "./RunnerSelect.vue";
+
 export default {
-    name: "assign-tag",
-    props: ["edition"],
-    mounted() {
-        console.log("Component mounted.");
+    name: "AssignTag",
+    components: {
+        // eslint-disable-next-line vue/no-unused-components
+        VueSweetalert2,
+        VueTimepicker,
+        TagReader,
+        RunnerSelect
     },
     data() {
         return {
-            bibNumber: "",
             errors: {},
+            // Fetch runner format
+            /*
+        registration_ID
+        firstname
+        lastname
+        categoryname
+        bib_nr
+        stime
+        stime_ID
+      */
             runner: {},
-            rfidTag: {},
-            loaded: false,
-            success: false,
-            reading: false,
+            rfidTag: null,
             timeValue: {
                 HH: "10",
                 mm: "15",
                 ss: "00"
-            }
+            },
+            // StartList format
+            /*
+        runnerId
+        firstName
+        lastName
+        bibNr
+        gender
+        categoryId
+        time
+        timeS
+      */
+            startList: [],
+            showTimeSet: false,
+            assignedBibs: [],
+            // TODO add detection
+            eventStartTimeMs: new Date("2021-12-05 10:15:00").getTime(),
+            time: null,
+            timeS: 0,
+            timerInterval: null,
+            timeFormatter: new Intl.DateTimeFormat("default", {
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric"
+            })
         };
     },
+    computed: {
+        hasRunner() {
+            return !!this.runner.registration_ID;
+        },
+        hasTag() {
+            return !!this.rfidTag;
+        },
+        hasTagRunnerPair() {
+            return this.hasRunner && this.hasTag;
+        },
+        runnerSuggestions() {
+            const notStartedNonAssigned = this.startList.filter(
+                runner =>
+                    this.timeS < runner.timeS &&
+                    !this.assignedBibs.includes(runner.bibNr) &&
+                    !!runner.bibNr
+            );
+            notStartedNonAssigned.sort((a, b) => {
+                if (a.timeS !== b.timeS) return a.timeS - b.timeS;
+                return a.bib_nr - b.bib_nr;
+            });
+            return notStartedNonAssigned.length > 20
+                ? notStartedNonAssigned.slice(0, 20)
+                : notStartedNonAssigned;
+        }
+    },
+    mounted() {
+        console.log("Component mounted.");
+        this.fetchRunners();
+        this.timerInterval = setInterval(() => {
+            this.updateEventTime();
+        }, 1000);
+    },
+    unmounted() {
+        if (this.timerInterval) this.timerInterval();
+    },
     methods: {
-        submit() {
-            this.runner = {};
+        fetchRunner(bibNumber) {
+            // MOCK VERSION
+            // const _mockFetch = startListData.data.find(
+            //     item => item.bibNr === bibNumber
+            // );
+            // this.errors = {};
+            // if (_mockFetch) {
+            //     const transformedMock = {
+            //         registration_ID: _mockFetch.runnerId,
+            //         firstname: _mockFetch.firstName,
+            //         lastname: _mockFetch.lastName,
+            //         categoryname: _mockFetch.categoryId,
+            //         bib_nr: _mockFetch.bibNr,
+            //         stime: _mockFetch.timeS,
+            //         stime_ID: false
+            //     };
+            //     this.runner = transformedMock;
+            //     if (!this.runner.stime_ID) this.showTimeSet = true;
+            // } else {
+            //     this.runner = {};
+            //     this.errors.message = "No runner found for bib number";
+            // }
+
+            // SERVER VERSION
             this.errors = {};
             axios
                 .get("./fetchrunner", {
                     params: {
-                        bibNumber: this.bibNumber
+                        bibNumber
                     }
                 })
                 .then(response => {
-                    this.reading = true;
-                    this.success = true;
                     this.runner = response.data;
                     console.log(this.runner.stime_ID);
-                    this.readTag();
+                    if (!this.runner.stime_ID) this.showTimeSet = true;
                 })
                 .catch(error => {
-                    this.reading = false;
+                    this.runner = {};
                     if (
                         error.response.status &&
                         error.response.status === 422
@@ -176,54 +254,104 @@ export default {
                     console.log(error);
                 });
         },
-        readTag() {
+        fetchRunners() {
+            // Mock version
+            // const _mockFetch = startListData.data;
+            // this.errors = {};
+            // if (_mockFetch) {
+            //     this.startList = _mockFetch;
+            // } else {
+            //     this.errors.message = "No startlist runner data found";
+            // }
+
+            // Server version
             this.errors = {};
-            this.reading = true;
-            axios.defaults.timeout = 10000;
             axios
-                .get("http://192.168.0.100:3001/readtag", { timeout: 5000 })
-                .then(rfidResponse => {
-                    this.reading = false;
-                    this.rfidTag = rfidResponse.data;
-                    this.assignTag();
+                .get("./startlist")
+                .then(response => {
+                    this.startList = response.data;
                 })
                 .catch(error => {
-                    this.reading = false;
-                    this.errors = error;
-                    console.log(this.errors);
+                    this.runner = {};
+                    if (
+                        error.response.status &&
+                        error.response.status === 422
+                    ) {
+                        this.errors = error.response.data;
+                        console.log(this.errors);
+                    }
+                    console.log(error);
                 });
         },
+        setTag(tag) {
+            this.rfidTag = tag;
+        },
         assignTag() {
+            // Mock version
+            // this.errors = {};
+            // console.log(
+            //     `Runner ${this.runner.registration_ID} has tag ${this.rfidTag}`
+            // );
+            // this.assignedBibs.push(this.runner.bib_nr);
+            // this.$swal({
+            //     position: "top-end",
+            //     type: "success",
+            //     title: "success",
+            //     showConfirmButton: false,
+            //     timer: 5000
+            // });
+            // this.clear();
+
+            //Server version
             this.errors = {};
+            console.log(
+                `Runner ${this.runner.registration_ID} has tag ${this.rfidTag}`
+            );
             axios
                 .put(
                     "./updaterunner",
                     {
                         registrationId: this.runner.registration_ID,
-                        epc: this.rfidTag.epc
+                        epc: this.rfidTag
                     },
                     { timeout: 5000 }
                 )
                 .then(updateResponse => {
-                    this.success = true;
-                    this.rfidTag.tagId = updateResponse.data.tagId;
+                    this.assignedBibs.push(this.runner.bib_nr);
                     this.$swal({
                         position: "top-end",
                         type: "success",
                         title: updateResponse.data.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2500
                     });
+                    this.clear();
                 })
                 .catch(error => {
-                    this.reading = false;
                     this.errors = error.response.data;
                     console.log(this.errors);
+                    this.clear();
                 });
+        },
+        cancelAssignment() {
+            this.clear();
+        },
+        clear() {
+            this.rfidTag = null;
+            this.runner = {};
+            this.showTimeSet = false;
+        },
+        displayTimeSet() {
+            this.showTimeSet = true;
         },
         setStartTime(startTimeData) {
             this.errors = {};
-            const time = startTimeData.HH+':'+startTimeData.mm+':'+startTimeData.ss;
+            const time =
+                startTimeData.HH +
+                ":" +
+                startTimeData.mm +
+                ":" +
+                startTimeData.ss;
             axios
                 .post(
                     "./setstart",
@@ -234,7 +362,6 @@ export default {
                     { timeout: 5000 }
                 )
                 .then(response => {
-                    this.success = true;
                     this.$swal({
                         position: "top-end",
                         type: "success",
@@ -245,16 +372,17 @@ export default {
                     this.runner = {};
                 })
                 .catch(error => {
-                    this.reading = false;
                     this.errors = error.response.data;
                     console.log(this.errors);
                 });
+        },
+        updateEventTime() {
+            this.time = new Date();
+            const currentTimeMs = this.time.getTime();
+            const diffMs = currentTimeMs - this.eventStartTimeMs;
+            const diffS = Math.round(diffMs / 1000);
+            this.timeS = diffS;
         }
-    },
-    components: {
-        BounceLoader,
-        VueSweetalert2,
-        VueTimepicker
     }
 };
 </script>
