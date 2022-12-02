@@ -1,5 +1,5 @@
 export default {
-  port: 'COM3',
+  port: 'COM5',
   readInterval: 100,
   scanTimeout: 10,
   usbVendorId: 4292,

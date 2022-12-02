@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Club;
+use App\Payment;
+use App\RaceEdition;
 use App\Registration;
 use App\RegistrationSum;
 use App\Runner;
-use App\Payment;
 use App\StartTime;
-use App\RaceEdition;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -188,7 +188,7 @@ class McvvFetchDataController extends Controller {
 				if (!isset($summary->status)) {
 					$summary->status = 0;
 				}
-				$price = array_sum(array_column($entryRequest['radky'],'startovne'));
+				$price = array_sum(array_column($entryRequest['radky'], 'startovne'));
 				$summary->price = $price;
 				$summary->discount = ($summary->discount == null) ? 0.00 : $summary->discount;
 				$summary->totalprice = $price - $summary->discount;
@@ -214,7 +214,10 @@ class McvvFetchDataController extends Controller {
 					$entry->firstname = $name[1];
 					$entry->lastname = $name[0];
 					$club = $clubs->where('importid', '=', $radek['klub_id'])->first();
-					if($club) $entry->club_ID = $club->club_ID;
+					if ($club) {
+						$entry->club_ID = $club->club_ID;
+					}
+
 					$entry->yearofbirth = $runner->yearofbirth;
 					$entry->gender = $runner->gender;
 					$entry->entryfee = $radek['startovne'];
@@ -302,7 +305,7 @@ class McvvFetchDataController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function setPaid($edition_ID) {
-		
+
 		$allRegistrations = Registration::leftJoin('registrationsum', 'registration.regsummary_ID', '=', 'registrationsum.regsummary_ID')->where('registration.edition_ID', $edition_ID)->select('registrationsum.payref', 'totalprice', 'paid', 'registration_ID', 'registrationsum.regsummary_ID')->get();
 		$allPayments = Payment::all();
 		//var_dump($content->records);
@@ -311,7 +314,7 @@ class McvvFetchDataController extends Controller {
 			$paid = $allPayments->where('vs', $registration->payref)->sum('amount');
 			$paid = number_format((float) $paid, 2, '.', '');
 
-			if($registration->totalprice <= $paid){
+			if ($registration->totalprice <= $paid) {
 				$registration->paid = true;
 				$registration->save();
 				$summary = RegistrationSum::find($registration->regsummary_ID);

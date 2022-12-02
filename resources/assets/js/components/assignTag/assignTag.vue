@@ -1,4 +1,6 @@
 <template>
+    <div>
+    <tag-reader :tag="rfidTag" @tag:changed="setTag"></tag-reader>
     <div class="row">
         <div class="col-xs-12 col-md-6">
             <div class="box box-default">
@@ -9,7 +11,6 @@
                 </div>
                 <span>{{ timeFormatter.format(time) }}</span>
                 <!-- /.box-header -->
-                <tag-reader :tag="rfidTag" @tag:changed="setTag"></tag-reader>
                 <div class="box-body">
                     <form class="form-horizontal" @submit.prevent>
                         <runner-select
@@ -101,6 +102,7 @@
         </div>
         <!-- /.col -->
     </div>
+</div>
 </template>
 
 <script>
@@ -158,7 +160,7 @@ export default {
             showTimeSet: false,
             assignedBibs: [],
             // TODO add detection
-            eventStartTimeMs: new Date("2021-12-05 10:15:00").getTime(),
+            eventStartTimeMs: new Date("2022-12-04 10:15:00").getTime(),
             time: null,
             timeS: 0,
             timerInterval: null,
@@ -267,9 +269,9 @@ export default {
             // Server version
             this.errors = {};
             axios
-                .get("./startlist")
+                .get("./fetchstartlist")
                 .then(response => {
-                    this.startList = response.data;
+                    this.startList = response.data.data;
                 })
                 .catch(error => {
                     this.runner = {};
@@ -293,8 +295,8 @@ export default {
             //     `Runner ${this.runner.registration_ID} has tag ${this.rfidTag}`
             // );
             // this.assignedBibs.push(this.runner.bib_nr);
-            // this.$swal({
-            //     position: "top-end",
+           // this.$swal({
+             //     position: "top-end",
             //     type: "success",
             //     title: "success",
             //     showConfirmButton: false,

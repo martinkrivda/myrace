@@ -110,9 +110,11 @@ async function parseEPC(Uint8Array) {
 // Prevent disconnected readings error, clear trailing bytes from last read
 const EXPECTED_FIRST_BYTES = [19, 0, 1].join('');
 const EXPECTED_FIRST_BYTES_NO_DATA = [5, 0, 1].join('');
+const EXPECTED_LENGTH_OK = 20;
+const EXPECTED_LENGTH_NOK = 6;
 const FIRST_BYTE = 19;
-const EXPECTED_LAST_BYTE = 182;
-const EXPECTED_LAST_BYTE_NO_DATA = 61;
+// const EXPECTED_LAST_BYTE = 182;
+// const EXPECTED_LAST_BYTE_NO_DATA = 61;
 function stripFaultyBytes(data) {
   let parsed = [...data];
   let success = false;
@@ -127,11 +129,9 @@ function stripFaultyBytes(data) {
   }
   if (parsed.length === 0) return parsed;
   if (parsed[0] === FIRST_BYTE)
-    return parsed[parsed.length - 1] === EXPECTED_LAST_BYTE ? parsed : [];
+    return parsed.length === EXPECTED_LENGTH_OK ? parsed : [];
   else
-    return parsed[parsed.length - 1] === EXPECTED_LAST_BYTE_NO_DATA
-      ? parsed
-      : [];
+    return parsed.length === EXPECTED_LENGTH_NOK ? parsed : [];
 }
 
 // Check if data is same as in last readout

@@ -63,6 +63,15 @@ Route::get('/auth/google/callback', 'Auth\LoginController@handleProviderCallback
 Route::get('/auth/facebook', 'Auth\LoginController@redirectToFacebookProvider');
 Route::get('/auth/facebook/callback', 'Auth\LoginController@handleFacebookProviderCallback');
 
+Route::group(['prefix' => 'race'], function () {
+	Route::group(['prefix' => '{edition_ID}'], function ($edition_ID) {
+		Route::get('fetchrunner', 'AssignTagController@fetchRunner');
+		Route::put('updaterunner', 'AssignTagController@updateRunner');
+		Route::post('setstart', 'AssignTagController@setStartTime');
+		Route::get('fetchstartlist', 'AssignTagController@fetchStartList');
+
+	});
+});
 Route::group(['middleware' => 'auth'], function () {
 	//    Route::get('/link1', function ()    {
 	//        // Uses Auth Middleware
@@ -100,9 +109,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::resource('course', 'CourseController');
 			// Assign Tag
 			Route::get('assigntag', 'AssignTagController@index');
-			Route::get('fetchrunner', 'AssignTagController@fetchRunner');
-			Route::put('updaterunner', 'AssignTagController@updateRunner');
-			Route::post('setstart', 'AssignTagController@setStartTime');
 			// Fetch MCVV Data
 			Route::get('mcvvclub', 'McvvFetchDataController@fetchClub');
 			Route::get('mcvvrunner', 'McvvFetchDataController@fetchRunner');

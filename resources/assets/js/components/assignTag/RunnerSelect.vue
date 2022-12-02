@@ -18,7 +18,7 @@
         />
       </div>
     </div>
-    <div class="form-group">
+    <div>
       <ul v-if="!bibNumber" class="list-group">
         <li
           v-for="runner in sortedRunners"

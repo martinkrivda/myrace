@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Category;
 use App\RaceEdition;
 use App\Registration;
 use App\StartTime;
@@ -150,7 +151,65 @@ class AssignTagController extends Controller {
 				return response()->json(['error' => 'Problem with database'], 503);
 			}
 
+		} else {
+			return response()->json(['message' => 'Runner has already start time defined'], 422);
 		}
 		return response()->json(['message' => 'Start time set successfully', 'time' => $startTime->stime]);
+	}
+
+	/**
+	 * Display a start list.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function fetchStartList($edition_ID) {
+		try {
+			$race = RaceEdition::find($edition_ID);
+		} catch (\Exception $e) {
+			Log::error('Can not find race in the database.', ['error' => $e->getMessage()]);
+		}
+		try {
+			$classes = Category::where('edition_ID', $edition_ID)->select('category_ID', 'starttime')->get();
+		} catch (\Exception $e) {
+			Log::error('Can not find any category for the event in the database.', ['error' => $e->getMessage()]);
+		}
+		try {
+			$startList = Registration::leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->where('registration.edition_ID', $edition_ID)->select('registration_ID', 'runner_ID', 'registration.club_ID', 'registration.category_ID', 'starttime.bib_nr', 'firstname', 'lastname', 'yearofbirth', 'clubname', 'clubabbr', 'gender', 'stime', 'NC', 'note')->get();
+		} catch (\Exception $e) {
+			Log::error('Problem with reading start list from databases.', ['error' => $e->getMessage()]);
+			return response()->json(['error' => 'Problem with database ' . $e->getMessage()], 503);
+		}
+		$startList->map(function ($item, $key) use ($race, $classes) {
+			if ($item->stime === null) {
+				$filtered = $classes->where('category_ID', $item->category_ID);
+				if (isset($filtered[0]) && $filtered[0]->starttime != null) {
+					$item->stime = $filtered[0]->starttime;
+				} else {
+					$item->stime = date('Y-m-d H:i:s', strtotime("$race->date $race->firststart"));
+				}
+			}
+			$item['timeMs'] = strtotime($item->stime) - strtotime("$race->date $race->firststart");
+		});
+		$startList->transform(function ($item) {
+			return [
+				'id' => $item->registration_ID,
+				'runnerId' => $item->runner_ID,
+				'firstName' => $item->firstname,
+				'lastName' => $item->lastname,
+				'yearOfBirth' => $item->yearofbirth,
+				'clubId' => $item->club_ID,
+				'club' => $item->clubname,
+				'clubAbbr' => $item->clubabbr,
+				'bibNr' => $item->bib_nr,
+				'gender' => $item->gender,
+				'categoryId' => $item->category_ID,
+				'notCompeting' => $item->NC,
+				'time' => $item->stime,
+				'timeS' => $item->timeMs,
+				'note' => $item->note,
+			];
+		});
+		return response()->json(['message' => 'Start list retrieved successfully', 'data' => $startList->toArray()]);
+
 	}
 }
