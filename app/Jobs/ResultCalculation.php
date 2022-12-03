@@ -8,7 +8,6 @@ use App\Notification;
 use App\RaceEdition;
 use App\Registration;
 use App\RfidReader;
-use Nexmo\Laravel\Facade\Nexmo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,6 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class ResultCalculation implements ShouldQueue {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -72,7 +72,7 @@ class ResultCalculation implements ShouldQueue {
 
 		while (true) {
 			// Your Database Logic
-			//Log::info('Service is available');
+			Log::info('Service is available');
 			foreach ($races as $race) {
 				$runners = Registration::leftJoin('starttime', 'registration.stime_ID', '=', 'starttime.stime_ID')->leftJoin('runner', 'registration.runner_ID', '=', 'runner.runner_ID')->leftJoin('club', 'registration.club_ID', '=', 'club.club_ID')->leftJoin('tag', 'registration.tag_ID', '=', 'tag.tag_ID')->where('registration.edition_ID', $race->edition_ID)->whereNotNull('registration.stime_ID')->select('registration.*', 'starttime.*', 'tag.*', 'club.clubname', 'club.club_ID', 'runner.email', 'runner.phone')->get();
 				$reader = RfidReader::where('edition_ID', $race->edition_ID)->where('gateway', 'F')->where('read_ID', '>', $lastRead)->select('read_ID', 'EPC', 'time')->get();
@@ -113,9 +113,9 @@ class ResultCalculation implements ShouldQueue {
 											if ($runner->phone != null) {
 												try {
 													Nexmo::message()->send([
-												    	'to'   => $runner->phone,
-												    	'from' => '+420774177641',
-												    	'text' => 'Skvele. Jsi v cili letosni MCVV s casem ' . date('i:s', $runner->timems) . '.'
+														'to' => $runner->phone,
+														'from' => '+420774177641',
+														'text' => 'Skvele. Jsi v cili letosni MCVV s casem ' . date('i:s', $runner->timems) . '.',
 													]);
 												} catch (\Exception $e) {
 													Log::error('Can not send SMS.', ['phone:' => $runner->phone]);
