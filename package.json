@@ -39,7 +39,7 @@
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.2"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "adminlte-vue": "^0.1.3",
